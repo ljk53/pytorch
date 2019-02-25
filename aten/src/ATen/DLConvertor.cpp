@@ -78,7 +78,7 @@ static DeviceType getATenDeviceType(const DLContext& ctx) {
     case DLDeviceType::kDLROCM:
       return DeviceType::HIP;
     default:
-      throw std::logic_error("Unsupported device_type: " + std::to_string(ctx.device_type));
+      throw std::logic_error("Unsupported device_type: ");// + std::to_string(ctx.device_type));
   }
   return DeviceType::CPU; // impossible
 }
@@ -94,7 +94,7 @@ ScalarType toScalarType(const DLDataType& dtype) {
           stype = ScalarType::Byte;
           break;
         default:
-          throw std::logic_error("Unsupported kUInt bits " + std::to_string(dtype.bits));
+          throw std::logic_error("Unsupported kUInt bits ");// + std::to_string(dtype.bits));
       }
       break;
     case DLDataTypeCode::kDLInt:
@@ -112,7 +112,7 @@ ScalarType toScalarType(const DLDataType& dtype) {
           stype = ScalarType::Long;
           break;
         default:
-          throw std::logic_error("Unsupported kInt bits " + std::to_string(dtype.bits));
+          throw std::logic_error("Unsupported kInt bits ");// + std::to_string(dtype.bits));
       }
       break;
     case DLDataTypeCode::kDLFloat:
@@ -127,11 +127,11 @@ ScalarType toScalarType(const DLDataType& dtype) {
           stype = ScalarType::Double;
           break;
         default:
-          throw std::logic_error("Unsupported kFloat bits " + std::to_string(dtype.bits));
+          throw std::logic_error("Unsupported kFloat bits ");// + std::to_string(dtype.bits));
       }
       break;
     default:
-      throw std::logic_error("Unsupported code " + std::to_string(dtype.code));
+      throw std::logic_error("Unsupported code ");// + std::to_string(dtype.code));
   }
   return stype;
 }

@@ -80,7 +80,7 @@ int64_t sample_poisson(double lambda, THGenerator* generator) {
         continue;
       }
       if ((std::log(V) + std::log(invalpha) - std::log(a / (us * us) + b)) <=
-          (-lambda + k * loglam - std::lgamma((double)k + 1))) {
+          (-lambda + k * loglam - lgamma((double)k + 1))) {
         return k;
       }
     }

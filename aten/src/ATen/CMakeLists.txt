@@ -171,7 +171,7 @@ IF(UNIX)
     ADD_DEFINITIONS(-DHAVE_MMAP=1)
   ENDIF(HAVE_MMAP)
   # done for lseek: https://www.gnu.org/software/libc/manual/html_node/File-Position-Primitive.html
-  ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64)
+  # ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64)
   CHECK_FUNCTION_EXISTS(shm_open HAVE_SHM_OPEN)
   IF(HAVE_SHM_OPEN)
     ADD_DEFINITIONS(-DHAVE_SHM_OPEN=1)
@@ -201,7 +201,7 @@ endif(MKLDNN_FOUND)
 
 list(APPEND ATen_CPU_DEPENDENCY_LIBS cpuinfo)
 
-if(NOT MSVC AND NOT EMSCRIPTEN)
+if(FALSE)
   # Preserve values for the main build
   set(__aten_sleef_build_shared_libs ${BUILD_SHARED_LIBS})
   set(__aten_sleef_build_tests ${BUILD_TESTS})

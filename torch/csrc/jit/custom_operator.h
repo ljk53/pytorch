@@ -9,6 +9,7 @@
 #include <ATen/core/function_schema.h>
 #include <c10/util/Metaprogramming.h>
 #include <c10/util/TypeList.h>
+#include <c10/util/C++17.h>
 
 namespace torch {
 namespace jit {
@@ -40,7 +41,7 @@ template <typename... Ts, size_t... Is>
 std::vector<Argument> createArgumentVectorFromTypes(Indices<Is...> indices) {
   checkStaticTypes<decay_t<Ts>...>();
   // Arguments are named "_<index>"
-  return {Argument("_" + std::to_string(Is), getTypePtr<decay_t<Ts>>())...};
+  return {Argument("_" + c10::to_string(Is), getTypePtr<decay_t<Ts>>())...};
 }
 
 template <typename... Ts, size_t... Is>

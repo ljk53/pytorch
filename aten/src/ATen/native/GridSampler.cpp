@@ -6,6 +6,7 @@
 #include <ATen/cpu/vml.h>
 #include <ATen/native/cpu/GridSamplerKernel.h>
 #include <c10/util/Exception.h>
+#include <cmath>
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -17,7 +18,6 @@ using at::native::detail::GridSamplerInterpolation;
 using at::native::detail::GridSamplerPadding;
 
 namespace {
-
   template<typename scalar_t>
   static inline scalar_t clip_coordinates(scalar_t in, int64_t clip_limit) {
     return std::min(static_cast<scalar_t>(clip_limit - 1), std::max(in, static_cast<scalar_t>(0)));
@@ -264,9 +264,9 @@ namespace {
                 }
               }
             } else if (interpolation_mode == GridSamplerInterpolation::Nearest) {
-              int64_t ix_nearest = static_cast<int64_t>(std::round(ix));
-              int64_t iy_nearest = static_cast<int64_t>(std::round(iy));
-              int64_t iz_nearest = static_cast<int64_t>(std::round(iz));
+              int64_t ix_nearest = static_cast<int64_t>((ix));
+              int64_t iy_nearest = static_cast<int64_t>((iy));
+              int64_t iz_nearest = static_cast<int64_t>((iz));
 
               // assign nearest neighor pixel value to output pixel
               scalar_t *out_ptr_NCDHW = out_ptr + n * out_sN + d * out_sD + h * out_sH + w * out_sW;
@@ -500,9 +500,9 @@ namespace {
               gGrid_ptr_NDHW[1] = giy_mult * giy;
               gGrid_ptr_NDHW[2] = giz_mult * giz;
             } else if (interpolation_mode == GridSamplerInterpolation::Nearest) {
-              int64_t ix_nearest = static_cast<int64_t>(std::round(ix));
-              int64_t iy_nearest = static_cast<int64_t>(std::round(iy));
-              int64_t iz_nearest = static_cast<int64_t>(std::round(iz));
+              int64_t ix_nearest = static_cast<int64_t>((ix));
+              int64_t iy_nearest = static_cast<int64_t>((iy));
+              int64_t iz_nearest = static_cast<int64_t>((iz));
 
               // assign nearest neighor pixel value to output pixel
               scalar_t *gOut_ptr_NCDHW = gOut_ptr + n * gOut_sN + d * gOut_sD + h * gOut_sH + w * gOut_sW;

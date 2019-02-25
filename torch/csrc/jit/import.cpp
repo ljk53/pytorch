@@ -22,6 +22,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 namespace torch {
 namespace jit {
@@ -230,6 +231,7 @@ void ScriptModuleDeserializer::convertModule(
     std::tie(data, size) =
         reader_.getRecord(module_def.torchscript_arena().key());
     std::string data_str(static_cast<const char*>(data.get()), size);
+    std::cout << data_str << std::endl;
     import_methods(module, data_str, tensor_table_);
   }
 }

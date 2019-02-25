@@ -16,7 +16,7 @@
 #include <ATen/core/function_schema.h>
 #include <c10/util/ArrayRef.h>
 #include <c10/util/Optional.h>
-
+#include <c10/util/C++17.h>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -241,7 +241,7 @@ struct Method {
     for (size_t i = 0; i < num_inputs; ++i) {
       const Value* v = g.inputs().at(i);
       std::string name = v->hasUniqueName() ? v->uniqueNameBase()
-                                            : ("argument_" + std::to_string(i));
+                                            : ("argument_" + c10::to_string(i));
       args.emplace_back(std::move(name), unshapedType(g.inputs()[i]->type()));
     }
     for (size_t i = 0; i < g.outputs().size(); ++i) {

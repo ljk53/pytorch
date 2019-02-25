@@ -129,6 +129,9 @@ else()
 endif()
 
 
+set(AT_MKL_ENABLED 0)
+set(AT_MKL_MT 0)
+set(USE_BLAS 0)
 if (NOT BUILD_ATEN_MOBILE)
   set(AT_MKL_ENABLED 0)
   set(AT_MKL_MT 0)
@@ -1001,6 +1004,8 @@ if (USE_NNAPI AND NOT ANDROID)
   caffe2_update_option(USE_NNAPI OFF)
 endif()
 
+list(APPEND Caffe2_DEPENDENCY_LIBS aten_op_header_gen)
+
 if (NOT BUILD_ATEN_MOBILE AND BUILD_CAFFE2_OPS)
   if (CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO)
     list(APPEND Caffe2_DEPENDENCY_LIBS aten_op_header_gen)
@@ -1076,7 +1081,8 @@ if (CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO)
 endif()
 
 # --[ ATen checks
-if (NOT BUILD_ATEN_MOBILE)
+#if (NOT BUILD_ATEN_MOBILE)
+if (TRUE)
   set(TORCH_CUDA_ARCH_LIST $ENV{TORCH_CUDA_ARCH_LIST})
   set(TORCH_NVCC_FLAGS $ENV{TORCH_NVCC_FLAGS})
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
@@ -1229,6 +1235,9 @@ if (NOT BUILD_ATEN_MOBILE)
   # we don't set -mavx and -mavx2 flags globally, but only for specific files
   # however, we want to enable the AVX codepaths, so we still need to
   # add USE_AVX and USE_AVX2 macro defines
+  SET(C_AVX_FOUND OFF)
+  SET(C_AVX2_FOUND OFF)
+
   IF (C_AVX_FOUND)
     MESSAGE(STATUS "AVX compiler support found")
     add_compile_options(-DUSE_AVX)
@@ -1273,17 +1282,19 @@ if (NOT BUILD_ATEN_MOBILE)
   }
   " HAS_MSC_ATOMICS)
 
-    CHECK_C_SOURCE_RUNS("
-  int main()
-  {
-    int a;
-    __sync_lock_test_and_set(&a, 1);
-    __sync_fetch_and_add(&a, 1);
-    if(!__sync_bool_compare_and_swap(&a, 2, 3))
-      return -1;
-    return 0;
-  }
-  " HAS_GCC_ATOMICS)
+  #  CHECK_C_SOURCE_RUNS("
+  #int main()
+  #{
+  #  int a;
+  #  __sync_lock_test_and_set(&a, 1);
+  #  __sync_fetch_and_add(&a, 1);
+  #  if(!__sync_bool_compare_and_swap(&a, 2, 3))
+  #    return -1;
+  #  return 0;
+  #}
+  #" HAS_GCC_ATOMICS)
+
+  SET(HAS_GCC_ATOMICS FALSE)
   ENDIF()
 
   IF (HAS_C11_ATOMICS)
@@ -1299,7 +1310,7 @@ if (NOT BUILD_ATEN_MOBILE)
     SET(CMAKE_THREAD_PREFER_PTHREAD TRUE)
     FIND_PACKAGE(Threads)
     IF(THREADS_FOUND)
-      ADD_DEFINITIONS(-DUSE_PTHREAD_ATOMICS=1)
+      #ADD_DEFINITIONS(-DUSE_PTHREAD_ATOMICS=1)
       MESSAGE(STATUS "Atomics: using pthread")
     ENDIF()
   ENDIF()
@@ -1373,7 +1384,7 @@ if (NOT BUILD_ATEN_MOBILE)
       ADD_DEFINITIONS(-DHAVE_MMAP=1)
     ENDIF(HAVE_MMAP)
     # done for lseek: https://www.gnu.org/software/libc/manual/html_node/File-Position-Primitive.html
-    ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64)
+    #ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64)
     CHECK_FUNCTION_EXISTS(shm_open HAVE_SHM_OPEN)
     IF(HAVE_SHM_OPEN)
       ADD_DEFINITIONS(-DHAVE_SHM_OPEN=1)

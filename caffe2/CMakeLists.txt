@@ -47,11 +47,52 @@ if (NOT BUILD_ATEN_MOBILE)
 else()
   # Only add "ATen Core", a minimal, easy-to-compile fragment of ATen.
   # This codepath should only be exercised by the Android build.
-  add_subdirectory(../aten/src/ATen/core ATen_core)
-  list(APPEND Caffe2_CPU_SRCS ${ATen_CORE_SRCS})
-  list(APPEND Caffe2_CPU_INCLUDE ${ATen_CORE_INCLUDE})
-  list(APPEND Caffe2_CPU_TEST_SRCS ${ATen_CORE_TEST_SRCS})
+  #add_subdirectory(../aten/src/ATen/core ATen_core)
+  #list(APPEND Caffe2_CPU_SRCS ${ATen_CORE_SRCS})
+  #list(APPEND Caffe2_CPU_INCLUDE ${ATen_CORE_INCLUDE})
+  #list(APPEND Caffe2_CPU_TEST_SRCS ${ATen_CORE_TEST_SRCS})
   # See cmake/Codegen.cmake for header installation
+
+  set(__caffe2_CMAKE_POSITION_INDEPENDENT_CODE ${CMAKE_POSITION_INDEPENDENT_CODE})
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  set(AT_LINK_STYLE INTERFACE)
+  add_subdirectory(../aten aten)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ${__caffe2_CMAKE_POSITION_INDEPENDENT_CODE})
+
+  # Generate the headers wrapped by our operator
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/contrib/aten/aten_op.h
+  COMMAND
+  "${PYTHON_EXECUTABLE}" ${CMAKE_CURRENT_SOURCE_DIR}/contrib/aten/gen_op.py
+    --aten_root=${CMAKE_CURRENT_SOURCE_DIR}/../aten
+    --template_dir=${CMAKE_CURRENT_SOURCE_DIR}/contrib/aten
+    --yaml_dir=${CMAKE_CURRENT_BINARY_DIR}/../aten/src/ATen
+    --install_dir=${CMAKE_CURRENT_BINARY_DIR}/contrib/aten
+  DEPENDS
+  ATEN_CPU_FILES_GEN_TARGET
+  ${CMAKE_CURRENT_SOURCE_DIR}/contrib/aten/gen_op.py
+  ${CMAKE_CURRENT_SOURCE_DIR}/contrib/aten/aten_op_template.h)
+
+  add_custom_target(__aten_op_header_gen
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/contrib/aten/aten_op.h)
+  add_library(aten_op_header_gen INTERFACE)
+  add_dependencies(aten_op_header_gen __aten_op_header_gen)
+
+  # Add source, includes, and libs to lists
+  list(APPEND Caffe2_CPU_SRCS ${ATen_CPU_SRCS})
+  list(APPEND Caffe2_GPU_SRCS ${ATen_CUDA_SRCS})
+  list(APPEND Caffe2_HIP_SRCS ${ATen_HIP_SRCS})
+  list(APPEND Caffe2_CPU_TEST_SRCS ${ATen_CPU_TEST_SRCS})
+  list(APPEND Caffe2_GPU_TEST_SRCS ${ATen_CUDA_TEST_SRCS})
+  list(APPEND Caffe2_HIP_TEST_SRCS ${ATen_HIP_TEST_SRCS})
+  list(APPEND Caffe2_CPU_TEST_SRCS ${ATen_CORE_TEST_SRCS})
+  list(APPEND Caffe2_CPU_INCLUDE ${ATen_CPU_INCLUDE})
+  list(APPEND Caffe2_GPU_INCLUDE ${ATen_CUDA_INCLUDE})
+  list(APPEND Caffe2_HIP_INCLUDE ${ATen_HIP_INCLUDE})
+  list(APPEND Caffe2_DEPENDENCY_LIBS ${ATen_CPU_DEPENDENCY_LIBS})
+  list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS ${ATen_CUDA_DEPENDENCY_LIBS})
+  list(APPEND Caffe2_HIP_DEPENDENCY_LIBS ${ATen_HIP_DEPENDENCY_LIBS})
+  list(APPEND Caffe2_DEPENDENCY_INCLUDE ${ATen_THIRD_PARTY_INCLUDE})
+
 endif()
 
 # ---[ Torch build
@@ -65,26 +106,26 @@ endif()
 
 if(NOT BUILD_ATEN_ONLY)
   add_subdirectory(proto)
-  add_subdirectory(contrib)
+  #add_subdirectory(contrib)
   add_subdirectory(core)
   add_subdirectory(utils)
-  add_subdirectory(predictor)
-  add_subdirectory(core/nomnigraph)
-  add_subdirectory(core/nomscheduler)
+  #add_subdirectory(predictor)
+  #add_subdirectory(core/nomnigraph)
+  #add_subdirectory(core/nomscheduler)
   add_subdirectory(serialize)
   if (USE_NVRTC)
     add_subdirectory(cuda_rtc)
   endif()
-  add_subdirectory(db)
-  add_subdirectory(distributed)
+  #add_subdirectory(db)
+  #add_subdirectory(distributed)
   # add_subdirectory(experiments) # note, we may remove this folder at some point
-  add_subdirectory(ideep)
-  add_subdirectory(image)
-  add_subdirectory(video)
+  #add_subdirectory(ideep)
+  #add_subdirectory(image)
+  #add_subdirectory(video)
   add_subdirectory(mobile)
-  add_subdirectory(mpi)
-  add_subdirectory(observers)
-  add_subdirectory(onnx)
+  #add_subdirectory(mpi)
+  #add_subdirectory(observers)
+  #add_subdirectory(onnx)
   if (BUILD_CAFFE2_OPS)
     add_subdirectory(operators)
     add_subdirectory(operators/rnn)
@@ -96,14 +137,14 @@ if(NOT BUILD_ATEN_ONLY)
       add_subdirectory(operators/quantized)
     endif()
   endif()
-  add_subdirectory(opt)
-  add_subdirectory(perfkernels)
+  #add_subdirectory(opt)
+  #add_subdirectory(perfkernels)
   add_subdirectory(python)
   add_subdirectory(queue)
-  add_subdirectory(sgd)
+  #add_subdirectory(sgd)
   add_subdirectory(share)
   # add_subdirectory(test) # todo: use caffe2_gtest_main instead of gtest_main because we will need to call GlobalInit
-  add_subdirectory(transforms)
+  #add_subdirectory(transforms)
 endif()
 
 # Advanced: if we have white list specified, we will do intersections for all

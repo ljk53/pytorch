@@ -33,6 +33,14 @@ inline uint64_t stoull(const std::string& str) {
   return n;
 }
 
+inline int64_t stoll(const std::string& str) {
+  std::stringstream ss;
+  int64_t n = 0;
+  ss << str;
+  ss >> n;
+  return n;
+}
+
 inline double stod(const std::string& str, std::size_t* pos = 0) {
   std::stringstream ss;
   ss << str;

@@ -160,10 +160,10 @@ CAFFE2_API Context& globalContext();
 static inline void init() {
   globalContext();
   if (const char *env_p = std::getenv("OMP_NUM_THREADS")) {
-    at::set_num_threads(std::stoi(env_p));
+    at::set_num_threads(stoi(env_p));
   }
   if (const char *env_p = std::getenv("MKL_NUM_THREADS")) {
-    at::set_num_threads(std::stoi(env_p));
+    at::set_num_threads(stoi(env_p));
   }
 }
 

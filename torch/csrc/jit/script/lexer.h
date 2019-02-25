@@ -1,5 +1,6 @@
 #pragma once
 #include <c10/util/Exception.h>
+#include <c10/util/C++17.h>
 #include <torch/csrc/jit/source_range.h>
 #include <torch/csrc/utils/memory.h>
 #include <algorithm>
@@ -168,7 +169,7 @@ struct SharedParserData {
   static double strtod_c(const char* str, char** end) {
     /// NOLINTNEXTLINE(hicpp-signed-bitwise)
     static locale_t loc = newlocale(LC_ALL_MASK, "C", nullptr);
-    return strtod_l(str, end, loc);
+    return (double) strtold_l(str, end, loc);
   }
 #endif
   // 1. skip whitespace
@@ -476,7 +477,7 @@ struct Lexer {
             indent_stack.pop_back();
             next_tokens.emplace_back(TK_DEDENT, r.range);
             if (indent_stack.size() == 0) {
-              reportError("invalid indent level " + std::to_string(depth), r);
+              reportError("invalid indent level " + c10::to_string(depth), r);
             }
           }
           return; // We've already queued the tokens

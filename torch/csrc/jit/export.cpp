@@ -7,6 +7,7 @@
 
 #include <ATen/core/functional.h>
 #include <c10/util/Exception.h>
+#include <c10/util/C++17.h>
 #include <torch/csrc/jit/passes/dead_code_elimination.h>
 #include <torch/csrc/jit/passes/python_print.h>
 
@@ -220,7 +221,7 @@ void EncoderBase::EncodeBlock(
   AT_ASSERT(graph_proto != nullptr);
   std::string block_name = "torch-jit-export";
   if (num_blocks_) {
-    block_name += std::to_string(num_blocks_);
+    block_name += c10::to_string(num_blocks_);
   }
   num_blocks_++;
   graph_proto->set_name(block_name);
@@ -611,7 +612,7 @@ void ScriptModuleSerializer::convertAndWriteTensor(
               storage_tensor.storage().size() ==
           record_size);
     }
-    std::string name = "tensors/" + std::to_string(tensor_id);
+    std::string name = "tensors/" + c10::to_string(tensor_id);
     writer_.writeRecord(name, storage_tensor.storage().data(), record_size);
     storage_it = storageMap.insert({key, name}).first;
   }

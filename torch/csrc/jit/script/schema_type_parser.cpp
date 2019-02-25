@@ -5,6 +5,7 @@
 #include <torch/csrc/jit/script/lexer.h>
 #include <torch/csrc/jit/script/parse_string_literal.h>
 #include <string>
+#include <c10/util/string_utils.h>
 
 namespace torch {
 namespace jit {
@@ -63,7 +64,7 @@ c10::optional<AliasInfo> SchemaTypeParser::parseAliasAnnotation() {
     L.expect(')');
   } else if (L.nextIf('!')) {
     alias_info.addSet(
-        Symbol::fromQualString("alias::$" + std::to_string(next_id++)));
+        Symbol::fromQualString("alias::$" + c10::to_string(next_id++)));
     alias_info.setIsWrite(true);
   } else {
     return c10::nullopt;
@@ -104,8 +105,9 @@ TypePtr SchemaTypeParser::parseRefinedTensor() {
     std::vector<int64_t> dims;
     parseList(TK_NOTHING, ',', ')', [&] {
       const std::string& num = L.expect(TK_NUMBER).text();
-      std::string::size_type num_len;
-      size_t dim = std::stoi(num, &num_len);
+      char* end;
+      size_t dim = (int) strtol(num.c_str(), &end, 10);
+      std::string::size_type num_len = end - num.c_str();
       AT_ASSERTM(
           num_len == num.size(),
           "Bad tensor dimension size. Strides not yet supported in parsing",

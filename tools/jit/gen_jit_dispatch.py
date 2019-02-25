@@ -146,6 +146,7 @@ auto result_ = (${first}).${name}(${args_with_tensor_options});
 
 CONSTRUCTOR = CodeTemplate("""\
 [](Stack & stack) {
+    std::cout << "Call Operator: " << "${name}" << std::endl;
     autograd::profiler::RecordFunction record("${name}");
     ${lvalues}
     ${call}

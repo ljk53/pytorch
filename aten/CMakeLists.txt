@@ -1,6 +1,6 @@
-if (BUILD_ATEN_MOBILE)
-  return()
-endif()
+#if (BUILD_ATEN_MOBILE)
+#  return()
+#endif()
 
 # Find modules
 list(APPEND CMAKE_MODULE_PATH

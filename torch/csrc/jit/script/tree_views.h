@@ -4,6 +4,8 @@
 
 #include <functional>
 #include <string>
+#include <c10/util/C++17.h>
+#include <c10/util/string_utils.h>
 
 namespace torch {
 namespace jit {
@@ -685,7 +687,7 @@ struct Const : public Expr {
     return !isFloatingPoint();
   }
   int64_t asIntegral() const {
-    return std::stoll(subtree(0)->stringValue());
+    return c10::stoll(subtree(0)->stringValue());
   }
   double asFloatingPoint() const {
     return SharedParserData::strtod_c(
@@ -782,7 +784,7 @@ struct SliceExpr : public Expr {
 
  private:
   Expr createInt(int value) const {
-    return Expr(Const::create(range(), std::to_string(value)));
+    return Expr(Const::create(range(), c10::to_string(value)));
   }
 };
 

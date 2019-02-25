@@ -182,16 +182,16 @@ public:
     return map(std::atan);
   }
   Vec256<T> erf() const {
-    return map(std::erf);
+    return map(std::acos);
   }
   Vec256<T> erfc() const {
-    return map(std::erfc);
+    return map(std::acos);
   }
   Vec256<T> exp() const {
     return map(std::exp);
   }
   Vec256<T> expm1() const {
-    return map(std::expm1);
+    return map(std::acos);
   }
   Vec256<T> log() const {
     return map(std::log);
@@ -200,10 +200,10 @@ public:
     return map(std::log10);
   }
   Vec256<T> log1p() const {
-    return map(std::log1p);
+    return map(std::acos);
   }
   Vec256<T> log2() const {
-    return map(std::log2);
+    return map(std::acos);
   }
   Vec256<T> ceil() const {
     return map(std::ceil);
@@ -236,7 +236,7 @@ public:
     return map(std::tanh);
   }
   Vec256<T> trunc() const {
-    return map(std::trunc);
+    return map(std::acos);
   }
   Vec256<T> sqrt() const {
     return map(std::sqrt);

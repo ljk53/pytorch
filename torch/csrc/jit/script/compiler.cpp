@@ -1856,7 +1856,7 @@ struct to_ir {
       case '^':
         return aten::__xor__;
       default:
-        throw std::runtime_error("unknown kind " + std::to_string(kind));
+        throw std::runtime_error("unknown kind " + c10::to_string(kind));
     }
   }
 
