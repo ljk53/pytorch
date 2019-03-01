@@ -1,7 +1,7 @@
 #include <torch/csrc/jit/passes/constant_propagation.h>
 #include <ATen/core/functional.h>
 #include <ATen/core/ivalue.h>
-#include <torch/csrc/autograd/variable.h>
+// #include <torch/csrc/autograd/variable.h>
 #include <torch/csrc/jit/constants.h>
 #include <torch/csrc/jit/interpreter.h>
 #include <torch/csrc/jit/ir.h>
@@ -35,7 +35,7 @@ std::vector<IValue> runNode(Node* n) {
     if (v.isTensor()) {
       auto t = std::move(v).toTensor();
       if (t.defined()) {
-        return IValue(autograd::as_variable_ref(t).data());
+        return t; //IValue(autograd::as_variable_ref(t).data());
       } else {
         return t;
       }

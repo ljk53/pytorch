@@ -1,4 +1,4 @@
-#include <torch/csrc/autograd/profiler.h>
+//#include <torch/csrc/autograd/profiler.h>
 #include <torch/csrc/jit/custom_operator.h>
 #include <torch/csrc/jit/operator.h>
 #include <torch/csrc/api/include/torch/utils.h>
@@ -140,7 +140,7 @@ RegisterOperators reg({
     Operator(
         "aten::split(Tensor self, int[] split_sizes, int dim=0) -> Tensor[]",
         [](Stack& stack) {
-          autograd::profiler::RecordFunction record("split_with_sizes");
+          //autograd::profiler::RecordFunction record("split_with_sizes");
           auto result = at::split_with_sizes(
               (std::move(peek(stack, 0, 3))).toTensor(),
               (std::move(peek(stack, 1, 3))).toIntList()->elements(),
@@ -155,7 +155,7 @@ RegisterOperators reg({
     Operator(
         "aten::size(Tensor self) -> int[]",
         [](Stack& stack) {
-          autograd::profiler::RecordFunction record("sizes");
+          //autograd::profiler::RecordFunction record("sizes");
           auto t = std::move(pop(stack)).toTensor();
           pack(stack, t.sizes().vec());
           return 0;
@@ -163,7 +163,7 @@ RegisterOperators reg({
     Operator(
         "aten::list_with_default(int[] list, int[] defaults) -> int[]",
         [](Stack& stack) {
-          autograd::profiler::RecordFunction record("sizes");
+          //autograd::profiler::RecordFunction record("sizes");
           auto list = peek(stack, 0, 2).toIntListRef();
           auto defaults = peek(stack, 1, 2).toIntListRef();
           drop(stack, 2);
@@ -250,7 +250,7 @@ Operator(                                                                       
       IValue dtype;                                                                   \
       IValue device;                                                                  \
       pop(stack, scalar_val, dtype, device);                                          \
-      auto tensor = autograd::make_variable(tensor_creation_op);                      \
+      auto tensor = tensor_creation_op /*autograd::make_variable(tensor_creation_op)*/;                      \
       at::ScalarType scalar_type = dtype.isNone() ?                                   \
         tensor.scalar_type() : dtype.toScalarType();                                  \
       c10::Device dev = device.isNone() ? tensor.device() : device.toDevice();        \
@@ -314,8 +314,8 @@ DEFINE_TORCH_TENSOR_OP(bool, bool, at::empty({}, at::CPU(at::kByte).options()).f
           IValue device;
           pop(stack, data, dtype, device);
           auto sizes = compute_sizes(data);
-          auto tensor = autograd::make_variable(
-            at::empty(sizes, at::initialTensorOptions().dtype(initial_scalar_type)));
+          auto tensor = //autograd::make_variable(
+            at::empty(sizes, at::initialTensorOptions().dtype(initial_scalar_type)); //);
 
           recursiveStore((char*)tensor.data_ptr(), sizes, tensor.strides(), 0,
               tensor.type().elementSizeInBytes(), data);

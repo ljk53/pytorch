@@ -1,6 +1,6 @@
 #pragma once
 
-#include <torch/csrc/autograd/variable.h>
+//#include <torch/csrc/autograd/variable.h>
 #include <torch/csrc/jit/ir.h>
 #include <ATen/core/stack.h>
 #include <ATen/core/jit_type.h>
@@ -90,7 +90,7 @@ struct ArgumentSpec {
     if (input.isTensor()) {
       at::Tensor t = input.toTensor();
       if ((arg.defined_ = t.defined())) {
-        arg.requires_grad_ = with_grad && autograd::Variable(t).requires_grad();
+        arg.requires_grad_ = false /*with_grad && autograd::Variable(t).requires_grad()*/;
         arg.dim_ = t.dim();
         arg.device_ = t.is_cuda() ? t.get_device() : -1;
         arg.type_ = static_cast<unsigned>(t.type().scalarType());
@@ -232,7 +232,7 @@ struct CompleteArgumentSpec {
           pod.type = static_cast<int>(t.type().scalarType());
           pod.device = (!t.is_cuda()) ? -1 : t.get_device();
           pod.requires_grad =
-              with_grad && autograd::as_variable_ref(t).requires_grad();
+              with_grad && false /*autograd::as_variable_ref(t).requires_grad()*/;
           total_dims += t.ndimension();
           auto sizes = t.sizes();
           std::copy(sizes.begin(), sizes.end(), next_dim);

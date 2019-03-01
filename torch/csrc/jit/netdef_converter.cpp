@@ -65,7 +65,7 @@ static void convertArg(const caffe2::Argument& arg, Node* node) {
       std::cout << "Unsupported type '" << toString(kind) << "' of attribute '"
                 << attrName << "'"
                 << " in node:" << std::endl;
-      node->dump();
+      // node->dump();
       abort();
     }
   }
@@ -184,7 +184,7 @@ static void convertAttrToCaffe2Arg(
       std::cout << "Unsupported type '" << toString(node->kindOf(name))
                 << "' of attribute '" << name.toUnqualString() << "'"
                 << " in node:" << std::endl;
-      node->dump();
+      // node->dump();
       abort();
     }
   }

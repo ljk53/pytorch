@@ -1,5 +1,5 @@
 #pragma once
-
+#if 0
 // ${generated_comment}
 
 #include <ATen/ATen.h>
@@ -108,3 +108,4 @@ inline at::Tensor from_blob(
 ${function_definitions}
 
 } // namespace torch
+#endif

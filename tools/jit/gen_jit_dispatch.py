@@ -134,7 +134,7 @@ const auto options = TensorOptions()
         .dtype(${dtype})
         .layout(${layout})
         .device(${device});
-auto result_ = torch::${name}(${args_with_tensor_options});
+auto result_ = /*torch*/ at::${name}(${args_with_tensor_options});
 """)
 CALL_METHOD_WITH_TENSOR_OPTIONS = CodeTemplate("""\
 const auto options = TensorOptions()
@@ -147,7 +147,7 @@ auto result_ = (${first}).${name}(${args_with_tensor_options});
 CONSTRUCTOR = CodeTemplate("""\
 [](Stack & stack) {
     std::cout << "Call Operator: " << "${name}" << std::endl;
-    autograd::profiler::RecordFunction record("${name}");
+    //autograd::profiler::RecordFunction record("${name}");
     ${lvalues}
     ${call}
     drop(stack, ${num_inputs});

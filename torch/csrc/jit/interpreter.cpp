@@ -1,11 +1,14 @@
 #include <torch/csrc/jit/interpreter.h>
 
+#if 0
 #include <torch/csrc/autograd/edge.h>
 #include <torch/csrc/autograd/function.h>
 #include <torch/csrc/autograd/generated/variable_factories.h>
 #include <torch/csrc/autograd/grad_mode.h>
 #include <torch/csrc/autograd/profiler.h>
 #include <torch/csrc/autograd/variable.h>
+#endif
+
 #include <c10/util/Exception.h>
 #include <torch/csrc/jit/constants.h>
 #include <torch/csrc/jit/graph_executor.h>
@@ -617,6 +620,7 @@ struct CodeImpl {
     return r;
   }
 
+#if 0
   const std::vector<GraphExecutor*>& grad_executors() {
     if (!grad_executors_) {
       grad_executors_.emplace();
@@ -628,6 +632,7 @@ struct CodeImpl {
     }
     return *grad_executors_;
   }
+
 
   void dumpInstruction(std::ostream& out, size_t pc) const {
     auto writeList = [&](const ListHandle<int>& list) {
@@ -660,14 +665,15 @@ struct CodeImpl {
       out << "\n";
     }
   }
-
+#endif
+  
   // We MUST hold onto graph here because some Operators stored in the
   // instruction lists have dependencies on meta-data stored in the graph
   // that would be dead otherwise.
   // It is also very useful for debugging interpreter problems to
   // keep this around.
   std::shared_ptr<Graph> graph;
-  c10::optional<std::vector<GraphExecutor*>> grad_executors_;
+  //c10::optional<std::vector<GraphExecutor*>> grad_executors_;
   PreprocessGraph preprocess;
 
   std::unordered_map<size_t, int>
@@ -732,7 +738,7 @@ struct InterpreterStateImpl : c10::intrusive_ptr_target {
         InterpreterState state(intrusive_from_this());
         e.future->addCallback([state]() {
           c10::global_work_queue().run(InterpreterContinuation(state, Stack(),
-              autograd::GradMode::is_enabled()));
+              false /*autograd::GradMode::is_enabled()*/));
         });
 
         return true;
@@ -851,18 +857,22 @@ struct InterpreterStateImpl : c10::intrusive_ptr_target {
   Stack stack;
 };
 
+#if 0
 std::ostream& operator<<(std::ostream& out, const Code& code) {
   out << *code.pImpl->graph << "\n";
   code.pImpl->dump(out);
   return out;
 }
+#endif
 
 Code::Code(const std::shared_ptr<Graph>& graph) : pImpl(new CodeImpl(graph)) {}
 Code::~Code() = default;
 
+#if 0
 const std::vector<GraphExecutor*>& Code::grad_executors() {
   return pImpl->grad_executors();
 }
+#endif
 
 InterpreterState::InterpreterState(const Code& code)
     : pImpl(c10::make_intrusive<InterpreterStateImpl>(code)) {}
@@ -885,7 +895,7 @@ InterpreterState::InterpreterState(
     : pImpl(std::move(pImpl_)) {}
 
 void InterpreterContinuation::operator()() {
-  autograd::AutoGradMode grad_mode(grad_mode_enabled);
+  //autograd::AutoGradMode grad_mode(grad_mode_enabled);
   state.runAsync(stack);
 }
 } // namespace jit

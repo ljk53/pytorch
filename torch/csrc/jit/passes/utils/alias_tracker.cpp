@@ -162,6 +162,7 @@ void AliasTracker::rebuildWriteCache() const {
   isWriteCacheStale_ = false;
 }
 
+#if 0
 void AliasTracker::dump() const {
   std::cout << "\n===2. ALIAS DB===\n";
   for (const auto& ptrPair : elements_) {
@@ -194,6 +195,7 @@ void AliasTracker::dump() const {
   }
   std::cout << "\n";
 }
+#endif
 
 std::unordered_set<const AliasTracker::Element*> AliasTracker::Element::
     getMemoryLocations() const {

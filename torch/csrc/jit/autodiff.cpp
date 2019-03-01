@@ -1,3 +1,4 @@
+#if 0
 #include <torch/csrc/jit/autodiff.h>
 
 #include <ATen/core/functional.h>
@@ -1177,3 +1178,4 @@ Gradient differentiate(std::shared_ptr<Graph>& graph) {
 
 } // namespace jit
 } // namespace torch
+#endif

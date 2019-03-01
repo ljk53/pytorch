@@ -363,6 +363,7 @@ OperatorRegistry& getRegistry() {
 } // anonymous namespace
 
 void registerOperator(Operator&& op) {
+  #if 0
   if (op.schema().is_varret()) {
     Symbol s = Symbol::fromQualString(op.schema().name());
     if (!printerHasSpecialCaseFor(s)) {
@@ -380,7 +381,7 @@ void registerOperator(Operator&& op) {
           ". File a bug to add a case for this operator.\n");
     }
   }
-
+  #endif
   getRegistry().registerOperator(std::move(op));
 }
 

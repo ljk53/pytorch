@@ -3,7 +3,7 @@
 #include <torch/csrc/jit/caffe2_operator.h>
 #include <torch/csrc/jit/operator.h>
 #include <ATen/core/stack.h>
-#include <torch/csrc/jit/tracer.h>
+//#include <torch/csrc/jit/tracer.h>
 #include <torch/csrc/utils/variadic.h>
 
 #include <ATen/core/function_schema.h>
@@ -86,6 +86,7 @@ FunctionSchema createFunctionSchemaFromTraits(const std::string& name) {
   return {name, arguments, returns};
 }
 
+#if 0
 /// Adds the elements of the `tuple` as input nodes to the traced graph.
 template <size_t... Is, typename... Types>
 Node* getTracedNode(
@@ -108,6 +109,7 @@ Node* getTracedNode(
 
   return node;
 }
+#endif
 
 /// Does two things for an operator implementation and a tuple of arguments:
 /// 1. Pops all necessary arguments off the stack into the tuple's elements,
@@ -127,18 +129,19 @@ void callOperatorWithTuple(
   pop(stack, std::get<Is>(arguments)...);
 
   Node* node = nullptr;
+/*
   if (jit::tracer::isTracing()) {
     node = getTracedNode<Is...>(schema, arguments);
   }
-
+*/
   // Call into the actual, original, user-supplied function.
   auto return_value =
       std::forward<Implementation>(implementation)(std::get<Is>(arguments)...);
-
+/*
   if (jit::tracer::isTracing()) {
     jit::tracer::addOutput(node, return_value);
   }
-
+*/
   // Push the return value back onto the stack.
   push(stack, IValue(std::move(return_value)));
 }

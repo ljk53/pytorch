@@ -1,5 +1,6 @@
 #pragma once
 
+#if 0
 #include <torch/csrc/utils/python_stub.h>
 
 #include <torch/csrc/WindowsTorchApiMacro.h>
@@ -747,3 +748,4 @@ inline Variable::Impl* Variable::get() const {
   return static_cast<Variable::Impl*>(impl_.get());
 }
 }} // namespace torch::autograd
+#endif

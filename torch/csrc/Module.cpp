@@ -25,9 +25,9 @@
 #include <torch/csrc/Generator.h>
 #include <torch/csrc/Layout.h>
 #include <torch/csrc/TypeInfo.h>
-#include <torch/csrc/autograd/generated/python_nn_functions.h>
-#include <torch/csrc/autograd/python_legacy_variable.h>
-#include <torch/csrc/autograd/python_variable.h>
+// #include <torch/csrc/autograd/generated/python_nn_functions.h>
+// #include <torch/csrc/autograd/python_legacy_variable.h>
+// #include <torch/csrc/autograd/python_variable.h>
 #include <torch/csrc/multiprocessing/init.h>
 #include <torch/csrc/tensor/python_tensor.h>
 #include <torch/csrc/utils/tensor_dtypes.h>

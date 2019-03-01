@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ATen/ATen.h>
-#include <torch/csrc/autograd/variable.h>
+//#include <torch/csrc/autograd/variable.h>
 
 #include <cstdint>
 #include <tuple>
@@ -87,6 +87,7 @@ size_t count_tensors(Args&&... args) {
   return CountTensors().apply(std::forward<Args>(args)...).out;
 }
 
+#if 0
 struct CountVariables : IterArgs<CountVariables> {
   size_t out = 0;
   void operator()(const autograd::Variable& x) {
@@ -101,6 +102,7 @@ template <typename... Args>
 inline size_t count_variables(Args&&... args) {
   return CountVariables().apply(std::forward<Args>(args)...).out;
 }
+#endif
 
 //===----------------------------------------------------------------------===//
 //                std::index_sequence shim for C++11

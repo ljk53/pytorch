@@ -38,6 +38,7 @@ static constexpr topo_position_t kAppendInterval = 1099511627776ULL /* 2^40 */;
 // https://stackoverflow.com/questions/8016780/undefined-reference-to-static-constexpr-char
 constexpr Symbol PythonOp::Kind;
 
+#if 0
 static void printValueRef(std::ostream& out, const Value* n) {
   out << "%" << n->uniqueName();
 }
@@ -299,6 +300,7 @@ void Graph::dumpPretty() {
   std::vector<at::Tensor> tensor_table;
   PythonPrint(std::cout, *this, tensor_table);
 }
+#endif
 
 static void checkSameDevice(const Node* node) {
   bool has_device = false;
@@ -554,9 +556,11 @@ void Graph::lint() const {
   LintImpl(*this).check_graph();
 }
 
+#if 0
 void Graph::dump() const {
   std::cout << *this << "\n";
 }
+#endif
 
 void LintGraph(std::shared_ptr<Graph>& graph) {
   graph->lint();
@@ -775,9 +779,11 @@ bool Node::mustBeNone() const {
        output()->type() == NoneType::get());
 }
 
+#if 0
 void Node::dump() const {
   std::cout << *this << "\n";
 }
+#endif
 
 void Node::findSchema() const {
   schema_ = &getOperatorFor(this).schema();
@@ -1339,11 +1345,13 @@ Value* Graph::insertConstant(
       *this, std::move(val), result_type, std::move(loc), std::move(scope));
 }
 
+#if 0
 std::string Graph::toString() const {
   std::ostringstream oss;
   oss << *this;
   return oss.str();
 }
+#endif
 
 Graph::~Graph() {
   for (const Node* n : all_nodes) {

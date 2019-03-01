@@ -1,9 +1,13 @@
 #include <aten/src/ATen/Context.h>
+
+#if 0
 #include <torch/csrc/autograd/edge.h>
 #include <torch/csrc/autograd/function.h>
 #include <torch/csrc/autograd/generated/variable_factories.h>
 #include <torch/csrc/autograd/profiler.h>
 #include <torch/csrc/autograd/variable.h>
+#endif
+
 #include <torch/csrc/jit/custom_operator.h>
 #include <torch/csrc/jit/fuser/interface.h>
 #include <torch/csrc/jit/graph_executor.h>
@@ -45,6 +49,7 @@ Operation noop(const Node* n) {
 // tensor cannot have grad set, tensor must be 0 dim,
 // and if the dest is an int the source must be integral type
 void checkImplicitTensorToNum(at::Tensor t, bool toInt) {
+  #if 0
   if (autograd::as_variable_ref(t).requires_grad()) {
     throw std::runtime_error(
         "Cannot input a tensor that requires grad as a scalar argument");
@@ -61,6 +66,7 @@ void checkImplicitTensorToNum(at::Tensor t, bool toInt) {
        << " as an integral argument";
     throw std::runtime_error(ss.str());
   }
+  #endif
 }
 
 template <typename dtype> // int64_t, bool, double
@@ -111,16 +117,16 @@ static at::Tensor to_dispatch(
 }
 
 RegisterOperators reg({
-    Operator(
+    /*Operator(
         prim::FusionGroup,
         [](const Node* node) {
           const auto key = registerFusion(node);
           return [key](Stack& stack) {
-            autograd::profiler::RecordFunction record("FusionGroup");
+            //autograd::profiler::RecordFunction record("FusionGroup");
             runFusion(key, stack);
             return 0;
           };
-        }),
+        }),*/
     Operator(
         "prim::Bool(Tensor a) -> bool",
         [](Stack& stack) {
@@ -187,7 +193,7 @@ RegisterOperators reg({
         [](Stack& stack) {
           at::Scalar s;
           pop(stack, s);
-          push(stack, autograd::make_variable(at::scalar_to_tensor(s)));
+          push(stack, at::scalar_to_tensor(s) /*autograd::make_variable(at::scalar_to_tensor(s))*/);
           return 0;
         }),
     // note: this op needs to share a name with the Scalar -> Tensor conversion
@@ -197,7 +203,7 @@ RegisterOperators reg({
         [](Stack& stack) {
           bool b;
           pop(stack, b);
-          push(stack, autograd::make_variable(at::scalar_to_tensor(b)));
+          push(stack, at::scalar_to_tensor(b) /*autograd::make_variable(at::scalar_to_tensor(b))*/);
           return 0;
         }),
     Operator(
@@ -501,7 +507,7 @@ RegisterOperators reg({
           return [=](Stack& stack) {
             auto t = pop(stack).toTensor();
             at::IntArrayRef sizes = t.sizes();
-            auto sizes_tensor = torch::empty(
+            auto sizes_tensor = at::empty(
                 {static_cast<int64_t>(sizes.size())}, at::dtype(at::kLong));
             auto accessor = sizes_tensor.accessor<int64_t, 1>();
             for (size_t i = 0; i < sizes.size(); ++i) {
@@ -622,7 +628,7 @@ RegisterOperators reg({
             return v->uses().size() > 0;
           });
           return [=](Stack& stack) {
-            autograd::profiler::RecordFunction record("chunk");
+            //autograd::profiler::RecordFunction record("chunk");
             at::Tensor t;
             pop(stack, t);
             auto result = at::chunk(t, chunks, dim);
@@ -796,7 +802,7 @@ RegisterOperators reg({
             InterpreterContinuation continuation(
                 forked_interprester,
                 Stack(stack.end() - n_inputs, stack.end()),
-                autograd::GradMode::is_enabled());
+                false /*autograd::GradMode::is_enabled()*/);
             drop(stack, n_inputs);
 
             push(stack, forked_interprester.getFuture());
@@ -1629,7 +1635,7 @@ RegisterOperators reg2({
         [](Stack& stack) {
           std::vector<int64_t> l;
           pop(stack, l);
-          auto t = torch::empty(
+          auto t = at::empty(
               {static_cast<int64_t>(l.size())}, at::dtype(at::kInt));
           for (size_t i = 0; i < l.size(); i++) {
             t[i] = l[i];

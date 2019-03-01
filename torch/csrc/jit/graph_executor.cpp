@@ -28,10 +28,10 @@
 #include <torch/csrc/jit/passes/shape_analysis.h>
 #include <torch/csrc/jit/passes/specialize_undef.h>
 #include <torch/csrc/jit/symbolic_variable.h>
-#include <torch/csrc/jit/tracer.h>
+// #include <torch/csrc/jit/tracer.h>
 
-#include <torch/csrc/autograd/edge.h>
-#include <torch/csrc/autograd/function.h>
+//#include <torch/csrc/autograd/edge.h>
+//#include <torch/csrc/autograd/function.h>
 #include <torch/csrc/jit/script/compiler.h>
 
 #include <cstdint>
@@ -48,8 +48,8 @@ namespace jit {
 namespace {
 
 using tensor_list = std::vector<at::Tensor>;
-using Variable = autograd::Variable;
-using autograd::variable_list;
+//using Variable = autograd::Variable;
+//using autograd::variable_list;
 
 struct ExecutionPlan {
   ExecutionPlan() = default;
@@ -75,6 +75,7 @@ struct ExecutionPlan {
   std::shared_ptr<Graph> graph;
 };
 
+#if 0
 struct DifferentiableGraphBackward : public autograd::Function {
   DifferentiableGraphBackward(GraphExecutor executor, size_t capture_size)
       : executor(std::move(executor)) {
@@ -294,8 +295,11 @@ Gradient getGradient(const Node* n) {
   return grad;
 }
 
+#endif
+
 } // anonymous namespace
 
+#if 0
 RegisterOperators reg_graph_executor_ops(
     {Operator(prim::DifferentiableGraph, [](const Node* n) -> Operation {
       return DifferentiableGraphOp(getGradient(n));
@@ -312,6 +316,8 @@ GraphExecutor* getGradExecutor(Operation& op) {
 
 } // namespace detail
 
+#endif
+
 // a Graph can be created via tracing, or via a language-based frontend
 // GraphExecutor runs it. It can run the same graph on many different sizes
 // and different requires_grad states, and handles specializations for each
@@ -320,7 +326,7 @@ GraphExecutor* getGradExecutor(Operation& op) {
 struct GraphExecutorImpl {
   static std::shared_ptr<Graph> prepareGraph(std::shared_ptr<Graph>& graph) {
     auto copy = graph->copy();
-    EraseShapeInformation(copy);
+    // EraseShapeInformation(copy);
     return copy;
   }
 
@@ -375,11 +381,11 @@ struct GraphExecutorImpl {
         num_inputs,
         " inputs, but got only ",
         stack.size());
-
+#if 0
     if (tracer::isTracing()) {
       return runTraced(stack);
     }
-
+#endif
     auto& execution_plan =
         optimize ? getOrCompile(stack) : getOrCompileFallback();
     return execution_plan.run(stack);
@@ -389,7 +395,7 @@ struct GraphExecutorImpl {
     AT_ASSERT(stack.size() >= num_inputs);
     auto inputs = last(stack, num_inputs);
     ArgumentSpec spec(
-        autograd::GradMode::is_enabled(), inputs, num_flat_inputs);
+        false /*autograd::GradMode::is_enabled()*/, inputs, num_flat_inputs);
 
     if (!optimize) {
       AT_CHECK(fallback, "No graph found for given inputs");
@@ -428,7 +434,7 @@ struct GraphExecutorImpl {
     std::lock_guard<std::mutex> lock(compile_mutex);
     if (!fallback) {
       auto graph_ = graph->copy();
-      runRequiredPasses(graph_);
+      // runRequiredPasses(graph_);
       fallback = ExecutionPlan(graph_);
     }
     return fallback;
@@ -438,7 +444,7 @@ struct GraphExecutorImpl {
     // outside lock guard, to minimize the time holding the lock on the fast
     // path ArgumentSpec even computes its hashCode here.
     ArgumentSpec spec(
-        autograd::GradMode::is_enabled(),
+        false /*autograd::GradMode::is_enabled()*/,
         last(stack, num_inputs),
         num_flat_inputs);
     {
@@ -468,6 +474,7 @@ struct GraphExecutorImpl {
     //          information anyway, so it's better to run it first.
     ConstantPropagation(opt_graph);
     PropagateInputShapes(opt_graph);
+#if 0
     PropagateRequiresGrad(opt_graph);
 
     // Phase 3. Run differentiable optimizations (i.e. simple graph rewrites
@@ -479,7 +486,7 @@ struct GraphExecutorImpl {
     //          symbolically differentiable subgraphs for further optimizations.
     // Phase 5. Apply non-differentiable optimizations to the graphs we've found
     //          (or the whole grpah if we know we won't need its derivative).
-    if (needsGradient(opt_graph)) {
+    if (false /*needsGradient(opt_graph)*/) {
       auto diff_nodes =
           CreateAutodiffSubgraphs(opt_graph, autodiffSubgraphNodeThreshold);
       for (Node* dnode : diff_nodes) {
@@ -492,11 +499,13 @@ struct GraphExecutorImpl {
     } else {
       runNondiffOptimization(opt_graph);
     }
+#endif
     // Make sure there are no leftovers from any passes.
     EliminateDeadCode(opt_graph);
     return ExecutionPlan(opt_graph);
   }
 
+#if 0
   void runOptimization(
       std::shared_ptr<Graph>& graph,
       const ArgumentSpec& spec) {
@@ -521,9 +530,10 @@ struct GraphExecutorImpl {
   void runNondiffOptimization(std::shared_ptr<Graph>& graph) {
     FuseGraph(graph);
   }
+#endif
 
   static bool needsGradient(const std::shared_ptr<const Graph>& graph) {
-    if (!autograd::GradMode::is_enabled())
+    if (!false /*autograd::GradMode::is_enabled()*/)
       return false;
     if (mayIntroduceGradient(graph->block()))
       return true;
@@ -546,6 +556,7 @@ struct GraphExecutorImpl {
     return false;
   }
 
+#if 0
   void runTraced(Stack& stack) {
     const auto& state = tracer::getTracingState();
     auto inputs = last(stack, num_inputs);
@@ -553,7 +564,7 @@ struct GraphExecutorImpl {
         inputs, [](const IValue& v) { return tracer::getNestedValueTrace(v); });
 
     ArgumentSpec spec(
-        autograd::GradMode::is_enabled(), inputs, num_flat_inputs);
+        false /*autograd::GradMode::is_enabled()*/, inputs, num_flat_inputs);
     // NB: we could just run the fallback in here and call it a day, but that
     // would loose all the control flow information we have in the graph. Thus,
     // we run the fallback to get the correct output values, but we will
@@ -580,6 +591,7 @@ struct GraphExecutorImpl {
       tracer::setValueTrace(outputs[i], output_values[i]);
     }
   }
+#endif
 
   // The unoptimized starting graph. This field is effectively const, but we
   // can't make it so because Graph::copy() is not const (and making it const is
@@ -634,6 +646,7 @@ void GraphExecutor::debugDisableAutodiffSubgraphInlining() {
   return pImpl->debugDisableAutodiffSubgraphInlining();
 }
 
+
 void runRequiredPasses(const std::shared_ptr<Graph>& g) {
   specializeUndef(*g);
   LowerGradOf(*g);
@@ -645,6 +658,5 @@ void runRequiredPasses(const std::shared_ptr<Graph>& g) {
   CanonicalizeOps(g);
   EliminateDeadCode(g);
 }
-
 } // namespace jit
 } // namespace torch

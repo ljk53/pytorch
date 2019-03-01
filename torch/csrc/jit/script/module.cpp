@@ -103,13 +103,13 @@ void Module::to(at::Device device, bool non_blocking) {
 }
 
 void Module::save(std::ostream& out, const ExtraFilesMap& extra_files) {
-  ExportModule(*this, out, extra_files);
+  //ExportModule(*this, out, extra_files);
 }
 
 void Module::save(
     const std::string& filename,
     const ExtraFilesMap& extra_files) {
-  ExportModule(*this, filename, extra_files);
+  //ExportModule(*this, filename, extra_files);
 }
 
 void Module::to_impl(
@@ -123,14 +123,16 @@ void Module::to_impl(
   // Then convert every of our parameters.
   for (auto& parameter : parameters) {
     // Need to access the `at::Tensor` as a `Variable` here.
-    autograd::Variable variable = *parameter->slot();
-    at::Tensor data = variable.data();
+    //autograd::Variable variable = *parameter->slot();
+    //at::Tensor data = variable.data();
+    at::Tensor data = *parameter->slot();
     // Use the data's original device or dtype if not supplied here.
     auto new_data = data.to(
         device.value_or(data.device()),
         dtype.value_or(data.scalar_type()),
         non_blocking);
-    variable.set_data(new_data);
+    //variable.set_data(new_data);
+    *parameter->slot() = new_data;
   }
 }
 

@@ -44,24 +44,24 @@ add_custom_command(
   OUTPUT
   "${TORCH_SRC_DIR}/csrc/nn/THNN.cpp"
   "${TORCH_SRC_DIR}/csrc/nn/THCUNN.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_0.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_1.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_2.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_3.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_4.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/Functions.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/Functions.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_functions.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_functions.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_variable_methods.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_variable_methods_dispatch.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_torch_functions.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_torch_functions_dispatch.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_nn_functions.cpp"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_nn_functions.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/python_nn_functions_dispatch.h"
-  "${TORCH_SRC_DIR}/csrc/autograd/generated/variable_factories.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_0.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_1.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_2.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_3.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_4.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/Functions.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/Functions.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_functions.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_functions.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_variable_methods.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_variable_methods_dispatch.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_torch_functions.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_torch_functions_dispatch.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_nn_functions.cpp"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_nn_functions.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/python_nn_functions_dispatch.h"
+  # "${TORCH_SRC_DIR}/csrc/autograd/generated/variable_factories.h"
   "${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_0.cpp"
   "${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_1.cpp"
   "${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_2.cpp"
@@ -72,57 +72,57 @@ add_custom_command(
   DEPENDS
   "${CMAKE_BINARY_DIR}/aten/src/ATen/Declarations.yaml"
   "${CMAKE_CURRENT_LIST_DIR}/../aten/src/THNN/generic/THNN.h"
-  "${TOOLS_PATH}/autograd/templates/VariableType.h"
-  "${TOOLS_PATH}/autograd/templates/VariableType.cpp"
-  "${TOOLS_PATH}/autograd/templates/Functions.h"
-  "${TOOLS_PATH}/autograd/templates/Functions.cpp"
-  "${TOOLS_PATH}/autograd/templates/python_functions.h"
-  "${TOOLS_PATH}/autograd/templates/python_functions.cpp"
-  "${TOOLS_PATH}/autograd/templates/python_variable_methods.cpp"
-  "${TOOLS_PATH}/autograd/templates/python_variable_methods_dispatch.h"
-  "${TOOLS_PATH}/autograd/templates/python_torch_functions.cpp"
-  "${TOOLS_PATH}/autograd/templates/python_torch_functions_dispatch.h"
-  "${TOOLS_PATH}/autograd/templates/python_nn_functions.cpp"
-  "${TOOLS_PATH}/autograd/templates/python_nn_functions.h"
-  "${TOOLS_PATH}/autograd/templates/python_nn_functions_dispatch.h"
-  "${TOOLS_PATH}/autograd/templates/variable_factories.h"
-  "${TOOLS_PATH}/autograd/deprecated.yaml"
-  "${TOOLS_PATH}/autograd/derivatives.yaml"
-  "${TOOLS_PATH}/autograd/gen_autograd_functions.py"
-  "${TOOLS_PATH}/autograd/gen_autograd.py"
-  "${TOOLS_PATH}/autograd/gen_python_functions.py"
-  "${TOOLS_PATH}/autograd/gen_variable_factories.py"
-  "${TOOLS_PATH}/autograd/gen_variable_type.py"
-  "${TOOLS_PATH}/autograd/load_derivatives.py"
-  "${TOOLS_PATH}/autograd/nested_dict.py"
-  "${TOOLS_PATH}/autograd/utils.py"
+  # "${TOOLS_PATH}/autograd/templates/VariableType.h"
+  # "${TOOLS_PATH}/autograd/templates/VariableType.cpp"
+  # "${TOOLS_PATH}/autograd/templates/Functions.h"
+  # "${TOOLS_PATH}/autograd/templates/Functions.cpp"
+  # "${TOOLS_PATH}/autograd/templates/python_functions.h"
+  # "${TOOLS_PATH}/autograd/templates/python_functions.cpp"
+  # "${TOOLS_PATH}/autograd/templates/python_variable_methods.cpp"
+  # "${TOOLS_PATH}/autograd/templates/python_variable_methods_dispatch.h"
+  # "${TOOLS_PATH}/autograd/templates/python_torch_functions.cpp"
+  # "${TOOLS_PATH}/autograd/templates/python_torch_functions_dispatch.h"
+  # "${TOOLS_PATH}/autograd/templates/python_nn_functions.cpp"
+  # "${TOOLS_PATH}/autograd/templates/python_nn_functions.h"
+  # "${TOOLS_PATH}/autograd/templates/python_nn_functions_dispatch.h"
+  # "${TOOLS_PATH}/autograd/templates/variable_factories.h"
+  # "${TOOLS_PATH}/autograd/deprecated.yaml"
+  # "${TOOLS_PATH}/autograd/derivatives.yaml"
+  # "${TOOLS_PATH}/autograd/gen_autograd_functions.py"
+  # "${TOOLS_PATH}/autograd/gen_autograd.py"
+  # "${TOOLS_PATH}/autograd/gen_python_functions.py"
+  # "${TOOLS_PATH}/autograd/gen_variable_factories.py"
+  # "${TOOLS_PATH}/autograd/gen_variable_type.py"
+  # "${TOOLS_PATH}/autograd/load_derivatives.py"
+  # "${TOOLS_PATH}/autograd/nested_dict.py"
+  # "${TOOLS_PATH}/autograd/utils.py"
   "${TOOLS_PATH}/jit/gen_jit_dispatch.py"
   "${TOOLS_PATH}/jit/templates/register_aten_ops.cpp"
   WORKING_DIRECTORY "${TORCH_ROOT}")
 
 set(TORCH_SRCS
-  ${TORCH_SRC_DIR}/csrc/autograd/anomaly_mode.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/engine.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/function.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/functions/accumulate_grad.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/functions/basic_ops.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/functions/tensor.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/functions/utils.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/generated/Functions.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_0.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_1.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_2.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_3.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_4.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/grad_mode.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/input_buffer.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/profiler.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/saved_variable.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/variable.cpp
-  ${TORCH_SRC_DIR}/csrc/autograd/VariableTypeManual.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/autodiff.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/anomaly_mode.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/engine.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/function.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/functions/accumulate_grad.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/functions/basic_ops.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/functions/tensor.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/functions/utils.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/generated/Functions.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_0.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_1.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_2.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_3.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/generated/VariableType_4.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/grad_mode.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/input_buffer.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/profiler.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/saved_variable.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/variable.cpp
+  # ${TORCH_SRC_DIR}/csrc/autograd/VariableTypeManual.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/autodiff.cpp
   ${TORCH_SRC_DIR}/csrc/jit/attributes.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/export.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/export.cpp
   ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_0.cpp
   ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_1.cpp
   ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_2.cpp
@@ -136,8 +136,8 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/irparser.cpp
   ${TORCH_SRC_DIR}/csrc/jit/netdef_converter.cpp
   ${TORCH_SRC_DIR}/csrc/jit/operator.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/caffe2_operator.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/register_c10_ops.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/caffe2_operator.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/register_c10_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/symbolic_script.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/alias_analysis.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/batch_mm.cpp
@@ -145,13 +145,13 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/passes/constant_propagation.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/constant_pooling.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/common_subexpression_elimination.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/passes/create_autodiff_subgraphs.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/passes/inline_autodiff_subgraphs.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/passes/create_autodiff_subgraphs.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/passes/inline_autodiff_subgraphs.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/dead_code_elimination.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/canonicalize_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/erase_number_types.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/inline_fork_wait.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/passes/graph_fuser.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/passes/graph_fuser.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/inplace_check.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/loop_unrolling.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/lower_grad_of.cpp
@@ -160,18 +160,18 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/passes/remove_expands.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/remove_inplace_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/shape_analysis.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/passes/requires_grad_analysis.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/passes/requires_grad_analysis.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/specialize_undef.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/python_print.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/utils/subgraph_utils.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/utils/check_alias_annotation.cpp
   ${TORCH_SRC_DIR}/csrc/jit/passes/utils/alias_tracker.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/fuser/interface.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/fuser/interface.cpp
   ${TORCH_SRC_DIR}/csrc/jit/register_prim_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/register_special_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/scope.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/compiler.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/testing/file_check.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/testing/file_check.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/final_returns.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/schema_matching.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/schema_type_parser.cpp
@@ -182,16 +182,16 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/script/edit_distance.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/lexer.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/module.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/tracer.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/tracer.cpp
   ${TORCH_SRC_DIR}/csrc/jit/hooks_for_testing.cpp
   ${TORCH_SRC_DIR}/csrc/utils/tensor_flatten.cpp
   ${TORCH_SRC_DIR}/csrc/utils/variadic.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/fuser/kernel_cache.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/fuser/compiler.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/fuser/executor.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/fuser/codegen.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/fuser/fallback.cpp
-  ${TORCH_ROOT}/test/cpp/jit/no-gtest.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/fuser/kernel_cache.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/fuser/compiler.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/fuser/executor.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/fuser/codegen.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/fuser/fallback.cpp
+  # ${TORCH_ROOT}/test/cpp/jit/no-gtest.cpp
   )
 
 if (BUILD_CAFFE2_OPS)
@@ -199,25 +199,25 @@ if (BUILD_CAFFE2_OPS)
     ${TORCH_SRC_DIR}/csrc/jit/register_caffe2_ops.cpp)
 endif()
 
-if (WIN32)
-  list(APPEND TORCH_SRCS
-    ${TORCH_SRC_DIR}/csrc/jit/fuser/cpu/dynamic_library_win.cpp
-  )
-else ()
-  list(APPEND TORCH_SRCS
-    ${TORCH_SRC_DIR}/csrc/jit/fuser/cpu/dynamic_library_unix.cpp
-    ${TORCH_SRC_DIR}/csrc/jit/fuser/cpu/fused_kernel.cpp
-  )
-  if (USE_CUDA AND NOT USE_ROCM)
-    list(APPEND TORCH_SRCS
-      ${TORCH_SRC_DIR}/csrc/jit/fuser/cuda/fused_kernel.cpp
-    )
-    add_library(thnvrtc SHARED ${TORCH_SRC_DIR}/csrc/jit/fuser/cuda/thnvrtc.cpp)
-    target_link_libraries(thnvrtc ${CUDA_NVRTC} ${CUDA_CUDA_LIB} ${CUDA_NVRTC_LIB})
-    target_include_directories(thnvrtc PRIVATE ${CUDA_INCLUDE_DIRS})
-    install(TARGETS thnvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
-  endif()
-endif ()
+# if (WIN32)
+#   list(APPEND TORCH_SRCS
+#     ${TORCH_SRC_DIR}/csrc/jit/fuser/cpu/dynamic_library_win.cpp
+#   )
+# else ()
+#   list(APPEND TORCH_SRCS
+#     ${TORCH_SRC_DIR}/csrc/jit/fuser/cpu/dynamic_library_unix.cpp
+#     ${TORCH_SRC_DIR}/csrc/jit/fuser/cpu/fused_kernel.cpp
+#   )
+#   if (USE_CUDA AND NOT USE_ROCM)
+#     list(APPEND TORCH_SRCS
+#       ${TORCH_SRC_DIR}/csrc/jit/fuser/cuda/fused_kernel.cpp
+#     )
+#     add_library(thnvrtc SHARED ${TORCH_SRC_DIR}/csrc/jit/fuser/cuda/thnvrtc.cpp)
+#     target_link_libraries(thnvrtc ${CUDA_NVRTC} ${CUDA_CUDA_LIB} ${CUDA_NVRTC_LIB})
+#     target_include_directories(thnvrtc PRIVATE ${CUDA_INCLUDE_DIRS})
+#     install(TARGETS thnvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+#   endif()
+# endif ()
 
 if (USE_CUDA)
   list(APPEND TORCH_SRCS

@@ -1,6 +1,6 @@
 #pragma once
-#include <torch/csrc/autograd/variable.h>
-#include <torch/csrc/autograd/generated/variable_factories.h>
+//#include <torch/csrc/autograd/variable.h>
+//#include <torch/csrc/autograd/generated/variable_factories.h>
 #include <torch/csrc/jit/argument_spec.h>
 #include <c10/util/Exception.h>
 #include <torch/csrc/jit/graph_executor.h>
@@ -393,7 +393,7 @@ struct Module {
 
   void register_parameter(
       const std::string& name,
-      autograd::Variable v,
+      at::Tensor v,
       bool is_buffer) {
     if (auto p = parameters.find(name)) {
       *p->slot() = v;
@@ -444,8 +444,8 @@ struct Module {
     *parameter_slot(name) = std::move(v);
   }
 
-  autograd::Variable get_parameter(const std::string& name) const {
-    return autograd::as_variable_ref(*parameter_slot(name));
+  at::Tensor get_parameter(const std::string& name) const {
+    return *parameter_slot(name);
   }
 
   // each module owns its method. The reference returned here
@@ -488,6 +488,7 @@ struct Module {
     }
     fn(*this);
   }
+  #if 0
   /// Enables "training" mode.
   void train(bool on = true) {
     for (auto& submod : get_modules()) {
@@ -508,7 +509,7 @@ struct Module {
     // We are in training mode by default
     return true;
   }
-
+  #endif
   /// Recursively casts all parameters to the given `dtype` and `device`.
   ///
   /// If `non_blocking` is true and the source is in pinned memory and

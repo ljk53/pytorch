@@ -2,6 +2,7 @@
 
 #include <torch/csrc/jit/script/error_report.h>
 #include <torch/csrc/utils/memory.h>
+#include <list>
 
 namespace torch {
 namespace jit {
@@ -173,12 +174,14 @@ ValueSet AliasDb::getReads(Node* n, bool recurseBlocks) const {
   return reads;
 }
 
+#if 0
 void AliasDb::dump() const {
   std::cout << "\n===1. GRAPH===\n";
   graph_->dump();
 
   aliasTracker_->dump();
 }
+#endif
 
 // TODO: need to create a dummy "graph input alias" value in setTracker for all
 // inputs of the same type to point to. Currently they all point to the first
