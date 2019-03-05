@@ -461,7 +461,7 @@ struct GraphExecutorImpl {
   ExecutionPlan compileSpec(const ArgumentSpec& spec) {
     auto opt_graph = graph->copy();
     setInputTypes(*opt_graph, spec);
-
+#if 0
     // Phase 1. Specialize to input definedness (this is very important for
     //          gradient graphs), and run required passes to bring the graph
     //          to an executable form.
@@ -474,7 +474,7 @@ struct GraphExecutorImpl {
     //          information anyway, so it's better to run it first.
     ConstantPropagation(opt_graph);
     PropagateInputShapes(opt_graph);
-#if 0
+
     PropagateRequiresGrad(opt_graph);
 
     // Phase 3. Run differentiable optimizations (i.e. simple graph rewrites
@@ -499,9 +499,9 @@ struct GraphExecutorImpl {
     } else {
       runNondiffOptimization(opt_graph);
     }
-#endif
     // Make sure there are no leftovers from any passes.
     EliminateDeadCode(opt_graph);
+#endif
     return ExecutionPlan(opt_graph);
   }
 
@@ -648,6 +648,7 @@ void GraphExecutor::debugDisableAutodiffSubgraphInlining() {
 
 
 void runRequiredPasses(const std::shared_ptr<Graph>& g) {
+  #if 0
   specializeUndef(*g);
   LowerGradOf(*g);
   // implicit inserted expand nodes are not necessarily always valid
@@ -657,6 +658,7 @@ void runRequiredPasses(const std::shared_ptr<Graph>& g) {
   RemoveExpands(g);
   CanonicalizeOps(g);
   EliminateDeadCode(g);
+  #endif
 }
 } // namespace jit
 } // namespace torch
