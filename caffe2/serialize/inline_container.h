@@ -10,7 +10,7 @@
 #include <c10/core/Allocator.h>
 #include <c10/core/Backend.h>
 
-#include "caffe2/core/logging.h"
+//#include "caffe2/core/logging.h"
 #include "caffe2/serialize/istream_adapter.h"
 #include "caffe2/serialize/read_adapter_interface.h"
 

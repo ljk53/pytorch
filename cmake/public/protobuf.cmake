@@ -1,5 +1,4 @@
 # ---[ Protobuf
-
 # We will try to use the config mode first, and then manual find.
 find_package(Protobuf CONFIG QUIET)
 if (NOT Protobuf_FOUND)

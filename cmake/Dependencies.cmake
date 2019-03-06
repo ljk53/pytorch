@@ -33,14 +33,14 @@ macro(enable_ubsan)
   endif()
 endmacro()
 
-if(NOT BUILD_ATEN_ONLY)
+#if(NOT BUILD_ATEN_ONLY)
 # ---[ Custom Protobuf
 if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO)
   disable_ubsan()
   include(${CMAKE_CURRENT_LIST_DIR}/ProtoBuf.cmake)
   enable_ubsan()
 endif()
-endif()
+#endif()
 
 # For MSVC,
 # 1. Replace /Zi and /ZI with /Z7

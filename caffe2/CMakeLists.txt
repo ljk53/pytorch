@@ -145,6 +145,9 @@ if(NOT BUILD_ATEN_ONLY)
   add_subdirectory(share)
   # add_subdirectory(test) # todo: use caffe2_gtest_main instead of gtest_main because we will need to call GlobalInit
   #add_subdirectory(transforms)
+else()
+  add_subdirectory(proto)
+  add_subdirectory(serialize)
 endif()
 
 # Advanced: if we have white list specified, we will do intersections for all
@@ -215,7 +218,7 @@ if (FALSE)
 endif()
 
 # ---[ List of libraries to link with
-if(NOT BUILD_ATEN_ONLY)
+#if(NOT BUILD_ATEN_ONLY)
   add_library(caffe2_protos STATIC $<TARGET_OBJECTS:Caffe2_PROTO>)
   add_dependencies(caffe2_protos Caffe2_PROTO)
   # If we are going to link protobuf locally inside caffe2 libraries, what we will do is
@@ -250,7 +253,7 @@ if(NOT BUILD_ATEN_ONLY)
   if (NOT BUILD_SHARED_LIBS)
     INSTALL(TARGETS caffe2_protos ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
   endif()
-endif()
+#endif()
 
 # Compile exposed libraries.
 add_library(caffe2 ${Caffe2_CPU_SRCS})
@@ -258,7 +261,7 @@ if (NOT WIN32)
   target_compile_options(caffe2 PRIVATE "-fvisibility=hidden")
 endif()
 
-if(NOT BUILD_ATEN_ONLY)
+#if(NOT BUILD_ATEN_ONLY)
   caffe2_interface_library(caffe2_protos caffe2_protos_whole)
   target_link_libraries(caffe2 PRIVATE caffe2_protos_whole)
   if (${CAFFE2_LINK_LOCAL_PROTOBUF})
@@ -266,7 +269,7 @@ if(NOT BUILD_ATEN_ONLY)
   else()
     target_link_libraries(caffe2 PUBLIC protobuf::libprotobuf)
   endif()
-endif()
+#endif()
 
 if (USE_OPENMP AND OPENMP_FOUND)
   message(STATUS "Caffe2 is compiling with OpenMP. \n"
