@@ -725,7 +725,7 @@ endif()
 
 # ---[ Android specific ones
 if(ANDROID)
-  list(APPEND Caffe2_DEPENDENCY_LIBS log)
+  # list(APPEND Caffe2_DEPENDENCY_LIBS log)
 endif()
 
 # ---[ CUDA

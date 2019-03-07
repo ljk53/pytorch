@@ -68,7 +68,7 @@ else()
 endif()
 
 if (ANDROID)
-    target_link_libraries(c10 PRIVATE log)
+    # target_link_libraries(c10 PRIVATE log)
 endif()
 
 target_include_directories(
