@@ -174,9 +174,9 @@ generators = {
     },
 }
 
-backends = ['CPU', 'CUDA']
-densities = ['Dense', 'Sparse']
-extension_backends = ['MSNPU', 'XLA']
+backends = ['CPU'] #, 'CUDA']
+densities = ['Dense'] #, 'Sparse']
+extension_backends = [] #['MSNPU', 'XLA']
 
 # scalar_name, c_type, accreal, th_scalar_type, is_floating_type
 scalar_types = [
@@ -494,7 +494,7 @@ def cmpfiles_with_eol_normalization(a, b, names):
             if ax == bx:
                 results[0].append(x)
             else:
-                results[1].append(x)
+                results[1].append(' : '.join((a, b, x)))
         except OSError:
             results[2].append(x)
     return results
