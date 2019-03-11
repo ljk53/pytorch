@@ -113,7 +113,8 @@ std::tuple<Tensor &,Tensor &> kthvalue_out(Tensor& values, Tensor& indices,
     indices.resize_({}).fill_(0);
     return std::forward_as_tuple(values, indices);
   } else {
-    return at::legacy::th::_th_kthvalue_out(values, indices, self, k, dim, keepdim);
+    throw nullptr;
+    //return at::legacy::th::_th_kthvalue_out(values, indices, self, k, dim, keepdim);
   }
 }
 
@@ -133,7 +134,8 @@ std::tuple<Tensor &,Tensor &> median_out(Tensor& values, Tensor& indices,
     indices.resize_({}).fill_(0);
     return std::forward_as_tuple(values, indices);
   } else {
-    return at::legacy::th::_th_median_out(values, indices, self, dim, keepdim);
+    throw nullptr;
+    //return at::legacy::th::_th_median_out(values, indices, self, dim, keepdim);
   }
 }
 
@@ -153,7 +155,8 @@ std::tuple<Tensor &,Tensor &> mode_out(Tensor& values, Tensor& indices,
     indices.resize_({}).fill_(0);
     return std::forward_as_tuple(values, indices);
   } else {
-    return at::legacy::th::_th_mode_out(values, indices, self, dim, keepdim);
+    throw nullptr;
+    //return at::legacy::th::_th_mode_out(values, indices, self, dim, keepdim);
   }
 }
 
@@ -169,7 +172,8 @@ std::tuple<Tensor &,Tensor &> _max_out_cpu(Tensor& max, Tensor& max_indices,
     }
     return std::tuple<Tensor &,Tensor &>{max, max_indices};
   }
-  return at::legacy::th::_th_max_out(max, max_indices, self, dim, keepdim);
+  throw nullptr;
+  //return at::legacy::th::_th_max_out(max, max_indices, self, dim, keepdim);
 }
 
 std::tuple<Tensor, Tensor> max(const Tensor& self, int64_t dim, bool keepdim) {
@@ -189,7 +193,8 @@ std::tuple<Tensor &,Tensor &> max_out(Tensor& max, Tensor& max_indices,
     return std::forward_as_tuple(max, max_indices);
   } else {
     if (self.is_cuda()) {
-      return at::legacy::th::_th_max_out(max, max_indices, self, dim, keepdim);
+      throw nullptr;
+      //return at::legacy::th::_th_max_out(max, max_indices, self, dim, keepdim);
     } else {
       return _max_out_cpu(max, max_indices, self, dim, keepdim);
     }
@@ -208,7 +213,8 @@ std::tuple<Tensor &,Tensor &> _min_out_cpu(Tensor& min, Tensor& min_indices,
     }
     return std::tuple<Tensor &,Tensor &>{min, min_indices};
   }
-  return at::legacy::th::_th_min_out(min, min_indices, self, dim, keepdim);
+  throw nullptr;
+  //return at::legacy::th::_th_min_out(min, min_indices, self, dim, keepdim);
 }
 
 std::tuple<Tensor, Tensor> min(const Tensor& self, int64_t dim, bool keepdim) {
@@ -228,7 +234,8 @@ std::tuple<Tensor &,Tensor &> min_out(Tensor& min, Tensor& min_indices,
     return std::forward_as_tuple(min, min_indices);
   } else {
     if (self.is_cuda()) {
-      return at::legacy::th::_th_min_out(min, min_indices, self, dim, keepdim);
+      throw nullptr;
+      //return at::legacy::th::_th_min_out(min, min_indices, self, dim, keepdim);
     } else {
       return _min_out_cpu(min, min_indices, self, dim, keepdim);
     }

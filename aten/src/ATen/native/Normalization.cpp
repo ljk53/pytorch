@@ -278,6 +278,7 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
   }
 
   bool use_cudnn = false;
+  /*
   use_cudnn = (input.is_cuda()
                && (input.type().scalarType() != at::kHalf
                  || weight.type().scalarType() == at::kFloat)
@@ -287,16 +288,17 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
                && input.size(0) <= 131070
                && detail::getCUDAHooks().compiledWithCuDNN()
                && cudnn_enabled && detail::getCUDAHooks().versionCuDNN() >= 5110L);
-
+  */
   if (use_cudnn && eps >= detail::getCUDAHooks().batchnormMinEpsilonCuDNN()) {
-    return std::tuple_cat(
-             at::cudnn_batch_norm(
-               input.contiguous(), weight.contiguous(),
-               bias.contiguous(),
-               running_mean.defined() ? running_mean.contiguous() : running_mean,
-               running_var.defined() ? running_var.contiguous() : running_var,
-               training, momentum, eps),
-             std::make_tuple(1));
+    AT_ERROR("unsupported!");
+    // return std::tuple_cat(
+    //          at::cudnn_batch_norm(
+    //            input.contiguous(), weight.contiguous(),
+    //            bias.contiguous(),
+    //            running_mean.defined() ? running_mean.contiguous() : running_mean,
+    //            running_var.defined() ? running_var.contiguous() : running_var,
+    //            training, momentum, eps),
+    //          std::make_tuple(1));
   }
 
   bool use_miopen = (input.is_cuda()
@@ -310,13 +312,14 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
                );
 
   if (use_miopen) {
-    return std::tuple_cat(
-             at::miopen_batch_norm(
-               input.contiguous(), weight.contiguous(), bias.contiguous(),
-               running_mean.defined() ? running_mean.contiguous() : running_mean,
-               running_var.defined() ? running_var.contiguous() : running_var,
-               training, momentum, eps),
-             std::make_tuple(2));
+    AT_ERROR("unsupported!");
+    // return std::tuple_cat(
+    //          at::miopen_batch_norm(
+    //            input.contiguous(), weight.contiguous(), bias.contiguous(),
+    //            running_mean.defined() ? running_mean.contiguous() : running_mean,
+    //            running_var.defined() ? running_var.contiguous() : running_var,
+    //            training, momentum, eps),
+    //          std::make_tuple(2));
   }
 
   return std::tuple_cat(
@@ -331,13 +334,13 @@ std::tuple<Tensor, Tensor, Tensor> _batch_norm_impl_index_backward(
     const Tensor& running_mean /* optional */, const Tensor& running_var /* optional */,
     const Tensor& save_mean /* optional */, const Tensor& save_var_transform /* optional */,
     bool train, double epsilon, std::array<bool, 3> output_mask) {
-  if (impl_index == 0) {
+  //if (impl_index == 0) {
     return at::native_batch_norm_backward(grad_output, input, weight, running_mean, running_var, save_mean, save_var_transform, train, epsilon, output_mask);
-  } else if (impl_index == 1) {
+  /*} else if (impl_index == 1) {
     return at::cudnn_batch_norm_backward(input, grad_output, weight, running_mean, running_var, save_mean, save_var_transform, epsilon);
   } else if (impl_index == 2) {
     return at::miopen_batch_norm_backward(input, grad_output, weight, running_mean, running_var, save_mean, save_var_transform, epsilon);
-  }
+  }*/
   AT_ASSERTM(false, "Unsupported impl_index in _batch_norm_impl_index_backward: ", impl_index);
 }
 

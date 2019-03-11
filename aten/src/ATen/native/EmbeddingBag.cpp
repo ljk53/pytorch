@@ -50,9 +50,9 @@ static void index_select_add(const Tensor &select_indices,
   auto output_stride0 = output.stride(0);
   auto output_stride1 = output.stride(1);
   for (int64_t i = 0; i < numel; i++) {
-    THBlas_axpy<T>(ddim, 1,
-            src_data + src_stride0 * select_indices_data[i], src_stride1,
-            output_data + output_stride0 * add_indices_data[i], output_stride1);
+    // THBlas_axpy<T>(ddim, 1,
+    //         src_data + src_stride0 * select_indices_data[i], src_stride1,
+    //         output_data + output_stride0 * add_indices_data[i], output_stride1);
   }
 }
 
@@ -313,13 +313,13 @@ Tensor _embedding_bag_dense_backward_cpu(const Tensor &grad_, const Tensor &indi
           if (grad.scalar_type() == kFloat) {
             auto igwd = index_grad_weight.data<float>();
             auto gd = grad.data<float>();
-            THBlas_axpy<float>(ddim, (float)scale, gd + ddim * source, 1,
-                        igwd + ddim * index, 1);
+            // THBlas_axpy<float>(ddim, (float)scale, gd + ddim * source, 1,
+            //             igwd + ddim * index, 1);
           } else if (grad.scalar_type() == kDouble) {
             auto igwd = index_grad_weight.data<double>();
             auto gd = grad.data<double>();
-            THBlas_axpy<double>(ddim, (double)scale, gd + ddim * source, 1,
-                         igwd + ddim * index, 1);
+            // THBlas_axpy<double>(ddim, (double)scale, gd + ddim * source, 1,
+            //              igwd + ddim * index, 1);
           }
         }
       }

@@ -355,14 +355,14 @@ Tensor ctc_loss(const Tensor& log_probs, const Tensor& targets, IntArrayRef inpu
   }
 
   Tensor res;
-  if (use_cudnn) {
-    res = std::get<0>(at::_cudnn_ctc_loss(log_probs, targets, input_lengths, target_lengths, BLANK, ctx.deterministicCuDNN(), zero_infinity));
-  } else {
+  //if (use_cudnn) {
+  //  res = std::get<0>(at::_cudnn_ctc_loss(log_probs, targets, input_lengths, target_lengths, BLANK, ctx.deterministicCuDNN(), zero_infinity));
+  //} else {
     res = std::get<0>(at::_ctc_loss(log_probs, targets, input_lengths, target_lengths, BLANK, zero_infinity));
     if (zero_infinity) {
       res = at::where(res == Scalar(std::numeric_limits<double>::infinity()), at::zeros({}, res.options()), res);
     }
-  }
+  //}
   if (reduction == Reduction::Mean) {
     auto target_lengths_t = at::tensor(target_lengths, res.options().device(at::Device(at::Device::Type::CPU)).dtype(kLong)).toType(res.type());
     return (res / target_lengths_t).mean();

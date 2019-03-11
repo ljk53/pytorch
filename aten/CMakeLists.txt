@@ -37,6 +37,7 @@ if(USE_CUDA)
   list(APPEND ATen_CUDA_INCLUDE ${CUDA_INCLUDE_DIRS})
 endif()
 
+if(False)
 set(TH_LINK_STYLE STATIC)
 add_subdirectory(src/TH)
 set(TH_CPU_INCLUDE
@@ -46,6 +47,14 @@ set(TH_CPU_INCLUDE
 list(APPEND ATen_CPU_INCLUDE ${TH_CPU_INCLUDE})
 
 add_subdirectory(src/THNN)
+else()
+add_subdirectory(src/TH)
+set(TH_CPU_INCLUDE
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${CMAKE_CURRENT_BINARY_DIR}/src
+  ${CMAKE_BINARY_DIR}/aten/src)
+list(APPEND ATen_CPU_INCLUDE ${TH_CPU_INCLUDE})
+endif()
 
 # Find the HIP package, set the HIP paths, load the HIP CMake.
 IF(USE_ROCM)

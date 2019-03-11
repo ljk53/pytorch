@@ -601,6 +601,7 @@ Tensor grid_sampler(const Tensor& input, const Tensor& grid,
       "but input has sizes ", input.sizes(), " with dimension ", i, " being "
       "empty");
   }
+  #if 0
   // cudnn does not support inputs larger than 1024
   if (at::native::cudnn_is_acceptable(input) &&
       at::native::cudnn_is_acceptable(grid) &&
@@ -610,6 +611,7 @@ Tensor grid_sampler(const Tensor& input, const Tensor& grid,
       input.size(1) <= 1024) {
     return cudnn_grid_sampler(input, grid);
   }
+  #endif
   if (input.dim() == 4) {
     return at::grid_sampler_2d(input, grid, interpolation_mode, padding_mode);
   } else {

@@ -55,40 +55,47 @@ Tensor& _clamp_out_cpu(
     const Tensor& self,
     optional<Scalar> min,
     optional<Scalar> max) {
-  if (min && max) {
-    legacy::th::_th_clamp_out(result, self, *min, *max);
-  } else if (max) {
-    legacy::th::_th_clamp_max_out(result, self, *max);
-  } else if (min) {
-    legacy::th::_th_clamp_min_out(result, self, *min);
-  } else {
-    AT_ERROR("At least one of 'min' or 'max' must not be None");
-  }
+  AT_ERROR("unsupported!");
+  // if (min && max) {
+  //   legacy::th::_th_clamp_out(result, self, *min, *max);
+  // } else if (max) {
+  //   legacy::th::_th_clamp_max_out(result, self, *max);
+  // } else if (min) {
+  //   legacy::th::_th_clamp_min_out(result, self, *min);
+  // } else {
+  //   AT_ERROR("At least one of 'min' or 'max' must not be None");
+  // }
   return result;
 }
 
 Tensor& _clamp_max__cpu(Tensor& self, Scalar max) {
-  return legacy::th::_th_clamp_max_out(self, self, max);
+  AT_ERROR("unsupported!");
+  //return legacy::th::_th_clamp_max_out(self, self, max);
 }
 
 Tensor& _clamp_max_out_cpu(Tensor& result, const Tensor& self, Scalar max) {
-  return legacy::th::_th_clamp_max_out(result, self, max);
+  AT_ERROR("unsupported!");
+  //return legacy::th::_th_clamp_max_out(result, self, max);
 }
 
 Tensor& _clamp_min__cpu(Tensor& self, Scalar min) {
-  return legacy::th::_th_clamp_min_out(self, self, min);
+  AT_ERROR("unsupported!");
+  //return legacy::th::_th_clamp_min_out(self, self, min);
 }
 
 Tensor& _clamp_min_out_cpu(Tensor& result, const Tensor& self, Scalar min) {
-  return legacy::th::_th_clamp_min_out(result, self, min);
+  AT_ERROR("unsupported!");
+  //return legacy::th::_th_clamp_min_out(result, self, min);
 }
 
 Tensor& fill_(Tensor& self, Scalar value) {
-  return at::legacy::th::_th_fill_(self, value);
+  AT_ERROR("unsupported!");
+  //return at::legacy::th::_th_fill_(self, value);
 }
 
 Tensor& fill_(Tensor& self, const Tensor& value) {
-  return at::legacy::th::_th_fill_(self, value);
+  AT_ERROR("unsupported!");
+  //return at::legacy::th::_th_fill_(self, value);
 }
 
 Tensor mvlgamma(const Tensor& self, int64_t p) {
@@ -146,7 +153,8 @@ Tensor& mvlgamma_(Tensor& self, int64_t p) {
   }                                                             \
   Tensor& _##op##_out_cpu(Tensor& result, const Tensor& self) { \
     result.resize_(self.sizes());                               \
-    return at::legacy::th::_th_##op##_out(result, self);                    \
+    AT_ERROR("unsupported!"); \
+    /*return at::legacy::th::_th_##op##_out(result, self);*/                    \
   }
 
 // NB: Temp. defaulting to TH implementation of abs due to issues with Apple

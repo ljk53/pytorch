@@ -16,7 +16,7 @@
 #include <ATen/native/Resize.h>
 #include <ATen/native/TensorFactories.h>
 #include <c10/core/TensorOptions.h>
-#include <TH/THRandom.h>
+//#include <TH/THRandom.h>
 #include <TH/THGenerator.hpp>
 #include <c10/util/Exception.h>
 
@@ -409,6 +409,8 @@ Tensor randn_like(const Tensor& self, const TensorOptions& options) {
 namespace {
 template <typename scalar_t>
 void randperm_cpu(Tensor& result, int64_t n, THGenerator* generator) {
+  AT_ERROR("unsupported!");
+  #if 0
   std::lock_guard<std::mutex> lock(generator->mutex);
   scalar_t *r__data = result.data<scalar_t>();
 
@@ -426,14 +428,16 @@ void randperm_cpu(Tensor& result, int64_t n, THGenerator* generator) {
     r__data[i*r__stride_0] = r__data[(z+i)*r__stride_0];
     r__data[(z+i)*r__stride_0] = sav;
   }
+  #endif
 }
 } // namespace
 
 
 THGenerator* get_generator(at::Generator* gen) {
-  auto default_gen = &at::globalContext().defaultGenerator(at::kCPU);
-  auto gen_ = at::check_generator<at::CPUGenerator>(gen, default_gen);
-  return gen_->generator;
+  return nullptr;
+  // auto default_gen = &at::globalContext().defaultGenerator(at::kCPU);
+  // auto gen_ = at::check_generator<at::CPUGenerator>(gen, default_gen);
+  // return gen_->generator;
 }
 
 Tensor randperm(int64_t n, const TensorOptions& options) {

@@ -9,7 +9,7 @@ namespace at { namespace native {
 void* data_ptr(const Tensor & self) {
   return self.unsafeGetTensorImpl()->slow_data();
 }
-
+#if 0
 Tensor & set_(Tensor& self, Storage source) {
   return at::legacy::th::_th_set_(self, source);
 }
@@ -856,5 +856,5 @@ Tensor & __irshift__(Tensor & self, Scalar other) {
 Tensor & __irshift__(Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_irshift_(self, other);
 }
-
+#endif
 }} // namespace at::native

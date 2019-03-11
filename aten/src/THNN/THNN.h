@@ -1,3 +1,4 @@
+#if 0
 #ifndef THNN_H
 #define THNN_H
 
@@ -22,4 +23,5 @@ typedef void THNNState;
 #include <THNN/generic/THNN.h>
 #include <THGenerateFloatTypes.h>
 
+#endif
 #endif

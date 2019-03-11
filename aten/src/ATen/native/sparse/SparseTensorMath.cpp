@@ -254,9 +254,9 @@ SparseTensor& add_out_sparse_cpu(SparseTensor& r, const SparseTensor& t, const S
               r_indices_accessor[d][r_i] = t_indices_accessor[d][t_i];
             }
             if (t_values.numel() > 0) {  // We add all elements from t_values to r_values only if t_values is not an empty tensor
-              THBlas_axpy<scalar_t>(blockSize, 1,
-                t_values_ptr + t_i * blockSize, 1,
-                r_values_ptr + r_i * blockSize, 1);
+              // THBlas_axpy<scalar_t>(blockSize, 1,
+              //   t_values_ptr + t_i * blockSize, 1,
+              //   r_values_ptr + r_i * blockSize, 1);
             }
             t_i++;
           }
@@ -265,9 +265,9 @@ SparseTensor& add_out_sparse_cpu(SparseTensor& r, const SparseTensor& t, const S
               r_indices_accessor[d][r_i] = src_indices_accessor[d][s_i];
             }
             if (s_values.numel() > 0) {  // We add all elements from s_values to r_values only if s_values is not an empty tensor
-              THBlas_axpy<scalar_t>(blockSize, cast_value,
-                s_values_ptr + s_i * blockSize, 1,
-                r_values_ptr + r_i * blockSize, 1);
+              // THBlas_axpy<scalar_t>(blockSize, cast_value,
+              //   s_values_ptr + s_i * blockSize, 1,
+              //   r_values_ptr + r_i * blockSize, 1);
             }
             s_i++;
           }
@@ -494,10 +494,10 @@ void s_addmm_out_sparse_dense_worker(int64_t nnz, int64_t dim_i, int64_t dim_j, 
     int64_t row = indices_accessor[0][i];
     int64_t col = indices_accessor[1][i];
     if (col >= 0 && col < dim_j && row >= 0 && row < dim_i) {
-      THBlas_axpy<scalar_t>(dim_k,
-            cast_alpha * val,
-            dense_ptr + col * dense_stride0, dense_stride1,
-            r_ptr + row * r_stride0, r_stride1);
+      // THBlas_axpy<scalar_t>(dim_k,
+      //       cast_alpha * val,
+      //       dense_ptr + col * dense_stride0, dense_stride1,
+      //       r_ptr + row * r_stride0, r_stride1);
     } else {
       if (col < 0 || col >= dim_j) {
         AT_ERROR("addmm: index out of column bound: ", col, " not between 1 and ", dim_j);
@@ -770,10 +770,10 @@ SparseTensor& _sspaddmm_out_cpu(
             scalar_t val = values_accessor[i];
             int64_t col = indices_accessor[1][i];
             if (col >= 0 && col < dim_j) {
-              THBlas_axpy<scalar_t>(dim_k,
-                  cast_alpha * val,
-                  dense_ptr + col * dense_stride0, dense_stride1,
-                  newv_ptr + p * newv_stride0, 1);
+              // THBlas_axpy<scalar_t>(dim_k,
+              //     cast_alpha * val,
+              //     dense_ptr + col * dense_stride0, dense_stride1,
+              //     newv_ptr + p * newv_stride0, 1);
             } else {
               AT_ERROR("index out of bound. sspmm: ", col, " not between 1 and ", dim_j);
             }

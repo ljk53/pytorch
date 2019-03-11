@@ -14,25 +14,25 @@ SET(hdr
   THLapack.h THLogAdd.h THRandom.h THVector.h )
 
 set(ATen_TH_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/THGeneral.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THAllocator.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THSize.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THStorageFunctions.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensor.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensorRandom.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensorMath.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensorMoreMath.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensorEvenMoreMath.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensorConv.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THTensorLapack.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THBlas.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THLapack.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THLogAdd.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THRandom.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THFile.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THDiskFile.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THMemoryFile.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/THVector.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THGeneral.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THAllocator.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THSize.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THStorageFunctions.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensor.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensorRandom.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensorMath.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensorMoreMath.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensorEvenMoreMath.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensorConv.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THTensorLapack.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THBlas.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THLapack.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THLogAdd.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THRandom.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THFile.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THDiskFile.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THMemoryFile.cpp
+  # ${CMAKE_CURRENT_SOURCE_DIR}/THVector.cpp
   ${extra_src}
   )
 # Remember that PARENT_SCOPE variables are not in the current scope

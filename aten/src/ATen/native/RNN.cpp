@@ -256,13 +256,13 @@ struct LSTMCell : Cell<std::tuple<Tensor, Tensor>, cell_params> {
     auto hx = std::get<0>(hidden);
     auto cx = std::get<1>(hidden);
 
-    if (input.is_cuda()) {
-      auto igates = params.matmul_ih(input);
-      auto hgates = params.matmul_hh(hx);
-      auto result = at::_thnn_fused_lstm_cell(igates, hgates, cx, params.b_ih, params.b_hh);
-      // Slice off the workspace argument (it's needed only for AD).
-      return std::make_tuple(std::get<0>(result), std::get<1>(result));
-    }
+    // if (input.is_cuda()) {
+    //   auto igates = params.matmul_ih(input);
+    //   auto hgates = params.matmul_hh(hx);
+    //   auto result = at::_thnn_fused_lstm_cell(igates, hgates, cx, params.b_ih, params.b_hh);
+    //   // Slice off the workspace argument (it's needed only for AD).
+    //   return std::make_tuple(std::get<0>(result), std::get<1>(result));
+    // }
 
     auto gates = params.linear_ih(input) + params.linear_hh(hx);
     auto chunked_gates = gates.chunk(4, 1);
@@ -283,13 +283,13 @@ template <typename cell_params>
 struct GRUCell : Cell<Tensor, cell_params> {
   using hidden_type = Tensor;
   hidden_type operator()(const Tensor& input, const hidden_type& hidden, const cell_params& params) const override {
-    if (input.is_cuda()) {
-      auto igates = params.matmul_ih(input);
-      auto hgates = params.matmul_hh(hidden);
-      auto result = at::_thnn_fused_gru_cell(igates, hgates, hidden, params.b_ih, params.b_hh);
-      // Slice off the workspace argument (it's needed only for AD).
-      return std::get<0>(result);
-    }
+    // if (input.is_cuda()) {
+    //   auto igates = params.matmul_ih(input);
+    //   auto hgates = params.matmul_hh(hidden);
+    //   auto result = at::_thnn_fused_gru_cell(igates, hgates, hidden, params.b_ih, params.b_hh);
+    //   // Slice off the workspace argument (it's needed only for AD).
+    //   return std::get<0>(result);
+    // }
 
     auto igates = params.linear_ih(input);
     auto hgates = params.linear_hh(hidden);
@@ -608,12 +608,12 @@ std::tuple<Tensor, Tensor> NAME(                                               \
       const Tensor& _input, const Tensor& hx,                                  \
       TensorList _params, bool has_biases,                                     \
       int64_t num_layers, double dropout_p, bool train, bool bidirectional, bool batch_first) { \
-  if (at::cudnn_is_acceptable(_input)) {                                       \
+  /*if (at::cudnn_is_acceptable(_input)) {                                       \
     Tensor output, hy;                                                         \
     NAME##_cudnn_stub(_input.type().device_type(), output, hy, _input, hx, _params, has_biases, \
             num_layers, dropout_p, train, bidirectional, batch_first);         \
     return std::make_tuple(output, hy);                                        \
-  }                                                                            \
+  }*/                                                                            \
   check_device(_input, _params, hx);					\
   auto input = batch_first ? _input.transpose(0, 1) : _input;                  \
   auto params = gather_params(_params, has_biases);                            \
@@ -629,12 +629,12 @@ std::tuple<Tensor, Tensor> NAME(                                               \
       const Tensor& data, const Tensor& batch_sizes, const Tensor& hx,         \
       TensorList _params, bool has_biases,                                     \
       int64_t num_layers, double dropout_p, bool train, bool bidirectional) {  \
-  if (at::cudnn_is_acceptable(data)) {                                         \
+  /*if (at::cudnn_is_acceptable(data)) {                                         \
     Tensor output, hy;                                                         \
     NAME##_packed_cudnn_stub(data.type().device_type(), output, hy, data, batch_sizes, hx, \
             _params, has_biases, num_layers, dropout_p, train, bidirectional); \
     return std::make_tuple(output, hy);                                        \
-  }                                                                            \
+  }*/                                                                            \
   PackedSequence input { data, batch_sizes };                                  \
   auto params = gather_params(_params, has_biases);                            \
   auto result = _rnn_impl_with_concat<CELL, PackedLayer, PackedBidirectionalLayer>( \
@@ -659,12 +659,12 @@ std::tuple<Tensor, Tensor, Tensor> lstm(
       TensorList _params, bool has_biases,
       int64_t num_layers, double dropout_p, bool train, bool bidirectional, bool batch_first) {
   AT_CHECK(hx.size() == 2, "lstm expects two hidden states");
-  if (at::cudnn_is_acceptable(_input)) {
-    Tensor output, hy, cy;
-    lstm_cudnn_stub(_input.type().device_type(), output, hy, cy, _input, hx, _params, has_biases,
-            num_layers, dropout_p, train, bidirectional, batch_first);
-    return std::make_tuple(output, hy, cy);
-  }
+  // if (at::cudnn_is_acceptable(_input)) {
+  //   Tensor output, hy, cy;
+  //   lstm_cudnn_stub(_input.type().device_type(), output, hy, cy, _input, hx, _params, has_biases,
+  //           num_layers, dropout_p, train, bidirectional, batch_first);
+  //   return std::make_tuple(output, hy, cy);
+  // }
   check_device(_input, _params, hx);
   auto input = batch_first ? _input.transpose(0, 1) : _input;
   auto params = gather_params(_params, has_biases);
@@ -681,12 +681,12 @@ std::tuple<Tensor, Tensor, Tensor> lstm(
       TensorList _params, bool has_biases,
       int64_t num_layers, double dropout_p, bool train, bool bidirectional) {
   AT_CHECK(hx.size() == 2, "lstm expects two hidden states");
-  if (at::cudnn_is_acceptable(data)) {
-    Tensor output, hy, cy;
-    lstm_packed_cudnn_stub(data.type().device_type(), output, hy, cy, data, batch_sizes, hx,
-            _params, has_biases, num_layers, dropout_p, train, bidirectional);
-    return std::make_tuple(output, hy, cy);
-  }
+  // if (at::cudnn_is_acceptable(data)) {
+  //   Tensor output, hy, cy;
+  //   lstm_packed_cudnn_stub(data.type().device_type(), output, hy, cy, data, batch_sizes, hx,
+  //           _params, has_biases, num_layers, dropout_p, train, bidirectional);
+  //   return std::make_tuple(output, hy, cy);
+  // }
   PackedSequence input { data, batch_sizes };
   auto params = gather_params(_params, has_biases);
   auto result = _lstm_impl<PackedLayer, PackedBidirectionalLayer>(
@@ -731,12 +731,12 @@ std::tuple<Tensor, Tensor, Tensor> quantized_lstm(
       TensorList _params, bool has_biases,
       int64_t num_layers, double dropout_p, bool train, bool bidirectional, bool batch_first) {
   AT_CHECK(hx.size() == 2, "lstm expects two hidden states");
-  if (at::cudnn_is_acceptable(_input)) {
-    Tensor output, hy, cy;
-    lstm_cudnn_stub(_input.type().device_type(), output, hy, cy, _input, hx, _params, has_biases,
-            num_layers, dropout_p, train, bidirectional, batch_first);
-    return std::make_tuple(output, hy, cy);
-  }
+  // if (at::cudnn_is_acceptable(_input)) {
+  //   Tensor output, hy, cy;
+  //   lstm_cudnn_stub(_input.type().device_type(), output, hy, cy, _input, hx, _params, has_biases,
+  //           num_layers, dropout_p, train, bidirectional, batch_first);
+  //   return std::make_tuple(output, hy, cy);
+  // }
   check_device(_input, _params, hx);
   auto input = batch_first ? _input.transpose(0, 1) : _input;
   AT_CHECK(has_biases, "quantized LSTM requires biases");

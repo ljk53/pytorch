@@ -6,34 +6,36 @@
 namespace at {
 
 CPUGenerator::CPUGenerator(Context * context_)
-  : context(context_), generator(THGenerator_new())
+  : context(context_), generator(nullptr /*THGenerator_new()*/)
 {}
 
 CPUGenerator::~CPUGenerator() {
-  if (generator)
-    THGenerator_free(generator);
+  //if (generator)
+  //  THGenerator_free(generator);
 }
 
 CPUGenerator& CPUGenerator::copy(const Generator& from) {
-  THGenerator_copy(generator, const_generator_cast(from).generator);
+  //THGenerator_copy(generator, const_generator_cast(from).generator);
   return *this;
 }
 
 CPUGenerator& CPUGenerator::free() {
-  THGenerator_free(generator);
+  //THGenerator_free(generator);
   return *this;
 }
 
 uint64_t CPUGenerator::seed() {
-  return THRandom_seed(generator);
+  return 0;
+  //return THRandom_seed(generator);
 }
 
 uint64_t CPUGenerator::initialSeed() {
-  return THRandom_initialSeed(generator);
+  return 0;
+  //return THRandom_initialSeed(generator);
 }
 
 CPUGenerator& CPUGenerator::manualSeed(uint64_t seed) {
-  THRandom_manualSeed(generator, seed);
+  // THRandom_manualSeed(generator, seed);
   return *this;
 }
 
@@ -43,7 +45,7 @@ CPUGenerator& CPUGenerator::manualSeedAll(uint64_t seed) {
 }
 
 void * CPUGenerator::unsafeGetTH() {
-  return generator;
+  return nullptr; /*generator;*/
 }
 
 } // namespace at

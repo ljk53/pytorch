@@ -1,3 +1,4 @@
+#if 0
 #include <TH/THBlas.h>
 #include <c10/core/ScalarType.h>
 
@@ -30,3 +31,4 @@ inline void THBlas_copy(int64_t n, T *x, int64_t incx, T *y, int64_t incy);
   }
 
 AT_FORALL_SCALAR_TYPES_EXCEPT_HALF(COPY_SPECIALIZATION)
+#endif

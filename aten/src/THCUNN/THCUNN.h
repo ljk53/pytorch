@@ -1,3 +1,4 @@
+#if 0
 #include <THC/THC.h>
 
 #define THCIndexTensor THCudaLongTensor
@@ -8,3 +9,4 @@ typedef int64_t THCIndex_t;
 
 #include <THCUNN/generic/THCUNN.h>
 #include <THC/THCGenerateFloatTypes.h>
+#endif

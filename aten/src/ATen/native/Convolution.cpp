@@ -356,8 +356,10 @@ at::Tensor _convolution(
       auto padding = params.padding;
       auto dilation = params.dilation;
 
-      output = at::thnn_conv_depthwise2d(input, weight, kernel_size, bias, stride, padding, dilation);
+      AT_ERROR("unsupported ConvNd parameters"); //output = at::thnn_conv_depthwise2d(input, weight, kernel_size, bias, stride, padding, dilation);
   } else if (params.use_cudnn(input)) {
+    AT_ERROR("unsupported ConvNd parameters");
+#if 0
     AT_CHECK(input.type() == weight.type(),
              "Input type (", input.type().toString(), ") and weight type (", weight.type().toString(),
              ") should be the same");
@@ -374,7 +376,10 @@ at::Tensor _convolution(
           input, weight, bias,
           params.padding, params.stride, params.dilation, params.groups, params.benchmark, params.deterministic);
     }
+#endif
   } else if (params.use_miopen(input)) {
+    AT_ERROR("unsupported ConvNd parameters");
+#if 0
     AT_CHECK(input.type() == weight.type(),
              "Input type (", input.type().toString(), ") and weight type (", weight.type().toString(),
              ") should be the same");
@@ -391,7 +396,9 @@ at::Tensor _convolution(
           input, weight, bias,
           params.padding, params.stride, params.dilation, params.groups, params.benchmark, params.deterministic);
     }
+#endif
   } else if (params.use_mkldnn(input)) {
+    AT_ERROR("unsupported ConvNd parameters");
 #if AT_MKLDNN_ENABLED()
     AT_CHECK(input.type() == weight.type(),
              "Input type (", input.type().toString(), ") and weight type (", weight.type().toString(),
@@ -448,6 +455,7 @@ at::Tensor _convolution_nogroup(
   auto dilated = params.is_dilated();
   auto kernel_size = weight.sizes().slice(2);
 
+#if 0
   if (params.transposed) {
     if (dim == 4) {
       return at::thnn_conv_transpose2d(
@@ -490,7 +498,7 @@ at::Tensor _convolution_nogroup(
           stride, padding);
     }
   }
-
+#endif
   AT_ERROR("unsupported ConvNd parameters");
 }
 

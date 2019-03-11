@@ -1216,9 +1216,6 @@ inline Tensor Tensor::atan2(const Tensor & other) const {
 inline Tensor Tensor::lerp(const Tensor & end, Scalar weight) const {
     return type().lerp(*this, end, weight);
 }
-inline Tensor Tensor::histc(int64_t bins, Scalar min, Scalar max) const {
-    return type().histc(*this, bins, min, max);
-}
 inline Tensor Tensor::sign() const {
     return type().sign(*this);
 }

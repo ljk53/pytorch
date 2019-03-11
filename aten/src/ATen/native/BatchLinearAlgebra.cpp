@@ -241,7 +241,7 @@ Tensor inverse(const Tensor &self) {
     return at::empty_like(self);
   }
   if (self.dim() == 2) {
-    return at::legacy::th::_th_getri_single(self);
+    //return at::legacy::th::_th_getri_single(self);
   }
   squareCheckInputs(self);
   return at::_inverse_helper(self);

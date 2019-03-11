@@ -5,6 +5,9 @@
 
 #include <mutex>
 
+#define _MERSENNE_STATE_N 624
+#define _MERSENNE_STATE_M 397
+
 struct THGeneratorState {
   /* The initial seed. */
   uint64_t the_initial_seed;

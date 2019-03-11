@@ -1,3 +1,4 @@
+#if 0
 #ifndef TH_INC
 #define TH_INC
 
@@ -21,4 +22,5 @@
 #include <TH/THDiskFile.h>
 #include <TH/THMemoryFile.h>
 
+#endif
 #endif

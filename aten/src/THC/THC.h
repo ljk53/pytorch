@@ -1,3 +1,4 @@
+#if 0
 #ifndef THC_INC
 #define THC_INC
 
@@ -15,4 +16,5 @@
 #include <THC/THCTensorRandom.h>
 #include <THC/THCTensorMath.h>
 
+#endif
 #endif

@@ -47,7 +47,8 @@ static void check_cat_no_zero_dim(TensorList tensors) {
 Tensor & cat_out(Tensor & result, TensorList tensors, int64_t dim) {
   check_cat_no_zero_dim(tensors);
   dim = legacy_cat_wrap_dim(dim, tensors);
-  return at::legacy::th::_th_cat_out(result, tensors, dim);
+  AT_ERROR("unsupported!");
+  //return at::legacy::th::_th_cat_out(result, tensors, dim);
 }
 
 static bool sizes_match_except(IntArrayRef s1, IntArrayRef s2, int64_t dim_except /* should already be wrapped */) {
@@ -177,7 +178,8 @@ Tensor cat(TensorList tensors, int64_t dim) {
   }
   check_cat_no_zero_dim(tensors);
   dim = legacy_cat_wrap_dim(dim, tensors);
-  return at::legacy::th::_th_cat(tensors, dim);
+  AT_ERROR("unsupported!");
+  //return at::legacy::th::_th_cat(tensors, dim);
 }
 
 std::vector<Tensor> chunk(const Tensor& self, int64_t chunks, int64_t dim) {
@@ -415,6 +417,8 @@ Tensor repeat(const Tensor& self, IntArrayRef repeats) {
 }
 
 Tensor reshape(const Tensor& self, IntArrayRef proposed_shape) {
+  AT_ERROR("unsupported!");
+  #if 0
   if (self.is_sparse()) {
     AT_ERROR("reshape is not implemented for sparse tensors");
   }
@@ -423,6 +427,7 @@ Tensor reshape(const Tensor& self, IntArrayRef proposed_shape) {
     return self.as_strided(shape, *stride);
   }
   return at::_unsafe_view(self.clone(), shape);
+  #endif
 }
 
 Tensor reshape_as(const Tensor& self, const Tensor& other) {

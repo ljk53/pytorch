@@ -34,8 +34,8 @@ Context::Context()
 , thh_state(nullptr, [](THHState* p){ /* no-op */ } )
 {
 
-  THSetDefaultErrorHandler(errorHandler,nullptr);
-  THSetDefaultArgErrorHandler(argErrorHandler,nullptr);
+  //THSetDefaultErrorHandler(errorHandler,nullptr);
+  //THSetDefaultArgErrorHandler(argErrorHandler,nullptr);
 
   generator_registry[static_cast<int>(DeviceType::CPU)]
     .reset(new CPUGenerator(this));
@@ -134,7 +134,8 @@ LegacyTHDispatcher& getLegacyTHDispatcher(const TensorImpl* impl) {
 }
 
 Allocator* getCPUAllocator() {
-  return getTHDefaultAllocator();
+  return nullptr;
+  //return getTHDefaultAllocator();
 }
 
 struct LegacyDeviceTypeInit : public LegacyDeviceTypeInitInterface {

@@ -3,7 +3,7 @@
 #include <ATen/LegacyTHFunctions.h>
 
 namespace at { namespace native {
-
+#if 0
 Tensor & binary_cross_entropy_out(Tensor & output, const Tensor & self, const Tensor & target, const Tensor & weight, int64_t reduction) {
   return at::legacy::th::_thnn_binary_cross_entropy_forward_out(output, self, target, weight, reduction);
 }
@@ -815,5 +815,5 @@ Tensor thnn_im2col_backward(const Tensor & grad_output, IntArrayRef input_size, 
 Tensor & thnn_im2col_backward_out(Tensor & grad_input, const Tensor & grad_output, IntArrayRef input_size, IntArrayRef kernel_size, IntArrayRef dilation, IntArrayRef padding, IntArrayRef stride) {
   return at::legacy::th::_thnn_im2col_backward_out(grad_input, grad_output, input_size, kernel_size, dilation, padding, stride);
 }
-
+#endif
 }} // namespace at::native

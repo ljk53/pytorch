@@ -18,9 +18,9 @@
 #include <assert.h>
 #include <cpuinfo.h>
 
-#include <TH/THRandom.h>
-#include <TH/THGenerator.hpp>
-#include <TH/THMath.h>
+//#include <TH/THRandom.h>
+//#include <TH/THGenerator.hpp>
+//#include <TH/THMath.h>
 
 namespace {
 /*
@@ -56,6 +56,8 @@ namespace {
 
 
 int64_t sample_poisson(double lambda, THGenerator* generator) {
+  AT_ERROR("unsupported!");
+  #if 0
   if (lambda >= 10) {
     // transformed rejection method, (Hoermann, 1993)
     int64_t k;
@@ -103,6 +105,7 @@ int64_t sample_poisson(double lambda, THGenerator* generator) {
       }
     }
   }
+  #endif
 }
 
 } // namespace
@@ -126,6 +129,8 @@ Tensor& bernoulli_out(Tensor& result, const Tensor& self, Generator* gen) {
 }
 
 Tensor& bernoulli_tensor_cpu_(Tensor& self, const Tensor& p_, Generator* gen) {
+  AT_ERROR("unsupported!");
+  #if 0
   AT_DISPATCH_ALL_TYPES(self.type(), "bernoulli_tensor_cpu_self_", [&] {
     THGenerator* generator = get_generator(gen);
     std::lock_guard<std::mutex> lock(generator->mutex);
@@ -148,11 +153,14 @@ Tensor& bernoulli_tensor_cpu_(Tensor& self, const Tensor& p_, Generator* gen) {
     }
   });
   return self;
+  #endif
 }
 
 DEFINE_DISPATCH(bernoulli_mkl_stub);
 
 Tensor& bernoulli_scalar_cpu_(Tensor& self, double p, Generator* gen) {
+  AT_ERROR("unsupported!");
+  #if 0
   AT_CHECK(0 <= p && p <= 1, "bernoulli_ expects p to be in [0, 1], but got p=", p);
 #if AT_MKL_ENABLED()
   if (cpuinfo_initialize() && cpuinfo_vendor_intel == cpuinfo_get_processor(0)->core->vendor) {
@@ -169,6 +177,7 @@ Tensor& bernoulli_scalar_cpu_(Tensor& self, double p, Generator* gen) {
         });
   });
   return self;
+  #endif
 }
 
 
@@ -203,6 +212,8 @@ Tensor _s_poisson_cpu(const Tensor& lambda, Generator *gen) {
 }
 
 Tensor _s_gamma_cpu(const Tensor& alpha, Generator *gen) {
+  AT_ERROR("unsupported!");
+  #if 0
   Tensor ret = at::zeros(alpha.sizes(), alpha.options());
   AT_DISPATCH_FLOATING_TYPES(ret.type(), "gamma", [&] {
     THGenerator* generator = get_generator(gen);
@@ -226,6 +237,7 @@ Tensor _s_gamma_cpu(const Tensor& alpha, Generator *gen) {
     });
 
   return ret;
+  #endif
 }
 
 }} // namespace at::native
