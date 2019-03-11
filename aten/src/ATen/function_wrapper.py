@@ -45,6 +45,7 @@ ${return_type} ${api_name}(${type_method_formals}) const override;
 TYPE_METHOD_DEFINITION_BROADCAST = CodeTemplate("""\
 ${return_type} TypeDefault::${api_name}(${type_method_formals}) const {
     ${device_guard_declaration}
+    RAIILogger l(__FILE__, "[broadcast] TypeDefault::${api_name} ${type_method_formals}");
     Tensor ${broadcast_returns};
     std::tie(${broadcast_returns}) = ${broadcast_function}(${broadcast_actuals}, "${api_name}");
     return ${method_prefix_derived}${api_name}(${broadcast_modified_actuals});
@@ -84,6 +85,7 @@ ${return_type} ${api_name}(${type_method_formals}) const override;
 TYPE_METHOD_DEFINITION_CONCRETE = CodeTemplate("""\
 ${return_type} TypeDefault::${api_name}(${type_method_formals}) const {
     ${device_guard_declaration}
+    RAIILogger l1(__FILE__, "[concrete] TypeDefault::${api_name} ${type_method_formals}");
     ${type_definition_body}
 }
 """)
@@ -95,6 +97,7 @@ ${return_type} ${method_prefix_derived}${api_name}(${type_method_formals}) const
 TYPE_DERIVED_DEFINITION = CodeTemplate("""\
 ${return_type} ${Type}::${method_prefix_derived}${api_name}(${type_method_formals}) const {
     ${device_guard_declaration}
+    RAIILogger l2(__FILE__, "[derived] ${Type}::${api_name} ${type_method_formals}");
     ${type_definition_body}
 }
 """)
@@ -104,6 +107,7 @@ ${return_type} ${Type}::${method_prefix_derived}${api_name}(${type_method_formal
 TYPE_DERIVED_DEFINITION_NATIVE = CodeTemplate("""\
 ${return_type} ${Type}::${api_name}(${type_method_formals}) const {
     ${device_guard_declaration}
+    RAIILogger l3(__FILE__, "[derived_native] ${Type}::${api_name} ${type_method_formals} ${native_type_method_dispatch}");
     ${return_call} at::native::${native_type_method_dispatch}(/* actuals */ ${actuals});
 }
 """)
@@ -113,11 +117,13 @@ ${return_type} ${Type}::${api_name}(${type_method_formals}) const {
 }
 """)
 TYPE_DEFINITION_BODY_NATIVE = CodeTemplate("""\
+RAIILogger l4(__FILE__, "[body_native] at::native::${native_type_method_dispatch} ${native_actuals}");
 ${return_call} at::native::${native_type_method_dispatch}(/* native_actuals */ ${native_actuals});
 """)
 
 # Overrideable stubs to be used in user-extendable backends
 TYPE_DEFINITION_EXTENSION_BACKEND = CodeTemplate("""\
+RAIILogger l5(__FILE__, "[extension_backend] ${Type}::${method_prefix_derived}${api_name} ${type_method_formals}");
 ${return_type} ${Type}::${method_prefix_derived}${api_name}(${type_method_formals}) const {
     return ${Type}Dispatch::get_function<${return_type} (*)(${formals_types})>("${schema}")(${native_actuals});
 }
@@ -130,6 +136,7 @@ ${return_type} ${api_name}(${method_formals_with_defaults})${const_mark};
 # add non-virtual declaration to Tensor.cpp
 TENSOR_METHOD_DEFINITION = CodeTemplate("""\
 inline ${return_type} Tensor::${api_name}(${method_formals})${const_mark} {
+    RAIILogger l6(__FILE__, "[tensor_method] Tensor::${api_name} ${method_actuals} ${const_mark}");
     return type().${api_name}(${method_actuals});
 }
 """)
@@ -144,6 +151,7 @@ C10_DEPRECATED static inline ${return_type} ${api_name}(${formals_with_defaults}
 # add method definition in Functions.h
 FUNCTION_DEFINITION = CodeTemplate("""\
 static inline ${return_type} ${api_name}(${formals}) {
+    RAIILogger l7(__FILE__, "[function] ${inferred_type}.${api_name} ${type_method_actuals}");
     return ${inferred_type}.${api_name}(${type_method_actuals});
 }
 """)
@@ -156,6 +164,7 @@ CAFFE2_API ${return_type} ${native_type_method_dispatch}(${formals_with_defaults
 FACTORY_DEFINITION = CodeTemplate("""\
 static inline ${return_type} ${api_name}(${formals}) {
     const DeviceGuard guard(options.device());
+    RAIILogger l8(__FILE__, "[factory] at::native::${api_name} ${type_method_actuals}");
     return at::native::${api_name}(${type_method_actuals});
 }
 """)

@@ -6,11 +6,25 @@
 #include <functional>
 #include <limits>
 #include <sstream>
+#include <iostream>
 
 #include "c10/macros/Macros.h"
 #include "c10/util/Exception.h"
 #include "c10/util/Flags.h"
 #include "c10/util/StringUtil.h"
+
+struct RAIILogger {
+  RAIILogger(const char* file, const char* msg) : file_(file), msg_(msg) {
+    std::cout << "=" << file_ << " " << msg_ << std::endl;
+  }
+
+  ~RAIILogger() {
+    std::cout << "~" << msg_ << std::endl;
+  }
+
+  const char* file_;
+  const char* msg_;
+};
 
 // CAFFE2_LOG_THRESHOLD is a compile time flag that would allow us to turn off
 // logging at compile time so no logging message below that level is produced
