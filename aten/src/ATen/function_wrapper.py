@@ -113,7 +113,8 @@ ${return_type} ${Type}::${api_name}(${type_method_formals}) const {
 }
 """)
 TYPE_DEFINITION_BODY_NATIVE = CodeTemplate("""\
-AT_ERROR("Unsupported!");
+    std::cout << "${native_type_method_dispatch}" << std::endl;
+AT_ERROR("!! Unsupported !!");
 #if 0
 ${return_call} at::native::${native_type_method_dispatch}(/* native_actuals */ ${native_actuals});
 #endif
