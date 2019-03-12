@@ -365,6 +365,8 @@ at::Tensor _convolution(
              "Input type (", input.type().toString(), ") and bias type (", bias.type().toString(),
              ") should be the same");
 
+    AT_ERROR("Unsupported!");
+    #if 0
     if (params.transposed) {
       output = at::cudnn_convolution_transpose(
           input, weight, bias,
@@ -374,6 +376,7 @@ at::Tensor _convolution(
           input, weight, bias,
           params.padding, params.stride, params.dilation, params.groups, params.benchmark, params.deterministic);
     }
+    #endif
   } else if (params.use_miopen(input)) {
     AT_CHECK(input.type() == weight.type(),
              "Input type (", input.type().toString(), ") and weight type (", weight.type().toString(),
@@ -382,6 +385,8 @@ at::Tensor _convolution(
              "Input type (", input.type().toString(), ") and bias type (", bias.type().toString(),
              ") should be the same");
 
+    AT_ERROR("Unsupported!");
+    #if 0
     if (params.transposed) {
       output = at::miopen_convolution_transpose(
           input, weight, bias,
@@ -391,6 +396,7 @@ at::Tensor _convolution(
           input, weight, bias,
           params.padding, params.stride, params.dilation, params.groups, params.benchmark, params.deterministic);
     }
+    #endif
   } else if (params.use_mkldnn(input)) {
 #if AT_MKLDNN_ENABLED()
     AT_CHECK(input.type() == weight.type(),
