@@ -121,7 +121,7 @@ static inline int64_t n_dim_size(const Tensor& self, IntArrayRef dim) {
   }
   return numel;
 }
-
+#if 0
 static inline Tensor cumsum(const Tensor& self, int64_t dim, optional<ScalarType> dtype) {
   return at::legacy::th::_th_cumsum(integer_upcast(self, dtype), dim);
 }
@@ -185,6 +185,7 @@ Tensor& cumprod_out(Tensor& result, const Tensor& self, int64_t dim, ScalarType 
 Tensor& cumprod_out(Tensor& result, const Tensor& self, int64_t dim) {
   return at::native::cumprod_out(result, self, dim, c10::nullopt);
 }
+#endif
 
 // ALL REDUCE #################################################################
 
@@ -395,7 +396,7 @@ static Tensor squeeze_multiple(const Tensor& self, IntArrayRef dims) {
   }
   return result;
 }
-
+#if 0
 Tensor& logsumexp_out(Tensor& result, const Tensor &self, IntArrayRef dims, bool keepdim) {
   // can't take max of empty tensor
   if (self.numel() != 0) {
@@ -482,7 +483,7 @@ Tensor norm(const Tensor& self, optional<Scalar> p, IntArrayRef dim, bool keepdi
 Tensor norm(const Tensor& self, Scalar p) {
   return at::native::_norm(self, p);
 }
-
+#endif
 inline Tensor & _all(Tensor & result, std::unique_ptr<TensorIterator> & iter) {
   if (iter->numel() == 0) {
     result.fill_(1);
@@ -526,7 +527,7 @@ Tensor &all_out(Tensor &result, const Tensor &self, int64_t dim, bool keepdim) {
     return _all(result, iter);
   }
 }
-
+#if 0
 inline Tensor & _any(Tensor & result, std::unique_ptr<TensorIterator> & iter) {
   if (iter->numel() == 0) {
     result.fill_(0);
@@ -570,6 +571,7 @@ Tensor &any_out(Tensor &result, const Tensor &self, int64_t dim, bool keepdim) {
     return _any(result, iter);
   }
 }
+#endif
 
 Tensor min_values(const Tensor& self, IntArrayRef dims, bool keepdim) {
   if (dims.size() == 1) {
@@ -596,7 +598,7 @@ Tensor max_values(const Tensor& self, IntArrayRef dims, bool keepdim) {
     return result;
   }
 }
-
+#if 0
 static Tensor &std_var_out(Tensor &result, const Tensor &self, IntArrayRef dim, bool unbiased, bool keepdim, bool take_sqrt) {
   AT_CHECK(self.type().backend() == Backend::CPU || self.type().backend() == Backend::CUDA,
            "std and var only support CPU AND CUDA backend, got: ", toString(self.type().backend()));
@@ -644,5 +646,5 @@ Tensor std(const Tensor& self, IntArrayRef dim, bool unbiased, bool keepdim) {
 Tensor &std_out(Tensor &result, const Tensor &self, IntArrayRef dim, bool unbiased, bool keepdim) {
   return std_var_out(result, self, dim, unbiased, keepdim, true);
 }
-
+#endif
 }} // namespace at::native

@@ -26,9 +26,10 @@ def ge(a : ${Scalar}, b : Tensor) -> Tensor:
   return b <= a
 def sub(a : ${Scalar}, b : Tensor) -> Tensor:
   return torch.neg(b) + a
-def div(a : ${Scalar}, b : Tensor) -> Tensor:
-  return torch.reciprocal(b) * a
 )SCRIPT");
+
+//def div(a : ${Scalar}, b : Tensor) -> Tensor:
+//  return torch.reciprocal(b) * a
 
 auto _ntuple_ops = CodeTemplate(
     R"SCRIPT(

@@ -137,6 +137,7 @@ void recursiveStore(char* data, const std::vector<int64_t>& sizes, const c10::Ar
 }
 
 RegisterOperators reg({
+    #if 0
     Operator(
         "aten::split(Tensor self, int[] split_sizes, int dim=0) -> Tensor[]",
         [](Stack& stack) {
@@ -149,6 +150,7 @@ RegisterOperators reg({
           pack(stack, std::move(result));
           return 0;
         }),
+    #endif
     Operator(
         "aten::Size(int[] sizes) -> int[]",
         [](Stack& stack) { return 0; }),
@@ -186,6 +188,7 @@ RegisterOperators reg({
             return 0;
           };
         }),
+    #if 0
     Operator(
       "aten::_no_grad_embedding_renorm_(Tensor weight, Tensor input, float max_norm, float norm_type) -> Tensor",
       [](const Node* node) {
@@ -205,6 +208,7 @@ RegisterOperators reg({
           return 0;
         };
       }),
+    #endif
     Operator(
         "aten::format(str self, ...) -> str",
         [](const Node* node) {
@@ -278,6 +282,7 @@ DEFINE_TORCH_TENSOR_OP(bool, bool, at::empty({}, at::CPU(at::kByte).options()).f
             return 0;
           };
         }),
+    #if 0
     Operator(
         "aten::_no_grad_embedding_renorm_(Tensor weight, Tensor input, float max_norm, float norm_type) -> Tensor",
         [](const Node* node) {
@@ -298,6 +303,7 @@ DEFINE_TORCH_TENSOR_OP(bool, bool, at::empty({}, at::CPU(at::kByte).options()).f
             return 0;
           };
         }),
+    #endif
     Operator(
       "aten::tensor(t[] data, *, ScalarType? dtype=None, Device? device=None) -> Tensor",
       [](const Node* node) {

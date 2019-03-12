@@ -15,14 +15,14 @@ namespace {
     return _type_has_native(self.type());
   }
 }
-
+#if 0
 // These native operations are not "really" native; they're actually just bridge
 // functions that decide whether or not to call native sparse functions, or
 // TH functions.  This file should be temporary; when all of TH gets ported, we
 // can just use the native mechanism straight.
 
 // TODO: Maybe the foo_ variants should call th_foo_
-
+#endif
 Tensor clone(const Tensor& self) {
   if (_has_native(self)) {
     return native_clone(self);
@@ -30,7 +30,7 @@ Tensor clone(const Tensor& self) {
     return legacy::th::_th_clone(self);
   }
 }
-
+#if 0
 Tensor& resize_as_(Tensor& self, const Tensor& the_template) {
   if (_has_native(self)) {
     return native_resize_as_(self, the_template);
@@ -54,7 +54,7 @@ Tensor pow(const Tensor& self, Scalar exponent) {
     return legacy::th::_th_pow(self, exponent);
   }
 }
-
+#endif
 Tensor& zero_(Tensor& self) {
   if (_has_native(self)) {
     return native_zero_(self);
@@ -62,7 +62,7 @@ Tensor& zero_(Tensor& self) {
     return legacy::th::_th_zero_(self);
   }
 }
-
+#if 0
 // Note [Multiple dispatch to sparse]
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // In an ideal world, we would use direct support for multiple dispatch to
@@ -111,19 +111,20 @@ Tensor& addmm_out(Tensor& result, const Tensor& self, const Tensor& mat1, const 
     return legacy::th::_th_addmm_out(result, self, mat1, mat2, beta, alpha);
   }
 }
-
+#endif
 Tensor addmm(const Tensor& self, const Tensor& mat1, const Tensor& mat2, Scalar beta, Scalar alpha) {
   // See Note [Multiple dispatch to sparse]
   auto mat1_sparse = mat1.is_sparse();
   if (mat1_sparse) {
-    Tensor b_self;
-    std::tie(b_self) = expand_size(self, {mat1.size(0), mat2.size(1)}, "addmm");
-    return s_native_addmm(b_self, mat1, mat2, beta, alpha);
+    AT_ERROR("Unsupported!");
+    // Tensor b_self;
+    // std::tie(b_self) = expand_size(self, {mat1.size(0), mat2.size(1)}, "addmm");
+    // return s_native_addmm(b_self, mat1, mat2, beta, alpha);
   } else {
     return legacy::th::_th_addmm(self, mat1, mat2, beta, alpha);
   }
 }
-
+#if 0
 Tensor& addmm_(Tensor& self, const Tensor& mat1, const Tensor& mat2, Scalar beta, Scalar alpha) {
   // See Note [Multiple dispatch to sparse]
   auto mat1_sparse = mat1.is_sparse();
@@ -134,5 +135,5 @@ Tensor& addmm_(Tensor& self, const Tensor& mat1, const Tensor& mat2, Scalar beta
     return legacy::th::_th_addmm_(self, mat1, mat2, beta, alpha);
   }
 }
-
+#endif
 }} // namespace at::native

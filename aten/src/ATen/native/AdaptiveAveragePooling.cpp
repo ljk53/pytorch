@@ -135,7 +135,7 @@ namespace {
       }
     }
   }
-
+#if 0
   template <typename scalar_t>
   static void adaptive_avg_pool2d_backward_out_frame(
     scalar_t *gradInput_p,
@@ -239,9 +239,9 @@ namespace {
     }
     return gradInput;
   }
-
+#endif
 } // namespace
-
+#if 0
   Tensor& adaptive_avg_pool2d_out_cpu(
     Tensor& output,
     const Tensor& input,
@@ -251,7 +251,7 @@ namespace {
       output, input, output_size);
     return output;
   }
-
+#endif
   Tensor adaptive_avg_pool2d_cpu(
     at::Tensor const& input,
     IntArrayRef output_size)
@@ -274,7 +274,7 @@ namespace {
        return _adaptive_avg_pool2d(input, output_size);
     }
   }
-
+#if 0
   Tensor& adaptive_avg_pool2d_backward_out_cpu(
     Tensor& gradInput,
     const Tensor& gradOutput,
@@ -295,6 +295,6 @@ namespace {
       gradInput, gradOutput, input);
     return gradInput;
   }
-
+#endif
 } // at::native
 } // at

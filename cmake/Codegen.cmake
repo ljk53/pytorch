@@ -84,7 +84,19 @@ if (TRUE)
     SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_LIST_DIR}/../aten/src/TH/THAllocator.cpp PROPERTIES COMPILE_FLAGS "-fno-openmp")
   ENDIF()
 
-  FILE(GLOB cpu_kernel_cpp_in "${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/*.cpp")
+  #FILE(GLOB cpu_kernel_cpp_in "${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/*.cpp")
+  SET(cpu_kernel_cpp_in
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/Activation.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/BinaryOpsKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/CopyKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/DistanceOpsKernel.cpp
+  # ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/GridSamplerKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/IndexKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/ReduceOpsKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/SoftMaxKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/TensorCompareKernel.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cpu/UnaryOpsKernel.cpp
+  )
 
   LIST(APPEND CPU_CAPABILITY_NAMES "DEFAULT")
   LIST(APPEND CPU_CAPABILITY_FLAGS "${OPT_FLAG}")

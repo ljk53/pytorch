@@ -25,7 +25,7 @@ Tensor & set_(Tensor& self, const Tensor & source) {
 Tensor & set_(Tensor& self) {
   return at::legacy::th::_th_set_(self);
 }
-
+#if 0
 bool is_set_to(const Tensor& self, const Tensor & tensor) {
   return at::legacy::th::_th_is_set_to(self, tensor);
 }
@@ -41,11 +41,11 @@ Tensor & masked_fill_(Tensor& self, const Tensor & mask, const Tensor & value) {
 Tensor & masked_scatter_(Tensor& self, const Tensor & mask, const Tensor & source) {
   return at::legacy::th::_th_masked_scatter_(self, mask, source);
 }
-
+#endif
 Tensor view(const Tensor& self, IntArrayRef size) {
   return at::legacy::th::_th_view(self, size);
 }
-
+#if 0
 Tensor & put_(Tensor& self, const Tensor & index, const Tensor & source, bool accumulate) {
   return at::legacy::th::_th_put_(self, index, source, accumulate);
 }
@@ -181,7 +181,7 @@ Tensor & fmod_(Tensor& self, Scalar other) {
 Tensor & fmod_(Tensor& self, const Tensor & other) {
   return at::legacy::th::_th_fmod_(self, other);
 }
-
+#endif
 Tensor & remainder_(Tensor& self, Scalar other) {
   return at::legacy::th::_th_remainder_(self, other);
 }
@@ -189,7 +189,7 @@ Tensor & remainder_(Tensor& self, Scalar other) {
 Tensor & remainder_(Tensor& self, const Tensor & other) {
   return at::legacy::th::_th_remainder_(self, other);
 }
-
+#if 0
 Tensor & addbmm_(Tensor& self, const Tensor & batch1, const Tensor & batch2, Scalar beta, Scalar alpha) {
   return at::legacy::th::_th_addbmm_(self, batch1, batch2, beta, alpha);
 }
@@ -267,7 +267,7 @@ Tensor cross(const Tensor & self, const Tensor & other, int64_t dim) {
 Tensor trace(const Tensor & self) {
   return at::legacy::th::_th_trace(self);
 }
-
+#endif
 Tensor & ne_out(Tensor & result, const Tensor & self, Scalar other) {
   return at::legacy::th::_th_ne_out(result, self, other);
 }
@@ -363,7 +363,7 @@ Tensor & lt_out(Tensor & result, const Tensor & self, const Tensor & other) {
 Tensor lt(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_lt(self, other);
 }
-
+#if 0
 Tensor & take_out(Tensor & result, const Tensor & self, const Tensor & index) {
   return at::legacy::th::_th_take_out(result, self, index);
 }
@@ -594,11 +594,11 @@ Tensor reciprocal(const Tensor & self) {
 Tensor & neg_out(Tensor & result, const Tensor & self) {
   return at::legacy::th::_th_neg_out(result, self);
 }
-
+#endif
 Tensor neg(const Tensor & self) {
   return at::legacy::th::_th_neg(self);
 }
-
+#if 0
 Tensor & atan2_out(Tensor & result, const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_atan2_out(result, self, other);
 }
@@ -650,15 +650,15 @@ Tensor fmod(const Tensor & self, const Tensor & other) {
 Tensor & remainder_out(Tensor & result, const Tensor & self, Scalar other) {
   return at::legacy::th::_th_remainder_out(result, self, other);
 }
-
+#endif
 Tensor remainder(const Tensor & self, Scalar other) {
   return at::legacy::th::_th_remainder(self, other);
 }
-
+#if 0
 Tensor & remainder_out(Tensor & result, const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_remainder_out(result, self, other);
 }
-
+#endif
 Tensor remainder(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_remainder(self, other);
 }
@@ -678,6 +678,7 @@ Tensor min(const Tensor & self) {
 Tensor & max_out(Tensor & result, const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_max_out(result, self, other);
 }
+
 Tensor max(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_max(self, other);
 }
@@ -685,7 +686,7 @@ Tensor max(const Tensor & self, const Tensor & other) {
 Tensor max(const Tensor & self) {
   return at::legacy::th::_th_max(self);
 }
-
+#if 0
 Tensor median(const Tensor & self) {
   return at::legacy::th::_th_median(self);
 }
@@ -721,11 +722,11 @@ Tensor renorm(const Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
 Tensor unfold(const Tensor & self, int64_t dimension, int64_t size, int64_t step) {
   return at::legacy::th::_th_unfold(self, dimension, size, step);
 }
-
+#endif
 bool equal(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_equal(self, other);
 }
-
+#if 0
 Tensor & pow_out(Tensor & result, const Tensor & self, const Tensor & exponent) {
   return at::legacy::th::_th_pow_out(result, self, exponent);
 }
@@ -856,5 +857,5 @@ Tensor & __irshift__(Tensor & self, Scalar other) {
 Tensor & __irshift__(Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_irshift_(self, other);
 }
-
+#endif
 }} // namespace at::native
