@@ -16,7 +16,7 @@
 
 namespace at {
 namespace native {
-
+#if 0
 Tensor _reshape_from_tensor(const Tensor& self, const Tensor& shape_tensor) {
   AT_CHECK(shape_tensor.dim() == 1);
   std::vector<int64_t> shape;
@@ -644,7 +644,7 @@ Tensor & t_(Tensor & self) {
   check_t(self, "t_()");
   return self.transpose_(0, 1);
 }
-
+#endif
 std::tuple<std::vector<int64_t>, std::vector<int64_t> >
 inferSqueezeGeometry(const Tensor &tensor) {
   std::vector<int64_t> sizes;
@@ -673,7 +673,7 @@ inferSqueezeGeometry(const Tensor& tensor, int64_t dim) {
   }
   return std::make_tuple(sizes, strides);
 }
-
+#if 0
 std::tuple<std::vector<int64_t>, std::vector<int64_t> >
 inferUnsqueezeGeometry(const Tensor& tensor, int64_t dim) {
   auto sizes = tensor.sizes().vec();
@@ -684,7 +684,7 @@ inferUnsqueezeGeometry(const Tensor& tensor, int64_t dim) {
 
   return std::make_tuple(sizes, strides);
 }
-
+#endif
 Tensor squeeze(const Tensor& self) {
   auto g = inferSqueezeGeometry(self);
   return self.as_strided(std::get<0>(g), std::get<1>(g));
@@ -716,7 +716,7 @@ Tensor & squeeze_(Tensor& self, int64_t dim) {
   auto g = inferSqueezeGeometry(self, dim);
   return self.as_strided_(std::get<0>(g), std::get<1>(g));
 }
-
+#if 0
 // _unsafe_view() differs from view() in that the returned tensor isn't treated
 // as a view for the purposes of automatic differentiation. (It's not listed in
 // VIEW_FUNCTIONS in gen_autograd.py).  It's only safe to use if the `self` tensor
@@ -842,6 +842,8 @@ std::vector<Tensor> meshgrid(TensorList tensors) {
   }
   return grids;
 }
+#endif
+
 }
 
 }

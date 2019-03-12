@@ -488,6 +488,7 @@ RegisterOperators reg({
             return 0;
           };
         }),
+    #if 0
     Operator(
         c10::onnx::Reshape,
         [](const Node* node) {
@@ -517,7 +518,7 @@ RegisterOperators reg({
             return 0;
           };
         }),
-
+    #endif
     Operator(
         prim::AnyDefined,
         [](const Node* node) {
@@ -619,6 +620,7 @@ RegisterOperators reg({
             return 0;
           };
         }),
+    #if 0
     Operator(
         prim::ConstantChunk,
         [](const Node* node) {
@@ -662,6 +664,7 @@ RegisterOperators reg({
             return 0;
           };
         }),
+    #endif
     Operator(
         prim::ListUnpack,
         [](const Node* node) -> Operation {
@@ -1693,6 +1696,7 @@ std::vector<int64_t> _output_size(
   return ret;
 }
 
+#if 0
 // reference: interpolate in torch/nn/functional.py
 // size can be none, int or intlist
 // scale_factors can be none, float, or floatlist
@@ -1921,7 +1925,7 @@ static auto reg4 =
         .op("_test::leaky_relu(Tensor self, float v=0.01) -> Tensor",
             &leaky_relu)
         .op("_test::cat(Tensor[] inputs) -> Tensor", &cat);
-
+#endif
 } // namespace
 } // namespace jit
 } // namespace torch

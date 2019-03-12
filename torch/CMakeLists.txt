@@ -184,7 +184,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/script/module.cpp
   # ${TORCH_SRC_DIR}/csrc/jit/tracer.cpp
   ${TORCH_SRC_DIR}/csrc/jit/hooks_for_testing.cpp
-  ${TORCH_SRC_DIR}/csrc/utils/tensor_flatten.cpp
+  # ${TORCH_SRC_DIR}/csrc/utils/tensor_flatten.cpp
   ${TORCH_SRC_DIR}/csrc/utils/variadic.cpp
   # ${TORCH_SRC_DIR}/csrc/jit/fuser/kernel_cache.cpp
   # ${TORCH_SRC_DIR}/csrc/jit/fuser/compiler.cpp

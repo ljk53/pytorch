@@ -14,6 +14,7 @@ DEFINE_DISPATCH(mul_stub);
 DEFINE_DISPATCH(div_stub);
 
 Tensor& add_out(Tensor& result, const Tensor& self, const Tensor& other, Scalar alpha) {
+  #if 0
   if (other.is_sparse()) {
     if (self.is_sparse()) {
       at::_sparse_add_out(result, self, other, alpha);
@@ -24,6 +25,7 @@ Tensor& add_out(Tensor& result, const Tensor& self, const Tensor& other, Scalar 
   } else if (self.is_sparse()) {
     AT_ERROR("add(sparse, dense) is not supported. Use add(dense, sparse) instead.");
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   add_stub(iter->device_type(), *iter, alpha);
   return result;
@@ -31,10 +33,12 @@ Tensor& add_out(Tensor& result, const Tensor& self, const Tensor& other, Scalar 
 
 Tensor add(const Tensor& self, const Tensor& other, Scalar alpha) {
   Tensor result;
+  #if 0
   if (other.is_sparse()) {
     result = at::empty({0}, self.options());
     return native::add_out(result, self, other, alpha);
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   add_stub(iter->device_type(), *iter, alpha);
   return iter->output();
@@ -45,6 +49,7 @@ Tensor& add_(Tensor& self, const Tensor& other, Scalar alpha) {
 }
 
 Tensor& div_out(Tensor& result, const Tensor& self, const Tensor& other) {
+  #if 0
   if (self.is_sparse()) {
     if (other.dim() != 0) {
       AT_ERROR("div(): sparse division only supports division by a scalar ",
@@ -52,6 +57,7 @@ Tensor& div_out(Tensor& result, const Tensor& self, const Tensor& other) {
     }
     return at::_sparse_div_zerodim_out(result, self, other);
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   div_stub(iter->device_type(), *iter);
   return result;
@@ -59,10 +65,12 @@ Tensor& div_out(Tensor& result, const Tensor& self, const Tensor& other) {
 
 Tensor div(const Tensor& self, const Tensor& other) {
   Tensor result;
+  #if 0
   if (self.is_sparse()) {
     result = at::empty({0}, self.options());
     return native::div_out(result, self, other);
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   div_stub(iter->device_type(), *iter);
   return iter->output();
@@ -73,9 +81,11 @@ Tensor& div_(Tensor& self, const Tensor& other) {
 }
 
 Tensor& mul_out(Tensor& result, const Tensor& self, const Tensor& other) {
+  #if 0
   if (self.is_sparse() || other.is_sparse()) {
     return at::_sparse_mul_out(result, self, other);
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   mul_stub(iter->device_type(), *iter);
   return result;
@@ -83,10 +93,12 @@ Tensor& mul_out(Tensor& result, const Tensor& self, const Tensor& other) {
 
 Tensor mul(const Tensor& self, const Tensor& other) {
   Tensor result;
+  #if 0
   if (self.is_sparse() || other.is_sparse()) {
     result = at::empty({0}, self.options());
     return native::mul_out(result, self, other);
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   mul_stub(iter->device_type(), *iter);
   return iter->output();
@@ -97,6 +109,7 @@ Tensor& mul_(Tensor& self, const Tensor& other) {
 }
 
 Tensor& sub_out(Tensor& result, const Tensor& self, const Tensor& other, Scalar alpha) {
+  #if 0
   if (other.is_sparse()) {
     if (!self.sizes().equals(other.sizes())) {
       AT_ERROR("sizes do not match");
@@ -110,6 +123,7 @@ Tensor& sub_out(Tensor& result, const Tensor& self, const Tensor& other, Scalar 
   } else if (self.is_sparse()) {
     AT_ERROR("sub(sparse, dense) is not supported. Use sub(dense, sparse) instead.");
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   sub_stub(iter->device_type(), *iter, alpha);
   return result;
@@ -117,10 +131,12 @@ Tensor& sub_out(Tensor& result, const Tensor& self, const Tensor& other, Scalar 
 
 Tensor sub(const Tensor& self, const Tensor& other, Scalar alpha) {
   Tensor result;
+  #if 0
   if (other.is_sparse()) {
     result = at::empty({0}, self.options());
     return native::sub_out(result, self, other, alpha);
   }
+  #endif
   auto iter = TensorIterator::binary_op(result, self, other);
   sub_stub(iter->device_type(), *iter, alpha);
   return iter->output();

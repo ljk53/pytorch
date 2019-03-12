@@ -25,7 +25,7 @@ Tensor & set_(Tensor& self, const Tensor & source) {
 Tensor & set_(Tensor& self) {
   return at::legacy::th::_th_set_(self);
 }
-
+#if 0
 bool is_set_to(const Tensor& self, const Tensor & tensor) {
   return at::legacy::th::_th_is_set_to(self, tensor);
 }
@@ -41,11 +41,11 @@ Tensor & masked_fill_(Tensor& self, const Tensor & mask, const Tensor & value) {
 Tensor & masked_scatter_(Tensor& self, const Tensor & mask, const Tensor & source) {
   return at::legacy::th::_th_masked_scatter_(self, mask, source);
 }
-
+#endif
 Tensor view(const Tensor& self, IntArrayRef size) {
   return at::legacy::th::_th_view(self, size);
 }
-
+#if 0
 Tensor & put_(Tensor& self, const Tensor & index, const Tensor & source, bool accumulate) {
   return at::legacy::th::_th_put_(self, index, source, accumulate);
 }
@@ -267,7 +267,7 @@ Tensor cross(const Tensor & self, const Tensor & other, int64_t dim) {
 Tensor trace(const Tensor & self) {
   return at::legacy::th::_th_trace(self);
 }
-
+#endif
 Tensor & ne_out(Tensor & result, const Tensor & self, Scalar other) {
   return at::legacy::th::_th_ne_out(result, self, other);
 }
@@ -363,7 +363,7 @@ Tensor & lt_out(Tensor & result, const Tensor & self, const Tensor & other) {
 Tensor lt(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_lt(self, other);
 }
-
+#if 0
 Tensor & take_out(Tensor & result, const Tensor & self, const Tensor & index) {
   return at::legacy::th::_th_take_out(result, self, index);
 }
@@ -856,5 +856,5 @@ Tensor & __irshift__(Tensor & self, Scalar other) {
 Tensor & __irshift__(Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_irshift_(self, other);
 }
-
+#endif
 }} // namespace at::native

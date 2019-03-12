@@ -35,8 +35,30 @@ endif()
 
 # NB: If you edit these globs, you'll have to update setup.py package_data as well
 FILE(GLOB base_h "*.h" "detail/*.h" "cpu/*.h")
-FILE(GLOB base_cpp "*.cpp" "detail/*.cpp" "cpu/*.cpp")
+#FILE(GLOB base_cpp "*.cpp" "detail/*.cpp" "cpu/*.cpp")
+SET(
+base_cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/CPUGeneral.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/CPUGenerator.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/CPUTypeDefault.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/Context.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/DLConvertor.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/ExpandUtils.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/LegacyTHDispatch.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/SparseTensorImpl.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/TensorGeometry.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/TensorUtils.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/UndefinedType.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/Utils.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/detail/CPUGuardImpl.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/detail/CUDAHooksInterface.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/detail/ComplexHooksInterface.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/detail/HIPHooksInterface.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/cpu/FlushDenormal.cpp
+)
+
 add_subdirectory(core)
+
 FILE(GLOB cuda_h "cuda/*.h" "cuda/detail/*.h" "cuda/*.cuh" "cuda/detail/*.cuh")
 FILE(GLOB cuda_cpp "cuda/*.cpp" "cuda/detail/*.cpp")
 FILE(GLOB cuda_cu "cuda/*.cu" "cuda/detail/*.cu")
@@ -52,10 +74,72 @@ FILE(GLOB miopen_cpp "miopen/*.cpp")
 FILE(GLOB mkl_cpp "mkl/*.cpp")
 FILE(GLOB mkldnn_cpp "mkldnn/*.cpp")
 
-FILE(GLOB native_cpp "native/*.cpp")
+#FILE(GLOB native_cpp "native/*.cpp")
+SET(
+native_cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Activation.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/AdaptiveAveragePooling.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/AffineGridGenerator.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/BatchLinearAlgebra.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/native/BinaryOps.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/ConstantPadNd.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Convolution.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/ConvolutionTBC.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Copy.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/DispatchStub.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Distance.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Distributions.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Dropout.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Embedding.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/EmbeddingBag.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/FractionalMaxPool2d.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/FractionalMaxPool3d.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/GridSampler.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Indexing.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Itertools.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/LegacyBridge.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/native/LegacyDefinitions.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/LegacyNNDefinitions.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Linear.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/LinearAlgebra.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Loss.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/LossCTC.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Memory.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/NNPACK.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Normalization.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Onehot.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/PackedSequence.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/PixelShuffle.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Pooling.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/QuantizedLinear.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/RNN.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/RangeFactories.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/native/ReduceOps.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/ReflectionPad.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/ReplicationPadding.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Resize.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Scalar.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/SoftMax.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/SpectralOps.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/SummaryOps.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TensorCompare.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TensorConversions.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TensorFactories.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/native/TensorIterator.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TensorIteratorReduce.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TensorProperties.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/native/TensorShape.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TensorTransformations.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/TypeProperties.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/UnaryOps.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/Unique.cpp
+# ${CMAKE_CURRENT_SOURCE_DIR}/native/WeightNorm.cpp
+)
+
 FILE(GLOB native_mkl_cpp "native/mkl/*.cpp")
 FILE(GLOB native_mkldnn_cpp "native/mkldnn/*.cpp")
-FILE(GLOB native_sparse_cpp "native/sparse/*.cpp")
+#FILE(GLOB native_sparse_cpp "native/sparse/*.cpp")
+SET(native_sparse_cpp)
 
 FILE(GLOB native_cuda_cu "native/cuda/*.cu")
 FILE(GLOB native_cuda_cpp "native/cuda/*.cpp")
