@@ -70,6 +70,10 @@ def process_types_and_backends(option):
 
 
 def exclude(declaration):
+    filters = ['cudnn', 'miopen', 'mkldnn']
+    for f in filters:
+        if (f in declaration.get('name')):
+            return True
     return 'only_register' in declaration or declaration.get('name') == 'ndimension'
 
 

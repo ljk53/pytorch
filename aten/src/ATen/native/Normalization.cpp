@@ -289,6 +289,8 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
                && cudnn_enabled && detail::getCUDAHooks().versionCuDNN() >= 5110L);
 
   if (use_cudnn && eps >= detail::getCUDAHooks().batchnormMinEpsilonCuDNN()) {
+    AT_ERROR("Unsupported!");
+    #if 0
     return std::tuple_cat(
              at::cudnn_batch_norm(
                input.contiguous(), weight.contiguous(),
@@ -297,6 +299,7 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
                running_var.defined() ? running_var.contiguous() : running_var,
                training, momentum, eps),
              std::make_tuple(1));
+    #endif
   }
 
   bool use_miopen = (input.is_cuda()
@@ -310,6 +313,8 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
                );
 
   if (use_miopen) {
+    AT_ERROR("Unsupported!");
+    #if 0
     return std::tuple_cat(
              at::miopen_batch_norm(
                input.contiguous(), weight.contiguous(), bias.contiguous(),
@@ -317,6 +322,7 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
                running_var.defined() ? running_var.contiguous() : running_var,
                training, momentum, eps),
              std::make_tuple(2));
+    #endif
   }
 
   return std::tuple_cat(
@@ -334,9 +340,11 @@ std::tuple<Tensor, Tensor, Tensor> _batch_norm_impl_index_backward(
   if (impl_index == 0) {
     return at::native_batch_norm_backward(grad_output, input, weight, running_mean, running_var, save_mean, save_var_transform, train, epsilon, output_mask);
   } else if (impl_index == 1) {
-    return at::cudnn_batch_norm_backward(input, grad_output, weight, running_mean, running_var, save_mean, save_var_transform, epsilon);
+    AT_ERROR("Unsupported!");
+    // return at::cudnn_batch_norm_backward(input, grad_output, weight, running_mean, running_var, save_mean, save_var_transform, epsilon);
   } else if (impl_index == 2) {
-    return at::miopen_batch_norm_backward(input, grad_output, weight, running_mean, running_var, save_mean, save_var_transform, epsilon);
+    AT_ERROR("Unsupported!");
+    // return at::miopen_batch_norm_backward(input, grad_output, weight, running_mean, running_var, save_mean, save_var_transform, epsilon);
   }
   AT_ASSERTM(false, "Unsupported impl_index in _batch_norm_impl_index_backward: ", impl_index);
 }
