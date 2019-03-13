@@ -1,7 +1,7 @@
 #ifndef TH_GENERIC_FILE
 #define TH_GENERIC_FILE "TH/generic/THTensorRandom.cpp"
 #else
-
+#if 0
 #include <cmath>
 
 #ifdef _OPENMP
@@ -461,5 +461,7 @@ void THTensor_(setRNGState)(THGenerator *_generator, THTensor *self)
   THArgCheck(THGeneratorState_isValid(rng_state), 1, "Invalid RNG state");
   THGeneratorState_copy(&_generator->gen_state, rng_state);
 }
+#endif
+
 #endif
 #endif

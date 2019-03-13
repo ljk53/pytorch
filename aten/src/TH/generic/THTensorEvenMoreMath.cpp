@@ -26,7 +26,7 @@ void THTensor_(zero)(THTensor *r_)
 {
   THTensor_(fill)(r_, 0);
 }
-
+#if 0
 void THTensor_(maskedFill)(THTensor *tensor, THByteTensor *mask, scalar_t value)
 {
 #ifdef _OPENMP
@@ -586,7 +586,7 @@ accreal THTensor_(dot)(THTensor *tensor, THTensor *src)
                    break;);
   return sum;
 }
-
+#endif
 scalar_t THTensor_(minall)(THTensor *tensor)
 {
   scalar_t theMin;
@@ -622,7 +622,7 @@ scalar_t THTensor_(maxall)(THTensor *tensor)
                   });
   return theMax;
 }
-
+#if 0
 accreal THTensor_(sumall)(THTensor *tensor)
 {
   accreal sum = 0;
@@ -906,7 +906,7 @@ void THTensor_(fmod)(THTensor *r_, THTensor *t, scalar_t value)
 #endif
   }
 }
-
+#endif
 // Should wrap if the value (a) has a different sign than the divisor (b), but is not 0.
 static inline bool modulo_wrap(scalar_t a, scalar_t b) {
   return (a != 0) && (a < 0) != (b < 0);
@@ -962,7 +962,7 @@ void THTensor_(remainder)(THTensor *r_, THTensor *t, scalar_t value)
 #endif
   }
 }
-
+#if 0
 void THTensor_(bitand)(THTensor *r_, THTensor *t, scalar_t value)
 {
 #if defined(TH_REAL_IS_FLOAT) || defined(TH_REAL_IS_DOUBLE) || defined(TH_REAL_IS_HALF)
@@ -1001,5 +1001,5 @@ void THTensor_(bitand)(THTensor *r_, THTensor *t, scalar_t value)
   }
 #endif
 }
-
+#endif
 #endif /* TH_GENERIC_FILE */

@@ -60,7 +60,7 @@
     THDescBuff s1 = THTensor_(sizeDesc)(T);	\
     THArgCheck(COND, ARG, FORMAT, s1.str);	\
   }
-
+#if 0
 #include <THNN/generic/AbsCriterion.c>
 #include <TH/THGenerateFloatTypes.h>
 
@@ -126,10 +126,10 @@
 
 #include <THNN/generic/Tanh.c>
 #include <TH/THGenerateFloatTypes.h>
-
+#endif
 #include <THNN/generic/TemporalRowConvolution.c>
 #include <TH/THGenerateFloatTypes.h>
-
+#if 0
 #include <THNN/generic/TemporalUpSamplingNearest.c>
 #include <TH/THGenerateFloatTypes.h>
 
@@ -138,13 +138,13 @@
 
 #include <THNN/generic/FeatureLPPooling.c>
 #include <TH/THGenerateFloatTypes.h>
-
+#endif
 #include <THNN/generic/unfold.c>
 #include <TH/THGenerateFloatTypes.h>
 
 #include <THNN/generic/SpatialConvolutionMM.c>
 #include <TH/THGenerateFloatTypes.h>
-
+#if 0
 #include <THNN/generic/SpatialFullDilatedConvolution.c>
 #include <TH/THGenerateFloatTypes.h>
 
@@ -156,10 +156,10 @@
 
 #include <THNN/generic/SpatialAveragePooling.c>
 #include <TH/THGenerateFloatTypes.h>
-
+#endif
 #include <THNN/generic/SpatialDilatedMaxPooling.c>
 #include <TH/THGenerateFloatTypes.h>
-
+#if 0
 #include <THNN/generic/SpatialMaxUnpooling.c>
 #include <TH/THGenerateFloatTypes.h>
 
@@ -204,3 +204,4 @@
 
 #include <THNN/generic/SpatialClassNLLCriterion.c>
 #include <TH/THGenerateFloatTypes.h>
+#endif

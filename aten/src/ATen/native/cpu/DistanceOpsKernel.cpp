@@ -7,7 +7,7 @@
 #include <ATen/Dispatch.h>
 #include <ATen/Parallel.h>
 #include <ATen/cpu/vml.h>
-
+#if 0
 namespace at { namespace native { namespace {
 
 template<typename scalar_t>
@@ -296,3 +296,4 @@ REGISTER_DISPATCH(pdist_backward_stub, &pdist_backward_kernel_impl);
 REGISTER_DISPATCH(cdist_stub, &cdist_kernel_impl);
 
 }}  // namespace at::native
+#endif

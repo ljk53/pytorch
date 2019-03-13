@@ -239,7 +239,7 @@ void THTensor_(min)(THTensor *values_, THLongTensor *indices_, THTensor *t, int 
     THLongTensor_squeeze1d(indices_, indices_, dimension);
   }
 }
-
+#if 0
 void THTensor_(sum)(THTensor *r_, THTensor *t, int dimension, int keepdim)
 {
   THArgCheck(dimension >= 0 && dimension < THTensor_(nDimensionLegacyAll)(t), 2, "dimension %d out of range",
@@ -513,7 +513,7 @@ void THTensor_(cross)(THTensor *r_, THTensor *a, THTensor *b, int dimension)
                        r__data[1*r__stride] = a_data[2*a_stride]*b_data[0*b_stride] - a_data[0*a_stride]*b_data[2*b_stride];
                        r__data[2*r__stride] = a_data[0*a_stride]*b_data[1*b_stride] - a_data[1*a_stride]*b_data[0*b_stride];);
 }
-
+#endif
 void THTensor_(cmax)(THTensor *r, THTensor *t, THTensor *src) {
   THTensor_(resizeAs)(r, t);
   TH_TENSOR_APPLY3(scalar_t, r, scalar_t, t, scalar_t, src,
@@ -525,7 +525,7 @@ void THTensor_(cmin)(THTensor *r, THTensor *t, THTensor *src) {
   TH_TENSOR_APPLY3(scalar_t, r, scalar_t, t, scalar_t, src,
                    *r_data = *t_data < *src_data ? *t_data : *src_data;);
 }
-
+#if 0
 void THTensor_(cmaxValue)(THTensor *r, THTensor *t, scalar_t value) {
   THTensor_(resizeAs)(r, t);
   TH_TENSOR_APPLY2(scalar_t, r, scalar_t, t,
@@ -1206,7 +1206,7 @@ void THTensor_(topk)(THTensor *rt_, THLongTensor *ri_, THTensor *t, int64_t k, i
   c10::raw::intrusive_ptr::decref(tmpResults);
   THLongTensor_free(tmpIndices);
 }
-
+#endif
 void THTensor_(triu)(THTensor *r_, THTensor *t, int64_t k)
 {
   int64_t t_size_0, t_size_1;
@@ -1399,7 +1399,7 @@ TENSOR_IMPLEMENT_LOGICAL(ne,!=)
 */
 
 LAB_IMPLEMENT_BASIC_FUNCTION(neg,-)
-
+#if 0
 #if defined(TH_REAL_IS_LONG)
 LAB_IMPLEMENT_BASIC_FUNCTION(abs,labs)
 #endif /* int64_t only part */
@@ -1974,6 +1974,7 @@ void THTensor_(dirichlet_grad)(THTensor *self, THTensor *x, THTensor *alpha, THT
 
   THTensor_(freeCopyTo)(grad, self);
 }
+#endif
 
 #undef TH_MATH_NAME
 #endif /* floating point only part */

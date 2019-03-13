@@ -21,14 +21,14 @@ namespace at {
 namespace native {
 
 DEFINE_DISPATCH(sum_stub);
-DEFINE_DISPATCH(std_var_stub);
+// DEFINE_DISPATCH(std_var_stub);
 DEFINE_DISPATCH(prod_stub);
-DEFINE_DISPATCH(norm_stub);
+// DEFINE_DISPATCH(norm_stub);
 DEFINE_DISPATCH(mean_stub);
 DEFINE_DISPATCH(and_stub);
-DEFINE_DISPATCH(or_stub);
-DEFINE_DISPATCH(min_values_stub);
-DEFINE_DISPATCH(max_values_stub);
+// DEFINE_DISPATCH(or_stub);
+// DEFINE_DISPATCH(min_values_stub);
+// DEFINE_DISPATCH(max_values_stub);
 
 static inline Tensor integer_upcast(const Tensor& self, optional<ScalarType> dtype) {
   ScalarType scalarType = self.type().scalarType();
@@ -571,7 +571,6 @@ Tensor &any_out(Tensor &result, const Tensor &self, int64_t dim, bool keepdim) {
     return _any(result, iter);
   }
 }
-#endif
 
 Tensor min_values(const Tensor& self, IntArrayRef dims, bool keepdim) {
   if (dims.size() == 1) {
@@ -598,7 +597,7 @@ Tensor max_values(const Tensor& self, IntArrayRef dims, bool keepdim) {
     return result;
   }
 }
-#if 0
+
 static Tensor &std_var_out(Tensor &result, const Tensor &self, IntArrayRef dim, bool unbiased, bool keepdim, bool take_sqrt) {
   AT_CHECK(self.type().backend() == Backend::CPU || self.type().backend() == Backend::CUDA,
            "std and var only support CPU AND CUDA backend, got: ", toString(self.type().backend()));

@@ -1,7 +1,7 @@
 #ifndef TH_GENERIC_FILE
 #define TH_GENERIC_FILE "TH/generic/THTensorConv.cpp"
 #else
-
+#if 0
 /*
   2D Input, 2D kernel  : convolve given image with the given kernel.
 */
@@ -1950,4 +1950,6 @@ void THTensor_(conv3Dmap)(THTensor *r_, scalar_t beta, scalar_t alpha, THTensor 
   c10::raw::intrusive_ptr::decref(input);
   c10::raw::intrusive_ptr::decref(kernel);
 }
+#endif
+
 #endif

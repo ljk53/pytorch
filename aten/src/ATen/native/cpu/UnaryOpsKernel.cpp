@@ -213,7 +213,7 @@ void bernoulli_mkl_kernel(Tensor &self, const double p, Generator* gen) {
   REGISTER_DISPATCH(op##Impl, &op##_kernel)
 
 } // anonymous namespace
-
+#if 0
 REGISTER_DISPATCH(sigmoidImpl, &sigmoid_kernel)
 REGISTER_DISPATCH(bernoulli_mkl_stub, &bernoulli_mkl_kernel);
 
@@ -229,7 +229,9 @@ IMPLEMENT_FLOAT_KERNEL(FLOATING, erfc)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, exp)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, expm1)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, floor)
+#endif
 IMPLEMENT_FLOAT_KERNEL(FLOATING, log)
+#if 0
 IMPLEMENT_FLOAT_KERNEL(FLOATING, log10)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, log1p)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, log2)
@@ -241,5 +243,5 @@ IMPLEMENT_FLOAT_KERNEL(FLOATING, sqrt)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, tan)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, tanh)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, trunc)
-
+#endif
 }} // namespace at::native
