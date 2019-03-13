@@ -143,13 +143,13 @@ struct LegacyDeviceTypeInit : public LegacyDeviceTypeInitInterface {
     globalContext();
   }
   void initCUDA() const override {
-    globalContext().lazyInitCUDA();
+    //globalContext().lazyInitCUDA();
   }
   void initHIP() const override {
-    globalContext().lazyInitHIP();
+    //globalContext().lazyInitHIP();
   }
   void initComplex() const override {
-    globalContext().lazyInitComplex();
+    //globalContext().lazyInitComplex();
   }
 };
 REGISTER_LEGACY_TYPE_INIT(LegacyDeviceTypeInit);

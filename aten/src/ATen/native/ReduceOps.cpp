@@ -483,7 +483,7 @@ Tensor norm(const Tensor& self, optional<Scalar> p, IntArrayRef dim, bool keepdi
 Tensor norm(const Tensor& self, Scalar p) {
   return at::native::_norm(self, p);
 }
-
+#endif
 inline Tensor & _all(Tensor & result, std::unique_ptr<TensorIterator> & iter) {
   if (iter->numel() == 0) {
     result.fill_(1);
@@ -527,7 +527,7 @@ Tensor &all_out(Tensor &result, const Tensor &self, int64_t dim, bool keepdim) {
     return _all(result, iter);
   }
 }
-
+#if 0
 inline Tensor & _any(Tensor & result, std::unique_ptr<TensorIterator> & iter) {
   if (iter->numel() == 0) {
     result.fill_(0);

@@ -24,6 +24,8 @@ int64_t stride(const Tensor& self, int64_t dim) {
 }
 
 bool cudnn_is_acceptable(const Tensor& self) {
+  return false;
+  #if 0
   if (!globalContext().userEnabledCuDNN()) return false;
   if (!self.is_cuda()) return false;
   auto st = self.type().scalarType();
@@ -38,6 +40,7 @@ bool cudnn_is_acceptable(const Tensor& self) {
   // cuDNN library was actually dynamically linked or not.  I'm not
   // sure if we can actually test this.
   return true;
+  #endif
 }
 
 Tensor detach(const Tensor& self) {

@@ -3,7 +3,7 @@
 #include <ATen/LegacyTHFunctions.h>
 
 namespace at { namespace native {
-
+#if 0
 Tensor & binary_cross_entropy_out(Tensor & output, const Tensor & self, const Tensor & target, const Tensor & weight, int64_t reduction) {
   return at::legacy::th::_thnn_binary_cross_entropy_forward_out(output, self, target, weight, reduction);
 }
@@ -415,11 +415,11 @@ Tensor avg_pool3d_backward(const Tensor & grad_output, const Tensor & self, IntA
 std::tuple<Tensor &,Tensor &> max_pool2d_with_indices_out(Tensor & output, Tensor & indices, const Tensor & self, IntArrayRef kernel_size, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation, bool ceil_mode) {
   return at::legacy::th::_thnn_max_pool2d_with_indices_forward_out(output, indices, self, kernel_size, stride, padding, dilation, ceil_mode);
 }
-
+#endif
 std::tuple<Tensor,Tensor> max_pool2d_with_indices(const Tensor & self, IntArrayRef kernel_size, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation, bool ceil_mode) {
   return at::legacy::th::_thnn_max_pool2d_with_indices_forward(self, kernel_size, stride, padding, dilation, ceil_mode);
 }
-
+#if 0
 Tensor & max_pool2d_with_indices_backward_out(Tensor & grad_input, const Tensor & grad_output, const Tensor & self, IntArrayRef kernel_size, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation, bool ceil_mode, const Tensor & indices) {
   return at::legacy::th::_thnn_max_pool2d_with_indices_backward_out(grad_input, grad_output, self, kernel_size, stride, padding, dilation, ceil_mode, indices);
 }
@@ -661,19 +661,19 @@ Tensor & thnn_conv2d_out(Tensor & output, const Tensor & self, const Tensor & we
   Tensor fgrad_input = at::empty({0}, self.options());
   return std::get<0>(at::thnn_conv2d_forward_out(output, finput, fgrad_input, self, weight, kernel_size, bias, stride, padding));
 }
-
+#endif
 Tensor thnn_conv2d(const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding) {
   return std::get<0>(at::thnn_conv2d_forward(self, weight, kernel_size, bias, stride, padding));
 }
-
+#if 0
 std::tuple<Tensor &,Tensor &,Tensor &> thnn_conv2d_forward_out(Tensor & output, Tensor & finput, Tensor & fgrad_input, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding) {
   return at::legacy::th::_thnn_conv2d_forward_out(output, finput, fgrad_input, self, weight, kernel_size, bias, stride, padding);
 }
-
+#endif
 std::tuple<Tensor,Tensor,Tensor> thnn_conv2d_forward(const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding) {
   return at::legacy::th::_thnn_conv2d_forward(self, weight, kernel_size, bias, stride, padding);
 }
-
+#if 0
 std::tuple<Tensor &,Tensor &,Tensor &> thnn_conv2d_backward_out(Tensor & grad_input, Tensor & grad_weight, Tensor & grad_bias, const Tensor & grad_output, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, IntArrayRef stride, IntArrayRef padding, const Tensor & finput, const Tensor & fgrad_input) {
   return at::legacy::th::_thnn_conv2d_backward_out(grad_input, grad_weight, grad_bias, grad_output, self, weight, kernel_size, stride, padding, finput, fgrad_input);
 }
@@ -815,5 +815,5 @@ Tensor thnn_im2col_backward(const Tensor & grad_output, IntArrayRef input_size, 
 Tensor & thnn_im2col_backward_out(Tensor & grad_input, const Tensor & grad_output, IntArrayRef input_size, IntArrayRef kernel_size, IntArrayRef dilation, IntArrayRef padding, IntArrayRef stride) {
   return at::legacy::th::_thnn_im2col_backward_out(grad_input, grad_output, input_size, kernel_size, dilation, padding, stride);
 }
-
+#endif
 }} // namespace at::native

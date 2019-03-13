@@ -110,6 +110,8 @@ auto ConvParams::view1d_as_2d() -> void {
 }
 
 auto ConvParams::use_cudnn(const at::Tensor& input) const -> bool {
+  return false;
+  #if 0
   if (!detail::getCUDAHooks().compiledWithCuDNN()) {
     return false;
   }
@@ -124,10 +126,12 @@ auto ConvParams::use_cudnn(const at::Tensor& input) const -> bool {
     return detail::getCUDAHooks().supportsDilatedConvolutionWithCuDNN() && !is_output_padding_big();
   }
   return !is_output_padding_big();
+  #endif
 }
 
 auto ConvParams::use_miopen(const at::Tensor& input) const -> bool {
-
+  return false;
+  #if 0
   return ((input.type().scalarType() == at::kFloat) || (input.type().scalarType() == at::kHalf))
          && detail::getCUDAHooks().compiledWithMIOpen()
          && input.is_cuda()
@@ -137,6 +141,7 @@ auto ConvParams::use_miopen(const at::Tensor& input) const -> bool {
          && (dilation.at(0) == dilation.at(1)) //MIOpen currently does not support assymetric dilation values.
          && (stride.at(0) == stride.at(1)) //Line 549 & 635 (swapping stride and dilation values) leads to assymetric dilation values.
          ;
+  #endif
 }
 
 auto ConvParams::use_mkldnn(const at::Tensor& input) const -> bool {
@@ -242,7 +247,7 @@ static at::Tensor subtensor(at::Tensor& tensor, int dim, int groups, int g) {
   return tensor.narrow(dim, n * g, n).contiguous();
 }
 
-
+#if 0
 at::Tensor conv1d(
     const Tensor& input, const Tensor& weight, const Tensor& bias,
     IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation, int64_t groups) {
@@ -294,7 +299,7 @@ at::Tensor convolution(
                           transposed, output_padding, groups,
                           ctx.benchmarkCuDNN(), ctx.deterministicCuDNN(), ctx.userEnabledCuDNN());
 }
-
+#endif
 static inline std::vector<int64_t> convolution_expand_param_if_needed(
   IntArrayRef list_param, const char *param_name, int64_t expected_dim) {
   if (list_param.size() == 1) {
@@ -349,6 +354,8 @@ at::Tensor _convolution(
   auto output = at::empty({0}, input.options());
 
   if (params.is_depthwise(input, weight)) {
+    AT_ERROR("Unsupported!");
+    #if 0
       /* output.resize_(output_size(input, weight)); */
 
       auto kernel_size = weight.sizes().slice(2);
@@ -357,6 +364,7 @@ at::Tensor _convolution(
       auto dilation = params.dilation;
 
       output = at::thnn_conv_depthwise2d(input, weight, kernel_size, bias, stride, padding, dilation);
+    #endif
   } else if (params.use_cudnn(input)) {
     AT_CHECK(input.type() == weight.type(),
              "Input type (", input.type().toString(), ") and weight type (", weight.type().toString(),
@@ -413,6 +421,8 @@ at::Tensor _convolution(
       output = at::_convolution_nogroup(
           input, weight, bias, params.stride, params.padding, params.dilation, params.transposed, params.output_padding);
     } else {
+      AT_ERROR("Unsupported!");
+      #if 0
       std::vector<Tensor> outputs(params.groups);
       for (int g = 0; g < params.groups; ++g) {
         auto input_g = subtensor(input, 1, params.groups, g);
@@ -422,6 +432,7 @@ at::Tensor _convolution(
             input_g, weight_g, bias_g, params.stride, params.padding, params.dilation, params.transposed, params.output_padding);
       }
       output = at::cat(outputs, 1);
+      #endif
     }
   }
 
@@ -455,6 +466,8 @@ at::Tensor _convolution_nogroup(
   auto kernel_size = weight.sizes().slice(2);
 
   if (params.transposed) {
+    AT_ERROR("Unsupported!");
+    #if 0
     if (dim == 4) {
       return at::thnn_conv_transpose2d(
           input, weight, kernel_size, bias,
@@ -464,14 +477,17 @@ at::Tensor _convolution_nogroup(
         input, weight, kernel_size, bias,
         stride, padding, output_padding, dilation);
       }
+    #endif
   } else {  /* Not transposed */
     if (dim == 4) {
       if (dilated) {
-        return at::thnn_conv_dilated2d(
-            input, weight, kernel_size, bias,
-            stride, padding, dilation);
+        AT_ERROR("Unsupported!");
+        // return at::thnn_conv_dilated2d(
+        //     input, weight, kernel_size, bias,
+        //     stride, padding, dilation);
       } else {  /* dim == 4, non-dilated */
         if (params.use_nnpack(input)) {
+          AT_ERROR("Unsupported!");
 #if AT_NNPACK_ENABLED()
           return at::_nnpack_spatial_convolution(
               input, weight, bias, padding);
@@ -485,21 +501,21 @@ at::Tensor _convolution_nogroup(
         }
       }
     } else if (dim == 5 && (input.is_cuda() || dilated)) {
-      return at::thnn_conv_dilated3d(
-          input, weight, kernel_size, bias,
-          stride, padding, dilation);
+      // return at::thnn_conv_dilated3d(
+      //     input, weight, kernel_size, bias,
+      //     stride, padding, dilation);
     } else if (dim == 5) { /* dim == 5, CPU, non-dilated */
       /* CPU implementation has specialized MM kernels
          for non-dilated case here */
-      return at::thnn_conv3d(
-          input, weight, kernel_size, bias,
-          stride, padding);
+      // return at::thnn_conv3d(
+      //     input, weight, kernel_size, bias,
+      //     stride, padding);
     }
   }
 
   AT_ERROR("unsupported ConvNd parameters");
 }
-
+#if 0
 static Tensor subvariable(const Tensor& var, int dim, int groups, int g) {
   int64_t n = var.sizes()[dim] / groups;
   auto result = var.narrow(dim, n * g, n);
@@ -726,5 +742,5 @@ std::tuple<Tensor,Tensor,Tensor> _convolution_double_backward(
 
   return std::tuple<Tensor,Tensor,Tensor>{ggO, gI, gW};
 }
-
+#endif
 }} // at::native

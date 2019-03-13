@@ -33,7 +33,7 @@ namespace at { namespace native {
 
 DEFINE_DISPATCH(max_kernel);
 DEFINE_DISPATCH(min_kernel);
-
+#if 0
 bool allclose(const Tensor& self, const Tensor& other, double rtol, double atol, bool equal_nan) {
   return at::isclose(self, other, rtol, atol, equal_nan).all().item<uint8_t>();
 }
@@ -60,7 +60,7 @@ Tensor isclose(const Tensor& self, const Tensor& other, double rtol, double atol
 Tensor isnan(const Tensor& self) {
   return self != self;
 }
-
+#endif
 bool is_nonzero(const Tensor& self) {
   auto n = self.numel();
   AT_ASSERT(n >= 0);
@@ -78,7 +78,7 @@ bool is_nonzero(const Tensor& self) {
   }
   AT_ERROR("expected non-Tensor backed scalar");
 }
-
+#if 0
 Tensor where(const Tensor& condition, const Tensor& self, const Tensor& other) {
   if (condition.type().scalarType() != ScalarType::Byte) {
     AT_ERROR("Expected condition to have ScalarType Byte, but got ScalarType ",
@@ -156,7 +156,7 @@ std::tuple<Tensor &,Tensor &> mode_out(Tensor& values, Tensor& indices,
     return at::legacy::th::_th_mode_out(values, indices, self, dim, keepdim);
   }
 }
-
+#endif
 std::tuple<Tensor &,Tensor &> _max_out_cpu(Tensor& max, Tensor& max_indices,
                                         const Tensor& self, int64_t dim, bool keepdim) {
   if (self.is_contiguous() && max.is_contiguous() && max_indices.is_contiguous()) {
@@ -234,7 +234,7 @@ std::tuple<Tensor &,Tensor &> min_out(Tensor& min, Tensor& min_indices,
     }
   }
 }
-
+#if 0
 // argmax and argmin
 
 Tensor argmax(const Tensor& self, int64_t dim, bool keepdim) {
@@ -265,4 +265,5 @@ Tensor _argmax(const Tensor& self, int64_t dim, bool keepdim) {
 Tensor _argmin(const Tensor& self, int64_t dim, bool keepdim) {
   return at::argmin(self, dim, keepdim);
 }
+#endif
 }} // namespace at::native

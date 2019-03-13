@@ -14,17 +14,19 @@ static const int MIOPEN_DIM_MAX = 4;
 namespace at { namespace native {
 
 namespace {
+
   void check_dims_match_num_input_features(const char* arg_name, int64_t expected, int64_t actual){
     AT_CHECK(actual == expected,
              arg_name, " should contain ", expected, " elements not ", actual);
   }
-
+#if 0
   static inline Tensor repeat_if_defined(const Tensor& t, int64_t repeat) {
     if (t.defined()) {
       return t.repeat(repeat);
     }
     return t;
   }
+#endif
 }
 
 // TensorAccessor when it is defined to work around undefined...
@@ -146,7 +148,7 @@ std::tuple<Tensor,Tensor> batch_norm_cpu_update_stats_template(
   });
   return std::make_tuple(save_mean, save_var_transform);
 }
-
+#if 0
 
 template<typename scalar_t>
 std::tuple<Tensor, Tensor, Tensor> batch_norm_backward_cpu_template(const Tensor& grad_out_, const Tensor& input, const Tensor& weight,
@@ -250,7 +252,7 @@ std::tuple<Tensor, Tensor, Tensor> batch_norm_backward_cpu_template(const Tensor
     });
   return std::make_tuple(grad_input, grad_weight, grad_bias);
 }
-
+#endif
 // _batch_norm_impl_index(_backward) are used in the JIT be able to keep the run-time selection
 // of backends, while enabling it to keep the information about the used backend, so that it can
 // use its corresponding backward implementation.
@@ -276,7 +278,7 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
   if (bias.defined()) {
     check_dims_match_num_input_features("bias", num_features, bias.numel());
   }
-
+#if 0
   bool use_cudnn = false;
   use_cudnn = (input.is_cuda()
                && (input.type().scalarType() != at::kHalf
@@ -324,13 +326,13 @@ std::tuple<Tensor, Tensor, Tensor, int64_t> _batch_norm_impl_index(
              std::make_tuple(2));
     #endif
   }
-
+#endif
   return std::tuple_cat(
            at::native_batch_norm(
              input, weight, bias, running_mean, running_var, training, momentum, eps),
            std::make_tuple(0));
 }
-
+#if 0
 std::tuple<Tensor, Tensor, Tensor> _batch_norm_impl_index_backward(
     int64_t impl_index,
     const Tensor& input, const Tensor& grad_output, const Tensor& weight /* optional */,
@@ -348,7 +350,7 @@ std::tuple<Tensor, Tensor, Tensor> _batch_norm_impl_index_backward(
   }
   AT_ASSERTM(false, "Unsupported impl_index in _batch_norm_impl_index_backward: ", impl_index);
 }
-
+#endif
 Tensor batch_norm(
     const Tensor& input, const Tensor& weight /* optional */, const Tensor& bias /* optional */,
     const Tensor& running_mean /* optional */, const Tensor& running_var /* optional */,
@@ -356,7 +358,7 @@ Tensor batch_norm(
   return std::get<0>(at::_batch_norm_impl_index(input, weight, bias, running_mean, running_var,
                                                 training, momentum, eps, cudnn_enabled));
 }
-
+#if 0
 Tensor instance_norm(
     const Tensor& input, const Tensor& weight /* optional */, const Tensor& bias /* optional */,
     const Tensor& running_mean /* optional */, const Tensor& running_var /* optional */,
@@ -498,7 +500,7 @@ std::tuple<Tensor, Tensor> batch_norm_update_stats_cpu(
       return batch_norm_cpu_update_stats_template<scalar_t, Var>(self, running_mean, running_var, momentum, 0);
     });
 }
-
+#endif
 std::tuple<Tensor, Tensor, Tensor> batch_norm_cpu(const Tensor& self, const Tensor& weight, const Tensor& bias,
                                                   const Tensor& running_mean, const Tensor& running_var,
                                                   bool train, double momentum, double eps) {
@@ -513,7 +515,7 @@ std::tuple<Tensor, Tensor, Tensor> batch_norm_cpu(const Tensor& self, const Tens
       }
     });
 }
-
+#if 0
 std::tuple<Tensor, Tensor, Tensor> batch_norm_backward_cpu(const Tensor& grad_out, const Tensor& self, const Tensor& weight,
                                                            const Tensor& running_mean, const Tensor& running_var, const Tensor& save_mean, const Tensor& save_invstd,
                                                            bool train, double eps, std::array<bool,3> grad_input_mask) {
@@ -521,5 +523,5 @@ std::tuple<Tensor, Tensor, Tensor> batch_norm_backward_cpu(const Tensor& grad_ou
       return batch_norm_backward_cpu_template<scalar_t>(grad_out, self, weight, running_mean, running_var, save_mean, save_invstd, train, eps, grad_input_mask);
     });
 }
-
+#endif
 }} // at::native

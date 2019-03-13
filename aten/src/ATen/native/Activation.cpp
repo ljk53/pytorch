@@ -14,6 +14,7 @@ static const double SELU_SCALE = 1.0507009873554804934193349852946;
 
 DEFINE_DISPATCH(threshold_stub);
 
+#if 0
 Tensor relu(const Tensor & self) {
   return at::threshold(self, 0, 0);
 }
@@ -47,7 +48,7 @@ Tensor rrelu(const Tensor & self, Scalar lower, Scalar upper, bool training, Gen
 Tensor & rrelu_(Tensor & self, Scalar lower, Scalar upper, bool training, Generator* generator) {
   return at::rrelu_with_noise_(self, at::empty({0}, self.options()), lower, upper, training, generator);
 }
-
+#endif
 // computes `result = self <= threshold ? value : other`
 // other is `self` in threshold() and `grad` in threshold_backward()
 static Tensor threshold_out(
@@ -79,7 +80,7 @@ Tensor& threshold_out(Tensor& result, const Tensor& self, Scalar threshold, Scal
 Tensor threshold_backward(const Tensor& grad, const Tensor& self, Scalar threshold) {
   return threshold_out(nullopt, self, threshold, 0, grad);
 }
-
+#if 0
 // -----------------------------------
 // prelu forward
 // -----------------------------------
@@ -357,5 +358,5 @@ Tensor hardshrink_backward_cpu(const Tensor & grad, const Tensor & self, Scalar 
   });
   return out_tensor;
 }
-
+#endif
 }}  // namespace at::native

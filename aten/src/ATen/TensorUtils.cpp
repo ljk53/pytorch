@@ -7,7 +7,7 @@
 #include <sstream>
 
 namespace at {
-
+#if 0
 std::ostream& operator<<(std::ostream & out, TensorGeometryArg t) {
   if (t.pos == 0) {
     // 0 is distinguished; it usually indicates 'self' or the return
@@ -193,7 +193,7 @@ void checkAllDefined(CheckedFrom c, ArrayRef<TensorArg> ts) {
     checkDefined(c, t);
   }
 }
-
+#endif
 void checkBackend(CheckedFrom c, const Tensor& t, Backend backend) {
   AT_CHECK(
     !t.defined() || t.type().backend() == backend,
@@ -207,7 +207,7 @@ void checkBackend(CheckedFrom c, ArrayRef<Tensor> tensors, at::Backend backend) 
     checkBackend(c, t, backend);
   }
 }
-
+#if 0
 void * maybe_data_ptr(const Tensor& tensor) {
   return tensor.defined() ? (void *)tensor.data_ptr() : nullptr;
 }
@@ -234,5 +234,5 @@ bool geometry_is_contiguous(IntArrayRef sizes, IntArrayRef strides) {
   }
   return contig_if_nonempty;
 }
-
+#endif
 }

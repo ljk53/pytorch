@@ -30,7 +30,7 @@
 
 namespace at {
 namespace native {
-
+#if 0
 Tensor clamp(const Tensor& self, optional<Scalar> min, optional<Scalar> max) {
   Tensor result = at::empty({0}, self.options());
   return clamp_out(result, self, min, max);
@@ -82,7 +82,7 @@ Tensor& _clamp_min__cpu(Tensor& self, Scalar min) {
 Tensor& _clamp_min_out_cpu(Tensor& result, const Tensor& self, Scalar min) {
   return legacy::th::_th_clamp_min_out(result, self, min);
 }
-
+#endif
 Tensor& fill_(Tensor& self, Scalar value) {
   return at::legacy::th::_th_fill_(self, value);
 }
@@ -90,7 +90,7 @@ Tensor& fill_(Tensor& self, Scalar value) {
 Tensor& fill_(Tensor& self, const Tensor& value) {
   return at::legacy::th::_th_fill_(self, value);
 }
-
+#if 0
 Tensor mvlgamma(const Tensor& self, int64_t p) {
   AT_CHECK(at::isFloatingType(self.type().scalarType()),
            "mvlgamma is not implemented for ", self.type());
@@ -112,7 +112,7 @@ Tensor& mvlgamma_(Tensor& self, int64_t p) {
   args = args.add(self.unsqueeze(-1));
   return self.copy_(args.lgamma_().sum(-1).add_(p * (p - 1) * std::log(M_PI) / 4.));
 }
-
+#endif
 // NB: If you use this macro, you may also need to add a CUDA forwarding
 // stub in CUDAUnaryOps
 
@@ -150,7 +150,7 @@ Tensor& mvlgamma_(Tensor& self, int64_t p) {
   }
 
 // NB: Temp. defaulting to TH implementation of abs due to issues with Apple
-
+#if 0
 IMPLEMENT_UNARY_OP_TH(abs)
 IMPLEMENT_UNARY_OP_VEC(acos)
 IMPLEMENT_UNARY_OP_VEC(asin)
@@ -163,7 +163,9 @@ IMPLEMENT_UNARY_OP_VEC(erfc)
 IMPLEMENT_UNARY_OP_VEC(exp)
 IMPLEMENT_UNARY_OP_VEC(expm1)
 IMPLEMENT_UNARY_OP_VEC(floor)
+#endif
 IMPLEMENT_UNARY_OP_VEC(log)
+#if 0
 IMPLEMENT_UNARY_OP_VEC(log10)
 IMPLEMENT_UNARY_OP_VEC(log1p)
 IMPLEMENT_UNARY_OP_VEC(log2)
@@ -176,7 +178,9 @@ IMPLEMENT_UNARY_OP_VEC(sqrt)
 IMPLEMENT_UNARY_OP_VEC(tan)
 IMPLEMENT_UNARY_OP_VEC(tanh)
 IMPLEMENT_UNARY_OP_VEC(trunc)
+#endif
 
+#if 0
 DEFINE_DISPATCH(absImpl);
 DEFINE_DISPATCH(acosImpl);
 DEFINE_DISPATCH(asinImpl);
@@ -188,7 +192,9 @@ DEFINE_DISPATCH(erfcImpl);
 DEFINE_DISPATCH(expImpl);
 DEFINE_DISPATCH(expm1Impl);
 DEFINE_DISPATCH(floorImpl);
+#endif
 DEFINE_DISPATCH(logImpl);
+#if 0
 DEFINE_DISPATCH(log10Impl);
 DEFINE_DISPATCH(log1pImpl);
 DEFINE_DISPATCH(log2Impl);
@@ -200,6 +206,6 @@ DEFINE_DISPATCH(sqrtImpl);
 DEFINE_DISPATCH(tanImpl);
 DEFINE_DISPATCH(tanhImpl);
 DEFINE_DISPATCH(truncImpl);
-
+#endif
 }
 } // namespace at

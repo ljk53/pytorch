@@ -266,7 +266,7 @@ Tensor diag_embed(const Tensor& self, int64_t offset, int64_t dim1_, int64_t dim
   diag.copy_(self);
   return result;
 }
-
+#endif
 Tensor expand(const Tensor& self, IntArrayRef size, bool implicit) {
   // [expand implicit]
   // The implicit flag is set to true for any expand calls inserted by broadcast
@@ -286,7 +286,7 @@ Tensor expand(const Tensor& self, IntArrayRef size, bool implicit) {
 
   return self.as_strided(expandedSizes, expandedStrides);
 }
-
+#if 0
 Tensor expand_as(const Tensor& self, const Tensor& other) {
   return self.expand(other.sizes());
 }
@@ -297,7 +297,7 @@ Tensor sum_to_size(const Tensor& self, IntArrayRef size) {
 
   return sum_to(self, size);
 }
-
+#endif
 Tensor as_strided(const Tensor& self, IntArrayRef size, IntArrayRef stride, optional<int64_t> storage_offset_) {
   auto storage_offset = storage_offset_.value_or(self.storage_offset());
   auto tid = self.type_id();
@@ -314,7 +314,7 @@ Tensor &as_strided_(Tensor& self, IntArrayRef size, IntArrayRef stride, optional
   setStrided(self, size, stride, storage_offset);
   return self;
 }
-
+#if 0
 Tensor narrow_copy_sparse(const Tensor& self, int64_t dim, int64_t start, int64_t length) {
   int64_t allDim = self.dim();
   int64_t end = start+length;
@@ -352,7 +352,7 @@ Tensor narrow_copy_sparse(const Tensor& self, int64_t dim, int64_t start, int64_
 Tensor narrow_copy_dense(const Tensor& self, int64_t dim, int64_t start, int64_t length){
     return self.narrow(dim, start, length).clone();
 }
-
+#endif
 Tensor narrow(const Tensor& self, int64_t dim, int64_t start, int64_t length) {
   AT_CHECK(self.dim() > 0, "narrow() cannot be applied to a 0-dim tensor.");
   auto cur_size = self.size(dim);
@@ -383,7 +383,7 @@ Tensor permute(const Tensor& self, IntArrayRef dims) {
   }
   return self.as_strided(newSizes, newStrides);
 }
-
+#if 0
 Tensor repeat(const Tensor& self, IntArrayRef repeats) {
   AT_CHECK(repeats.size() >= (size_t)self.dim(),
            "Number of dimensions of repeat dims can not be smaller than number of dimensions of tensor");
@@ -428,7 +428,7 @@ Tensor reshape(const Tensor& self, IntArrayRef proposed_shape) {
 Tensor reshape_as(const Tensor& self, const Tensor& other) {
   return self.reshape(other.sizes());
 }
-
+#endif
 Tensor select(const Tensor& self, int64_t dim, int64_t index) {
   int64_t ndim = self.dim();
   if (ndim == 0) {
@@ -483,7 +483,7 @@ Tensor slice(const Tensor& self, int64_t dim, int64_t start, int64_t end, int64_
   strides[dim] *= step;
   return self.as_strided(sizes, strides, storage_offset);
 }
-
+#if 0
 std::vector<Tensor> split(const Tensor& self, int64_t split_size, int64_t dim) {
   AT_CHECK(self.dim() != 0, "split expects at least a 1-dimensional tensor");
   AT_CHECK(split_size >= 0,  "split expects split_size be non-negative, but got split_size=", split_size);
@@ -602,7 +602,7 @@ Tensor & transpose_(Tensor & self, int64_t dim0, int64_t dim1) {
   std::swap(sizes[dim0], sizes[dim1]);
   return self.as_strided_(sizes, strides);
 }
-
+#endif
 Tensor transpose(const Tensor & self, int64_t dim0, int64_t dim1) {
   auto ndims = self.dim();
   dim0 = maybe_wrap_dim(dim0, ndims);
@@ -611,10 +611,10 @@ Tensor transpose(const Tensor & self, int64_t dim0, int64_t dim1) {
     return self;
   }
 
-  if (self.is_sparse()) {
-    Tensor self_clone = self.clone();  // yes, this is what THS does
-    return sparse_transpose_(self_clone, dim0, dim1);
-  }
+  // if (self.is_sparse()) {
+  //   Tensor self_clone = self.clone();  // yes, this is what THS does
+  //   return sparse_transpose_(self_clone, dim0, dim1);
+  // }
 
   auto strides = self.strides().vec();
   auto sizes = self.sizes().vec();
@@ -639,7 +639,7 @@ Tensor t(const Tensor & self) {
   check_t(self, "t()");
   return self.transpose(0, 1);
 }
-
+#if 0
 Tensor & t_(Tensor & self) {
   check_t(self, "t_()");
   return self.transpose_(0, 1);
@@ -673,7 +673,7 @@ inferSqueezeGeometry(const Tensor& tensor, int64_t dim) {
   }
   return std::make_tuple(sizes, strides);
 }
-#if 0
+
 std::tuple<std::vector<int64_t>, std::vector<int64_t> >
 inferUnsqueezeGeometry(const Tensor& tensor, int64_t dim) {
   auto sizes = tensor.sizes().vec();
@@ -684,7 +684,7 @@ inferUnsqueezeGeometry(const Tensor& tensor, int64_t dim) {
 
   return std::make_tuple(sizes, strides);
 }
-#endif
+
 Tensor squeeze(const Tensor& self) {
   auto g = inferSqueezeGeometry(self);
   return self.as_strided(std::get<0>(g), std::get<1>(g));
@@ -750,18 +750,18 @@ static Tensor unsqueeze_sparse(Tensor const &self, int64_t dim /* should already
         sparse_dim, dense_dim + 1, sizes, indices, self._values().unsqueeze(dim - sparse_dim + 1), self.options());
   }
 }
-
+#endif
 Tensor unsqueeze(const Tensor& self, int64_t dim) {
   dim = maybe_wrap_dim(dim, self.dim() + 1);
 
-  if (self.is_sparse()) {
-    return unsqueeze_sparse(self, dim);
-  } else {
+  //if (self.is_sparse()) {
+  //  return unsqueeze_sparse(self, dim);
+  //} else {
     auto g = inferUnsqueezeGeometry(self, dim);
     return self.as_strided(std::get<0>(g), std::get<1>(g));
-  }
+  //}
 }
-
+#if 0
 Tensor & unsqueeze_(Tensor& self, int64_t dim) {
   dim = maybe_wrap_dim(dim, self.dim() + 1);
 
@@ -799,11 +799,11 @@ Tensor flatten(const Tensor& self, int64_t start_dim, int64_t end_dim) {
 Tensor view_as(const Tensor& self, const Tensor& other) {
   return self.view(other.sizes());
 }
-
+#endif
 int64_t numel(const Tensor& self) {
   return self.unsafeGetTensorImpl()->numel();
 }
-
+#if 0
 std::vector<Tensor> unbind(const Tensor &self, int64_t dim) {
   dim = maybe_wrap_dim(dim, self.dim());
   int64_t size = self.size(dim);

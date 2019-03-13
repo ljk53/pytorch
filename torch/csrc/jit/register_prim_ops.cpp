@@ -102,9 +102,11 @@ static at::Tensor to_dispatch(
     c10::optional<at::ScalarType> scalarType,
     bool non_blocking,
     bool copy) {
+  #if 0
   if (device && device->is_cuda()) {
     at::globalContext().lazyInitCUDA();
   }
+  #endif
   if (!device && !scalarType && !copy) {
     return self;
   } else if (!device) {

@@ -26,6 +26,7 @@
 
 namespace at {
 namespace native {
+#if 0
 namespace {
 void window_function_checks(
     const char* function_name,
@@ -87,7 +88,7 @@ Tensor _dim_arange(const Tensor& like, int64_t dim) {
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ empty ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+#endif
 Tensor empty_cpu(IntArrayRef size, const TensorOptions& options) {
   AT_ASSERT(options.backend() == Backend::CPU);
   AT_ASSERT(!options.is_variable());  // is_variable should have been 'unpacked'  // TODO: remove this when Variable and Tensor are merged
@@ -117,7 +118,7 @@ Tensor empty_strided_cpu(IntArrayRef size, IntArrayRef stride, const TensorOptio
   at::native::resize_impl_cpu_(t.unsafeGetTensorImpl(), size, stride);
   return t;
 }
-
+#if 0
 Tensor& empty_out(Tensor& result, IntArrayRef size) {
   check_size_nonnegative(size);
   if (result.is_sparse()) {
@@ -144,20 +145,22 @@ Tensor& empty_out(Tensor& result, IntArrayRef size) {
 AT_FORALL_SCALAR_TYPES(DEFINE_CAST_OP)
 
 #undef DEFINE_CAST_OP
-
+#endif
 Tensor empty_like(const Tensor& self) {
   return native::empty_like(self, self.options());
 }
 
 Tensor empty_like(const Tensor& self, const TensorOptions& options) {
+  #if 0
   if (options.layout() == kSparse && self.is_sparse()) {
     auto res = at::empty({0}, options); // to be resized
     res.sparse_resize_and_clear_(self.sizes(), self.sparse_dim(), self.dense_dim());
     return res;
   }
+  #endif
   return at::empty(self.sizes(), options);
 }
-
+#if 0
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ eye ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Tensor eye(int64_t n, const TensorOptions& options) {
@@ -195,7 +198,7 @@ Tensor& eye_out_cpu(Tensor& result, int64_t n, int64_t m) {
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ full ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+#endif
 Tensor full(IntArrayRef size, Scalar fill_value, const TensorOptions& options) {
   if (options.layout() == kSparse) {
     AT_ERROR("full(...) is not implemented for sparse layout");
@@ -203,7 +206,7 @@ Tensor full(IntArrayRef size, Scalar fill_value, const TensorOptions& options) {
   auto result = at::empty(size, options);
   return result.fill_(fill_value);
 }
-
+#if 0
 Tensor& full_out(Tensor& result, IntArrayRef size, Scalar fill_value) {
   if (result.is_sparse()) {
     AT_ERROR("full(...) is not implemented for sparse layout");
@@ -243,11 +246,11 @@ Tensor logspace(
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ones ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+#endif
 Tensor ones(IntArrayRef size, const TensorOptions& options) {
   return native::full(size, /*fill_value=*/1, options);
 }
-
+#if 0
 Tensor& ones_out(Tensor& result, IntArrayRef size) {
   return native::full_out(result, size, /*fill_value=*/1);
 }
@@ -259,13 +262,13 @@ Tensor ones_like(const Tensor& self) {
 Tensor ones_like(const Tensor& self, const TensorOptions& options) {
   return native::ones(self.sizes(), options);
 }
-
+#endif
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ scalar_tensor ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Tensor scalar_tensor(Scalar s, const TensorOptions& options) {
   return at::empty({}, options).fill_(s);
 }
-
+#if 0
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ rand ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Tensor rand(IntArrayRef size, const TensorOptions& options) {
@@ -560,14 +563,14 @@ Tensor triu_indices_cpu(
 
   return result;
 }
-
+#endif
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ zeros ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Tensor zeros(IntArrayRef size, const TensorOptions& options) {
   auto result = at::empty(size, options);
   return result.zero_();
 }
-
+#if 0
 Tensor& zeros_out(Tensor& result, IntArrayRef size) {
   if (result.is_sparse()) {
     result.sparse_resize_and_clear_(size, size.size(), 0);
@@ -698,7 +701,7 @@ Tensor hann_window(
   return native::hamming_window(
       window_length, periodic, /*alpha=*/0.5, /*beta=*/0.5, options);
 }
-
+#endif
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ tensor ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 template <typename T>

@@ -181,7 +181,7 @@ Tensor & fmod_(Tensor& self, Scalar other) {
 Tensor & fmod_(Tensor& self, const Tensor & other) {
   return at::legacy::th::_th_fmod_(self, other);
 }
-
+#endif
 Tensor & remainder_(Tensor& self, Scalar other) {
   return at::legacy::th::_th_remainder_(self, other);
 }
@@ -189,7 +189,7 @@ Tensor & remainder_(Tensor& self, Scalar other) {
 Tensor & remainder_(Tensor& self, const Tensor & other) {
   return at::legacy::th::_th_remainder_(self, other);
 }
-
+#if 0
 Tensor & addbmm_(Tensor& self, const Tensor & batch1, const Tensor & batch2, Scalar beta, Scalar alpha) {
   return at::legacy::th::_th_addbmm_(self, batch1, batch2, beta, alpha);
 }
@@ -594,11 +594,11 @@ Tensor reciprocal(const Tensor & self) {
 Tensor & neg_out(Tensor & result, const Tensor & self) {
   return at::legacy::th::_th_neg_out(result, self);
 }
-
+#endif
 Tensor neg(const Tensor & self) {
   return at::legacy::th::_th_neg(self);
 }
-
+#if 0
 Tensor & atan2_out(Tensor & result, const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_atan2_out(result, self, other);
 }
@@ -650,15 +650,15 @@ Tensor fmod(const Tensor & self, const Tensor & other) {
 Tensor & remainder_out(Tensor & result, const Tensor & self, Scalar other) {
   return at::legacy::th::_th_remainder_out(result, self, other);
 }
-
+#endif
 Tensor remainder(const Tensor & self, Scalar other) {
   return at::legacy::th::_th_remainder(self, other);
 }
-
+#if 0
 Tensor & remainder_out(Tensor & result, const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_remainder_out(result, self, other);
 }
-
+#endif
 Tensor remainder(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_remainder(self, other);
 }
@@ -678,6 +678,7 @@ Tensor min(const Tensor & self) {
 Tensor & max_out(Tensor & result, const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_max_out(result, self, other);
 }
+
 Tensor max(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_max(self, other);
 }
@@ -685,7 +686,7 @@ Tensor max(const Tensor & self, const Tensor & other) {
 Tensor max(const Tensor & self) {
   return at::legacy::th::_th_max(self);
 }
-
+#if 0
 Tensor median(const Tensor & self) {
   return at::legacy::th::_th_median(self);
 }
@@ -721,11 +722,11 @@ Tensor renorm(const Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
 Tensor unfold(const Tensor & self, int64_t dimension, int64_t size, int64_t step) {
   return at::legacy::th::_th_unfold(self, dimension, size, step);
 }
-
+#endif
 bool equal(const Tensor & self, const Tensor & other) {
   return at::legacy::th::_th_equal(self, other);
 }
-
+#if 0
 Tensor & pow_out(Tensor & result, const Tensor & self, const Tensor & exponent) {
   return at::legacy::th::_th_pow_out(result, self, exponent);
 }
