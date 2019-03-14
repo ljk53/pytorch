@@ -29,14 +29,14 @@ void THStorage_(copy##TYPENAMESRC)(THStorage *storage, TH##TYPENAMESRC##Storage 
     data[i] = static_cast<scalar_t>(src_data[i]);                           \
 }
 
-IMPLEMENT_THStorage_COPY(Byte)
-IMPLEMENT_THStorage_COPY(Char)
-IMPLEMENT_THStorage_COPY(Short)
-IMPLEMENT_THStorage_COPY(Int)
+// IMPLEMENT_THStorage_COPY(Byte)
+// IMPLEMENT_THStorage_COPY(Char)
+// IMPLEMENT_THStorage_COPY(Short)
+// IMPLEMENT_THStorage_COPY(Int)
 IMPLEMENT_THStorage_COPY(Long)
 IMPLEMENT_THStorage_COPY(Float)
 IMPLEMENT_THStorage_COPY(Double)
-IMPLEMENT_THStorage_COPY(Half)
-IMPLEMENT_THStorage_COPY(Bool)
+// IMPLEMENT_THStorage_COPY(Half)
+// IMPLEMENT_THStorage_COPY(Bool)
 
 #endif

@@ -7,9 +7,9 @@
 #define THGenerateManyTypes
 #endif
 
-#include <TH/THGenerateByteType.h>
+// #include <TH/THGenerateByteType.h>
 #include <TH/THGenerateCharType.h>
-#include <TH/THGenerateShortType.h>
+// #include <TH/THGenerateShortType.h>
 #include <TH/THGenerateIntType.h>
 #include <TH/THGenerateLongType.h>
 

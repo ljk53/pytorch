@@ -180,15 +180,15 @@ extension_backends = [] #['MSNPU', 'XLA']
 
 # scalar_name, c_type, accreal, th_scalar_type, is_floating_type
 scalar_types = [
-    ('Bool', 'uint8_t', 'BoolAccrealNotDefined', 'uint8_t', False),
-    ('Byte', 'uint8_t', 'Long', 'uint8_t', False),
-    ('Char', 'int8_t', 'Long', 'int8_t', False),
+    # ('Bool', 'uint8_t', 'BoolAccrealNotDefined', 'uint8_t', False),
+    # ('Byte', 'uint8_t', 'Long', 'uint8_t', False),
+    # ('Char', 'int8_t', 'Long', 'int8_t', False),
     ('Double', 'double', 'Double', 'double', True),
     ('Float', 'float', 'Double', 'float', True),
-    ('Int', 'int', 'Long', 'int32_t', False),
+    # ('Int', 'int', 'Long', 'int32_t', False),
     ('Long', 'int64_t', 'Long', 'int64_t', False),
-    ('Short', 'int16_t', 'Long', 'int16_t', False),
-    ('Half', 'Half', 'Double', 'at::Half', True),
+    # ('Short', 'int16_t', 'Long', 'int16_t', False),
+    # ('Half', 'Half', 'Double', 'at::Half', True),
 ]
 
 # shared environment for non-derived base classes Type.h Tensor.h Storage.h
