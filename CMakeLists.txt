@@ -531,3 +531,12 @@ endif()
 
 include(cmake/Summary.cmake)
 caffe2_print_configuration_summary()
+
+
+add_executable(loader loader.cpp)
+target_link_libraries(loader torch caffe2_library)
+set_property(TARGET loader PROPERTY CXX_STANDARD 11)
+
+add_executable(executor executor.cpp)
+target_link_libraries(executor lite_executor_interface)
+set_property(TARGET executor PROPERTY CXX_STANDARD 11)

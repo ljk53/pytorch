@@ -72,11 +72,17 @@ const size_t autodiffSubgraphInlineThreshold = 5;
 struct ExecutionPlan {
   ExecutionPlan() = default;
   ExecutionPlan(std::shared_ptr<Graph> graph)
-      : code(graph), graph(std::move(graph)) {}
+      : code(graph), graph(std::move(graph)) {
+    std::cout << code << std::endl;
+  }
 
   void run(Stack& stack) const {
     InterpreterState(code).run(stack);
     last_executed_optimized_graph = graph;
+  }
+
+  void saveInstructions(const std::string& fileName) const {
+    code.exportInstructions(fileName);
   }
 
   operator bool() const {
@@ -509,12 +515,7 @@ struct GraphExecutorImpl {
 
   // entry point where execution begins
   void run(Stack& stack) {
-    AT_CHECK(
-        stack.size() >= num_inputs,
-        "expected ",
-        num_inputs,
-        " inputs, but got only ",
-        stack.size());
+    checkInputNumber(stack);
 
     logging::getLogger()->addStatValue(
         logging::runtime_counters::GRAPH_EXECUTOR_INVOCATIONS, 1.0);
@@ -526,6 +527,14 @@ struct GraphExecutorImpl {
     auto& execution_plan =
         optimize ? getOrCompile(stack) : getOrCompileFallback();
     return execution_plan.run(stack);
+  }
+
+  void saveInstructions(Stack& stack, const std::string& fileName) {
+    checkInputNumber(stack);
+
+    auto& execution_plan =
+        optimize ? getOrCompile(stack) : getOrCompileFallback();
+    return execution_plan.saveInstructions(fileName);
   }
 
   GraphExecutorState getDebugState() {
@@ -551,6 +560,15 @@ struct GraphExecutorImpl {
       fallback = ExecutionPlan(graph_);
     }
     return fallback;
+  }
+
+  void checkInputNumber(const Stack& stack) {
+    AT_CHECK(
+        stack.size() >= num_inputs,
+        "expected ",
+        num_inputs,
+        " inputs, but got only ",
+        stack.size());
   }
 
   const ExecutionPlan& getOrCompile(const Stack& stack) {
@@ -741,6 +759,10 @@ GraphExecutor::GraphExecutor(std::shared_ptr<Graph> graph, bool optimize)
 
 void GraphExecutor::run(Stack& inputs) {
   return pImpl->run(inputs);
+}
+
+void GraphExecutor::saveInstructions(Stack& inputs, const std::string& fileName) {
+  return pImpl->saveInstructions(inputs, fileName);
 }
 
 std::shared_ptr<Graph> GraphExecutor::graph() const {

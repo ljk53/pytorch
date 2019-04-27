@@ -331,6 +331,7 @@ list(APPEND ATen_HIP_INCLUDE ${ATen_CPU_INCLUDE})
 # built when USE_CUDA=1 and CUDA is available.  (libATen_hip.so works
 # the same way as libATen_cuda.so)
 set(ATen_CPU_SRCS ${all_cpu_cpp})
+message("AT_LINK_STYLE: " ${AT_LINK_STYLE})
 if(AT_LINK_STYLE STREQUAL "INTERFACE")
   # Source code can't be added to an interface library, so it is
   # passed back to be compiled into the containing library

@@ -86,6 +86,18 @@ struct TORCH_API Method {
     return stack.front();
   }
 
+  void saveInstructions(
+      std::vector<IValue> stack,
+      const std::string& fileName,
+      const Kwargs& kwargs = Kwargs()) {
+    getSchema().checkAndNormalizeInputs(stack, kwargs);
+    for (auto input : initial_ivalues_) {
+      push(stack, input.value());
+    }
+    // use run rather than operator() to skip the second schema check.
+    function_->saveInstructions(std::move(stack), fileName);
+  }
+
   const std::vector<Slot>& initial_ivalues() const {
     return initial_ivalues_;
   }
@@ -163,6 +175,10 @@ struct TORCH_API Module {
 
   IValue forward(std::vector<IValue> inputs) {
     return get_method("forward")(std::move(inputs));
+  }
+
+  void saveInstructions(std::vector<IValue> inputs, const std::string& fileName) {
+    return get_method("forward").saveInstructions(inputs, fileName);
   }
 
   void register_buffer(const std::string& name, autograd::Variable v) {

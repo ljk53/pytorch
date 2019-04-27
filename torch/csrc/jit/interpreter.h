@@ -5,6 +5,7 @@
 
 #include <torch/csrc/WindowsTorchApiMacro.h>
 #include <ATen/core/ivalue.h>
+#include <torch/csrc/jit/source_location.h>
 
 namespace at {
 class Tensor;
@@ -39,6 +40,8 @@ struct TORCH_API Code {
   explicit operator bool() const {
     return pImpl != nullptr;
   }
+
+  void exportInstructions(const std::string& filename) const;
 
  private:
   std::shared_ptr<CodeImpl> pImpl;

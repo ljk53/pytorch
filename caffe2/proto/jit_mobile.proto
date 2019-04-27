@@ -1,0 +1,98 @@
+syntax = "proto2";
+
+package jit_mobile;
+
+message ListHandleDef {
+  required uint32 start = 1;
+  required uint32 size = 2 [default = 0];
+}
+
+message UseListDef {
+  required ListHandleDef values = 1;
+  required ListHandleDef free_flags = 2;
+}
+
+message RecordRef {
+  // The filename to the tensor binary
+  optional string key = 1;
+}
+
+// Reuse the Jit tensor format
+message TensorDef {
+  repeated int64 dims = 1;
+  enum DataType {
+    UNDEFINED = 0;
+
+    // Basic types
+    FLOAT = 1;     // float
+    INT32 = 2;     // int
+    BYTE = 3;      // byte, when deserialized, is going to be restored as uint8
+    STRING = 4;    // string
+
+    // Less-commonly used data types
+    BOOL = 5;      // bool
+    UINT8 = 6;     // uint8_t
+    INT8 = 7;      // int8_t
+    UINT16 = 8;    // uint16_t
+    INT16 = 9;     // int16_t
+    INT64 = 10;    // int64_t
+    FLOAT16 = 12;  // at::Half
+    DOUBLE = 13;   // double
+  }
+  optional int64 offset = 2;
+  repeated int64 strides = 3;
+  // whether we compute the gradient for the parameter
+  optional bool requires_grad = 4;
+  optional DataType data_type = 5 [default = FLOAT];
+
+  optional RecordRef data = 6;
+
+  // device field stores the canonical device string, and it follows the
+  // format below: `(cpu|cuda)[:<device-index>]`, e.g., 'cuda:0'
+  optional string device = 7;
+}
+
+message OperationProto {
+  required string name = 1;
+  required string overload_name = 2;
+}
+
+message AttributeValueProto {
+  enum AttributKind {
+    f = 0; 
+    fs = 1; 
+    i = 2; 
+    is = 3; 
+    s = 4; 
+    ss = 5;
+    t = 6; 
+    ts = 7; 
+  }
+  required AttributKind kind = 1;
+  optional float float_value = 2;
+  optional int64 int_value = 3;
+  optional string string_value = 4;
+  // if it's a tensor, the offset into the tensor table
+  optional int64 tensor_id = 5;
+  repeated float float_array = 6;
+  repeated int64 int_array = 7;
+  repeated string string_array = 8;
+}
+
+message InstructionProto { //instruction
+  required OperationProto op = 1; 
+  required UseListDef inputs = 2;
+  required ListHandleDef outputs =3;
+// Use AttributeValue to hold the constants needed in this instruction,
+// if there is any. Currently I only saw them in Constant operators.
+  repeated AttributeValueProto attributes = 4;
+}
+
+message InstructionListProto { //instruction list
+  required string name = 1;
+  repeated InstructionProto instructions = 2;
+  repeated TensorDef tensors = 3;
+  repeated uint32 int_data = 4;
+  repeated bool bool_data = 5;
+  required uint32 register_size = 6;
+}

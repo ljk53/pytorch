@@ -126,6 +126,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/attributes.cpp
   ${TORCH_SRC_DIR}/csrc/jit/argument_spec.cpp
   ${TORCH_SRC_DIR}/csrc/jit/export.cpp
+  ${TORCH_SRC_DIR}/csrc/jit/export_instructions.cpp
   ${TORCH_SRC_DIR}/csrc/jit/pass_manager.cpp
   ${TORCH_SRC_DIR}/csrc/jit/pickler.cpp
   ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_0.cpp
@@ -754,3 +755,26 @@ if (BUILD_PYTHON)
 
   install(TARGETS torch_python DESTINATION "${TORCH_INSTALL_LIB_DIR}")
 endif()
+
+#if (BUILD_ATEN_MOBILE)
+#    add_subdirectory(../aten/src/ATen ATen)
+#    set(LITE_EXECUTOR_SRCS
+#        ${TORCH_SRC_DIR}/csrc/jit/import_instructions.cpp
+#        ${TORCH_SRC_DIR}/csrc/jit/register_ins_ops.cpp
+#        ${TORCH_SRC_DIR}/csrc/jit/instruction_executor.cpp
+#        )
+
+#    add_library(lite_executor STATIC ${LITE_EXECUTOR_SRCS})
+#    target_include_directories(lite_executor PUBLIC ${ATen_CPU_INCLUDE})
+#    target_link_libraries(lite_executor Caffe2_PROTO ATen_cpu)
+#    caffe2_interface_library(lite_executor lite_executor_interface)
+#endif()
+
+set(LITE_EXECUTOR_SRCS
+    ${TORCH_SRC_DIR}/csrc/jit/import_instructions.cpp
+    ${TORCH_SRC_DIR}/csrc/jit/register_ins_ops.cpp
+    ${TORCH_SRC_DIR}/csrc/jit/instruction_executor.cpp
+    )
+add_library(lite_executor STATIC ${LITE_EXECUTOR_SRCS})
+target_link_libraries(lite_executor torch)
+caffe2_interface_library(lite_executor lite_executor_interface)

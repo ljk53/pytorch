@@ -31,6 +31,8 @@ struct TORCH_API GraphExecutor {
   GraphExecutor() = default;
   GraphExecutor(std::shared_ptr<Graph> graph, bool optimize = true);
   void run(Stack& inputs);
+  // Save optimized instructions to fileName. Inputs are required for optimization.
+  void saveInstructions(Stack& inputs, const std::string& fileName);
   explicit operator bool() const {
     return pImpl != nullptr;
   }
