@@ -95,7 +95,7 @@ ${return_type} ${method_prefix_derived}${api_name}(${type_method_formals}) const
 TYPE_DERIVED_DEFINITION = CodeTemplate("""\
 ${return_type} ${Type}::${method_prefix_derived}${api_name}(${type_method_formals}) const {
     ${device_guard_declaration}
-    ScopedLogger l(__FILE__, "[derived] ${Type}::${api_name} ${type_method_formals}");
+    ScopedLogger l(__FILE__, "[derived]${Type} ${api_name}");
     ${type_definition_body}
 }
 """)
@@ -116,7 +116,7 @@ case ScalarType::${ScalarName}: {
 TYPE_DERIVED_DEFINITION_NATIVE = CodeTemplate("""\
 ${return_type} ${Type}::${api_name}(${type_method_formals}) const {
     ${device_guard_declaration}
-    ScopedLogger l(__FILE__, "[derived_native] ${Type}::${api_name} ${type_method_formals} ${native_type_method_dispatch}");
+    ScopedLogger l(__FILE__, "[derived_native]${Type} ${api_name}");
     ${dispatch_scalar_type_declaration}
     switch (dispatch_scalar_type) {
         ${cases}
@@ -167,7 +167,7 @@ C10_DEPRECATED static inline ${return_type} ${api_name}(${formals_with_defaults}
 # add method definition in Functions.h
 FUNCTION_DEFINITION = CodeTemplate("""\
 static inline ${return_type} ${api_name}(${formals}) {
-    ScopedLogger l(__FILE__, "[function] ${inferred_type}.${api_name} ${type_method_actuals}");
+    ScopedLogger l(__FILE__, "[function]${inferred_type} ${api_name}");
     return ${inferred_type}.${api_name}(${type_method_actuals});
 }
 """)
@@ -180,7 +180,7 @@ CAFFE2_API ${return_type} ${native_type_method_dispatch}(${formals_with_defaults
 FACTORY_DEFINITION = CodeTemplate("""\
 static inline ${return_type} ${api_name}(${formals}) {
     const DeviceGuard guard(options.device());
-    ScopedLogger l(__FILE__, "[factory] at::native::${api_name} ${type_method_actuals}");
+    ScopedLogger l(__FILE__, "[factory]at::native:: ${api_name}");
     return at::native::${api_name}(${type_method_actuals});
 }
 """)
