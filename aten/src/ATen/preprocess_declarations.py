@@ -91,6 +91,21 @@ def process_types_and_backends(option):
 
 def exclude(declaration):
     return 'only_register' in declaration or declaration.get('name') == 'ndimension'
+    used = [
+        'at::_convolution',
+        'at::adaptive_avg_pool2d',
+        'at::cat',
+        'at::dropout',
+        'at::max_pool2d',
+        'at::max_pool2d_with_indices',
+        'at::numel',
+        'at::relu_',
+        'at::size',
+    ]
+    for f in used:
+        if (f == declaration.get('name')):
+            return False
+    return True
 
 
 def add_variants(option):
