@@ -123,13 +123,13 @@ def from_ivalue(arg, value):
 
 
 CALL_NAMESPACE = CodeTemplate("""\
-    std::cout << "at::${name}" << std::endl;
+    //std::cout << "at::${name}" << std::endl;
 auto result_ = at::${name}(
     ${args}
 );
 """)
 CALL_METHOD = CodeTemplate("""\
-    std::cout << "(${first}).${name}" << std::endl;
+    //std::cout << "(${first}).${name}" << std::endl;
 auto result_ = (${first}).${name}(
     ${args}
 );
@@ -140,7 +140,7 @@ const auto options = TensorOptions()
         .layout(${layout})
         .device(${device})
         .pinned_memory(${pin_memory});
-    std::cout << "torch::${name}" << std::endl;
+    //std::cout << "torch::${name}" << std::endl;
 auto result_ = torch::${name}(${args_with_tensor_options});
 """)
 CALL_METHOD_WITH_TENSOR_OPTIONS = CodeTemplate("""\
@@ -149,7 +149,7 @@ const auto options = TensorOptions()
         .layout(${layout})
         .device(${device})
         .pinned_memory(${pin_memory});;
-    std::cout << "(${first}).${name}" << std::endl;
+    //std::cout << "(${first}).${name}" << std::endl;
 auto result_ = (${first}).${name}(${args_with_tensor_options});
 """)
 

@@ -170,7 +170,6 @@ endif(MSVC)
 if (ANDROID OR IOS)
   set(INTERN_BUILD_MOBILE ON)
 endif()
-set(INTERN_BUILD_MOBILE ON)
 
 # INTERN_BUILD_ATEN_OPS is used to control whether to build ATen/TH operators.
 # It's disabled for caffe2 mobile library.

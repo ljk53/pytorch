@@ -14,6 +14,7 @@
 #include <c10/core/TensorOptions.h>
 #include <ATen/DeviceGuard.h>
 #include <ATen/SparseTensorUtils.h>
+#include <iostream>
 
 namespace at {
 
