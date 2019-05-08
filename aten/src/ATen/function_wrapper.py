@@ -137,6 +137,69 @@ TYPE_DEFINITION_BODY_NATIVE = CodeTemplate("""\
 ${return_call} at::native::${native_type_method_dispatch}(/* native_actuals */ ${native_actuals});
 """)
 
+# Flatten type declarations / definitions
+
+FLATTEN_TYPE_METHOD_DECLARATION_CONCRETE = CodeTemplate("""\
+${return_type} ${api_name}(${type_method_formals}) const;
+""")
+
+FLATTEN_TYPE_METHOD_DECLARATION_BROADCAST = CodeTemplate("""\
+${return_type} ${api_name}(${type_method_formals}) const;
+""")
+
+FLATTEN_TYPE_METHOD_DECLARATION_DERIVED = CodeTemplate("""\
+${return_type} ${method_prefix_derived}${api_name}(${type_method_formals}) const;
+""")
+
+FLATTEN_TYPE_METHOD_DEFINITION_CONCRETE = CodeTemplate("""\
+${return_type} Type::${api_name}(${type_method_formals}) const {
+    ${device_guard_declaration}
+    ${type_definition_body}
+}
+""")
+
+FLATTEN_TYPE_METHOD_DEFINITION_BROADCAST = CodeTemplate("""\
+${return_type} Type::${api_name}(${type_method_formals}) const {
+    ${device_guard_declaration}
+    Tensor ${broadcast_returns};
+    std::tie(${broadcast_returns}) = ${broadcast_function}(${broadcast_actuals}, "${api_name}");
+    return ${method_prefix_derived}${api_name}(${broadcast_modified_actuals});
+}
+""")
+
+FLATTEN_TYPE_METHOD_DEFINITION_ABSTRACT = CodeTemplate("""\
+${return_type} Type::${method_prefix_derived}${api_name}(${type_method_formals}) const {
+    AT_ERROR("${method_prefix_derived}${api_name} is not implemented for type ", toString());
+}
+""")
+
+FLATTEN_TYPE_DERIVED_DEFINITION = CodeTemplate("""\
+${return_type} Type::${method_prefix_derived}${api_name}(${type_method_formals}) const {
+    ${device_guard_declaration}
+    ${type_definition_body}
+}
+""")
+
+FLATTEN_TYPE_DERIVED_DEFINITION_NATIVE_MISSING = CodeTemplate("""\
+${return_type} Type::${api_name}(${type_method_formals}) const {
+    AT_ERROR("${api_name} not supported on ${Type}");
+}
+""")
+
+FLATTEN_TYPE_DERIVED_DEFINITION_NATIVE = CodeTemplate("""\
+${return_type} Type::${api_name}(${type_method_formals}) const {
+    ${device_guard_declaration}
+    ${dispatch_scalar_type_declaration}
+    switch (dispatch_scalar_type) {
+        ${cases}
+            ${return_call} at::native::${native_type_method_dispatch}(/* actuals */ ${actuals});
+        break;
+        default:
+            AT_ERROR("${api_name} not supported on ${Type} for ", dispatch_scalar_type);
+    }
+}
+""")
+
 # Overrideable stubs to be used in user-extendable backends
 TYPE_DEFINITION_EXTENSION_BACKEND = CodeTemplate("""\
 ${return_type} ${Type}::${method_prefix_derived}${api_name}(${type_method_formals}) const {
@@ -428,6 +491,8 @@ TopEnvironment = TypedDict('TopEnvironment', {
     'pure_virtual_extended_type_method_declarations': List[str],
     'type_method_declarations': List[str],
     'type_method_definitions': List[str],
+    'flatten_type_method_declarations': List[str],
+    'flatten_type_method_definitions': List[str],
     'tensor_method_declarations': List[str],
     'tensor_method_definitions': List[str],
     'function_declarations': List[str],
@@ -921,17 +986,25 @@ def create_generic(top_env, declarations):
                 PURE_VIRTUAL_TYPE_METHOD_DECLARATION.substitute(env))
             top_env['type_method_declarations'].append(
                 TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
+            top_env['flatten_type_method_declarations'].append(
+                FLATTEN_TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
             body = emit_nn_body(option)
             top_env['type_method_definitions'].append(
                 TYPE_METHOD_DEFINITION_CONCRETE.substitute(
+                    env, type_definition_body=body))
+            top_env['flatten_type_method_definitions'].append(
+                FLATTEN_TYPE_METHOD_DEFINITION_CONCRETE.substitute(
                     env, type_definition_body=body))
         elif broadcast_arg is None:
             top_env['pure_virtual_extended_type_method_declarations'].append(
                 PURE_VIRTUAL_TYPE_METHOD_DECLARATION.substitute(env))
             top_env['type_method_declarations'].append(
                 TYPE_METHOD_DECLARATION_ABSTRACT.substitute(env))
+            top_env['flatten_type_method_declarations'].append(
+                FLATTEN_TYPE_METHOD_DECLARATION_DERIVED.substitute(env))
             top_env['type_method_definitions'].append(
                 TYPE_METHOD_DEFINITION_ABSTRACT.substitute(env))
+            option['flatten_abstract_definition'] = FLATTEN_TYPE_METHOD_DEFINITION_ABSTRACT.substitute(env)
         else:
             top_env['pure_virtual_extended_type_method_declarations'].append(
                 PURE_VIRTUAL_TYPE_METHOD_DECLARATION.substitute(env))
@@ -939,10 +1012,15 @@ def create_generic(top_env, declarations):
                 PURE_VIRTUAL_TYPE_METHOD_DECLARATION_BROADCAST.substitute(env))
             top_env['type_method_declarations'].append(
                 TYPE_METHOD_DECLARATION_BROADCAST.substitute(env))
+            top_env['flatten_type_method_declarations'].append(
+                FLATTEN_TYPE_METHOD_DECLARATION_BROADCAST.substitute(env))
             top_env['type_method_declarations'].append(
                 TYPE_METHOD_DECLARATION_ABSTRACT.substitute(env))
+            top_env['flatten_type_method_declarations'].append(
+                FLATTEN_TYPE_METHOD_DECLARATION_DERIVED.substitute(env))
             top_env['type_method_definitions'].append(
                 TYPE_METHOD_DEFINITION_ABSTRACT.substitute(env))
+            option['flatten_abstract_definition'] = FLATTEN_TYPE_METHOD_DEFINITION_ABSTRACT.substitute(env)
 
             broadcast_inplace = 'inplace' in broadcast_arg['broadcast']
             broadcast_dims = 'dims:' in broadcast_arg['broadcast']
@@ -959,6 +1037,8 @@ def create_generic(top_env, declarations):
                                                     for y in option['actuals']]
             top_env['type_method_definitions'].append(
                 TYPE_METHOD_DEFINITION_BROADCAST.substitute(env))
+            top_env['flatten_type_method_definitions'].append(
+                FLATTEN_TYPE_METHOD_DEFINITION_BROADCAST.substitute(env))
 
         method_of = ['Type']
         if is_namespace_function:
@@ -1154,6 +1234,7 @@ def create_generic(top_env, declarations):
             top_env['pure_virtual_type_method_declarations'].append(
                 PURE_VIRTUAL_TYPE_METHOD_DECLARATION.substitute(env))
         top_env['type_method_declarations'].append(TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
+        top_env['flatten_type_method_declarations'].append(FLATTEN_TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
         option['native_type_method_dispatch'] = type_method_dispatch
 
         # Note [Abstract ATen methods]
@@ -1169,10 +1250,14 @@ def create_generic(top_env, declarations):
             abstract = True
             top_env['type_method_definitions'].append(
                 TYPE_METHOD_DEFINITION_ABSTRACT.substitute(env))
+            option['flatten_abstract_definition'] = FLATTEN_TYPE_METHOD_DEFINITION_ABSTRACT.substitute(env)
         else:
             body = TYPE_DEFINITION_BODY_NATIVE.substitute(env)
             top_env['type_method_definitions'].append(
                 TYPE_METHOD_DEFINITION_CONCRETE.substitute(
+                    env, type_definition_body=body))
+            top_env['flatten_type_method_definitions'].append(
+                FLATTEN_TYPE_METHOD_DEFINITION_CONCRETE.substitute(
                     env, type_definition_body=body))
 
         # generate the at::native function declarations (i.e. what the user will implement)
@@ -1253,6 +1338,8 @@ def create_derived(backend_type_env, declarations):
     # type: (Environment, List[FunctionOption]) -> Tuple[List[str], List[str]]
     type_object_declarations = []
     type_object_definitions = []
+    flatten_type_object_definitions = []
+
     is_cuda = 'CUDA' in backend_type_env['Backend']
 
     def replace_with_null(argument):
@@ -1635,14 +1722,18 @@ def create_derived(backend_type_env, declarations):
     def process_option(option):
         # type: (FunctionOption) -> None
         backend = backend_type_env['Backend']
+        env = nested_dict(option, backend_type_env)
         if backend in option['backend_types']:
-            env = nested_dict(option, backend_type_env)
             body = emit_body(env, option, option['backend_types'][backend])  # type: ignore
             option['type_definition_body'] = body
             type_object_declarations.append(
                 TYPE_DERIVED_DECLARATION.substitute(env))
             type_object_definitions.append(
                 TYPE_DERIVED_DEFINITION.substitute(env))
+            flatten_type_object_definitions.append(
+                FLATTEN_TYPE_DERIVED_DEFINITION.substitute(env))
+        else:
+            flatten_type_object_definitions.append(option.get('flatten_abstract_definition', ''))
 
     def process_native(option):
         # type: (FunctionOption) -> None
@@ -1658,18 +1749,25 @@ def create_derived(backend_type_env, declarations):
                 if native_dispatch is None:
                     type_object_definitions.append(
                         TYPE_DERIVED_DEFINITION_NATIVE_MISSING.substitute(env))
+                    flatten_type_object_definitions.append(
+                        FLATTEN_TYPE_DERIVED_DEFINITION_NATIVE_MISSING.substitute(env))
                 else:
                     option['native_type_method_dispatch'] = native_dispatch
                     cases = []
                     for scalar_type in option['backend_types'][backend]:
                         cases.append(TYPE_DERIVED_DEFINITION_NATIVE_CASE.substitute(env, ScalarName=scalar_type))
                     type_object_definitions.append(TYPE_DERIVED_DEFINITION_NATIVE.substitute(env, cases=cases))
+                    flatten_type_object_definitions.append(FLATTEN_TYPE_DERIVED_DEFINITION_NATIVE.substitute(env, cases=cases))
+                return
+        flatten_type_object_definitions.append(option.get('flatten_abstract_definition', ''))
 
     for declaration in declarations:
         for option in declaration['options']:
             if not option.get('skip', False):
                 try:
+                    env = nested_dict(option, backend_type_env)
                     if option['mode'] == 'NN' and option.get('cimpls') is None:
+                        flatten_type_object_definitions.append(option.get('flatten_abstract_definition', ''))
                         continue
                     if option['mode'] != 'native':
                         process_option(option)
@@ -1677,7 +1775,7 @@ def create_derived(backend_type_env, declarations):
                         process_native(option)
                 except NYIError:
                     pass
-    return type_object_declarations, type_object_definitions
+    return type_object_declarations, type_object_definitions, flatten_type_object_definitions
 
 
 def create_extension_backend(backend_type_env, declarations):
