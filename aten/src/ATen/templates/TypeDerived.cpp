@@ -49,13 +49,13 @@ TypeID ${Type}::ID() const {
   return ${TypeID};
 }
 
+#if 0
 /* example
 Tensor * ${Type}::add(Tensor & a, Tensor & b) {
   std::cout << "add Tensor with backend ${Backend}\n";
   return &a;
 }
 */
-
 ${type_derived_method_definitions}
-
+#endif
 }

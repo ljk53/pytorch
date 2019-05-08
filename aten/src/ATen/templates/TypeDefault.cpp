@@ -51,6 +51,7 @@ Storage TypeDefault::unsafeStorageFromTH(void * th_pointer, bool retain) const {
   return Storage(c10::intrusive_ptr<StorageImpl>::reclaim(static_cast<StorageImpl*>(th_pointer)));
 }
 
+#if 0
 ${type_method_definitions}
-
+#endif
 }
