@@ -119,6 +119,7 @@ TYPE_DERIVED_CPP = CodeTemplate.from_file(TEMPLATE_PATH + "/TypeDerived.cpp")
 SPARSE_TYPE_DERIVED_CPP = CodeTemplate.from_file(TEMPLATE_PATH + "/SparseTypeDerived.cpp")
 TYPE_DERIVED_H = CodeTemplate.from_file(TEMPLATE_PATH + "/TypeDerived.h")
 TYPE_H = CodeTemplate.from_file(TEMPLATE_PATH + "/Type.h")
+TYPE_CPP = CodeTemplate.from_file(TEMPLATE_PATH + "/TypeFlatten.cpp")
 TYPE_EXTENDED_INTERFACE_H = CodeTemplate.from_file(TEMPLATE_PATH + "/TypeExtendedInterface.h")
 TYPE_DEFAULT_H = CodeTemplate.from_file(TEMPLATE_PATH + "/TypeDefault.h")
 TYPE_DEFAULT_CPP = CodeTemplate.from_file(TEMPLATE_PATH + "/TypeDefault.cpp")
@@ -179,12 +180,12 @@ def backend_to_devicetype(backend):
         return 'CPU'
     return backend
 
-backends = ['CPU', 'CUDA']
-densities = ['Dense', 'Sparse', 'Mkldnn']  # TODO: layout instead of densities?
+backends = ['CPU']#, 'CUDA']
+densities = ['Dense']#, 'Sparse', 'Mkldnn']  # TODO: layout instead of densities?
 
-quantized_backends = ['QuantizedCPU']
+quantized_backends = []#'QuantizedCPU']
 
-extension_backends = ['MSNPU', 'XLA']
+extension_backends = []#'MSNPU', 'XLA']
 
 # scalar_name, c_type, accreal, is_floating_type
 quantized_scalar_types = [
@@ -202,6 +203,8 @@ top_env = {
     'pure_virtual_extended_type_method_declarations': [],
     'type_method_declarations': [],
     'type_method_definitions': [],
+    'flatten_type_method_declarations': [],
+    'flatten_type_method_definitions': [],
     'tensor_method_declarations': [],
     'tensor_method_definitions': [],
     'function_declarations': [],
@@ -314,10 +317,11 @@ def generate_storage_type_and_tensor(backend, density, declarations):
         env['storage_device'] = 'throw std::runtime_error("CPU storage has no device");'
         env['Generator'] = 'CPUGenerator'
 
-    declarations, definitions = function_wrapper.create_derived(
+    declarations, definitions, flatten_definitions = function_wrapper.create_derived(
         env, declarations)
     env['type_derived_method_declarations'] = declarations
     env['type_derived_method_definitions'] = definitions
+    top_env['flatten_type_method_definitions'].extend(flatten_definitions)
 
     fm = file_manager
     if env['DeviceType'] == 'CUDA':
@@ -417,7 +421,7 @@ def iterate_types():
 # so that the script runs quickly when we are just querying the
 # outputs
 def declare_outputs():
-    core_files = ['Type.h', 'Tensor.h', 'TensorMethods.h']
+    core_files = ['Type.h', 'TypeFlatten.cpp', 'Tensor.h', 'TensorMethods.h']
     for f in core_files:
         core_file_manager.will_write(f)
     files = ['Declarations.yaml', 'TypeExtendedInterface.h', 'TypeDefault.cpp', 'TypeDefault.h',
@@ -521,6 +525,7 @@ def generate_outputs():
 
     core_files = {
         'Type.h': TYPE_H,
+        'TypeFlatten.cpp': TYPE_CPP,
         'Tensor.h': TENSOR_H,
         'TensorMethods.h': TENSOR_METHODS_H
     }
@@ -563,8 +568,10 @@ def generate_outputs():
         if len(mismatch) > 1:
             file_component = '{' + file_component + '}'
         update_cmd = "cp {}/{} {}".format(core_install_dir, file_component, core_source_path)
-        raise RuntimeError("Source files: {} did not match generated files.  To update the source files, "
-                           "set environment variable GEN_TO_SOURCE or run \"{}\"".format(mismatch, update_cmd))
+        print("Update source file: ", update_cmd)
+        os.system(update_cmd)
+        #raise RuntimeError("Source files: {} did not match generated files.  To update the source files, "
+        #                   "set environment variable GEN_TO_SOURCE or run \"{}\"".format(mismatch, update_cmd))
 
 declare_outputs()
 if options.output_dependencies is not None:

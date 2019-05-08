@@ -21,11 +21,11 @@ struct ${Type} final : public ${DeviceType}TypeDefault {
   virtual Backend backend() const override;
   virtual const char * toString() const override;
   virtual TypeID ID() const override;
-
+#if 0
   // example
   // virtual Tensor * add(Tensor & a, Tensor & b) override;
   ${type_derived_method_declarations}
-
+#endif
  private:
   ScalarType infer_scalar_type(const Tensor & t) const {
     return t.scalar_type();

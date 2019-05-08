@@ -3,17 +3,22 @@
 // for context
 #define __STDC_FORMAT_MACROS
 
-#include <ATen/${Type}.h>
+#include <ATen/Type.h>
 
 // ${generated_comment}
 
-$th_headers
-$storage_tensor_headers
-#include <ATen/${Generator}.h>
+#include <TH/TH.h>
+#include <TH/THTensor.hpp>
+#include <THNN/THNN.h>
+#undef THNN_
 #include <c10/core/Allocator.h>
 #include <ATen/DeviceGuard.h>
 #include <ATen/NativeFunctions.h>
 #include <ATen/Utils.h>
+#include <ATen/ExpandUtils.h>
+#include <ATen/CPUGenerator.h>
+#include <ATen/Context.h>
+#include <ATen/CheckGenerator.h>
 #include <ATen/WrapDimUtils.h>
 #include <ATen/Dispatch.h>
 #include <c10/util/Half.h>
@@ -27,32 +32,18 @@ $storage_tensor_headers
 #include <utility>
 
 #include <ATen/Config.h>
-$extra_cuda_headers
 
 namespace at {
 
-${Type}::${Type}()
-  : ${DeviceType}TypeDefault(${Backend}TensorId(), /*is_variable=*/false, /*is_undefined=*/false) {}
+static inline ScalarType infer_scalar_type(const Tensor & t) {
+   return t.scalar_type();
+ }
 
-Backend ${Type}::backend() const {
-  return Backend::${Backend};
-}
+static inline ScalarType infer_scalar_type(const TensorList & tl) {
+   AT_CHECK(tl.size() > 0, "expected a non-empty list of Tensors");
+   return tl[0].scalar_type();
+ }
 
-const char * ${Type}::toString() const {
-  return "${Type}";
-}
+${flatten_type_method_definitions}
 
-TypeID ${Type}::ID() const {
-  return ${TypeID};
-}
-
-#if 0
-/* example
-Tensor * ${Type}::add(Tensor & a, Tensor & b) {
-  std::cout << "add Tensor with backend ${Backend}\n";
-  return &a;
-}
-*/
-${type_derived_method_definitions}
-#endif
 }
