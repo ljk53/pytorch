@@ -88,44 +88,8 @@ def process_types_and_backends(option):
         backend_types[backend] = sorted([type for type in backend_types[backend]])
     option['backend_types'] = backend_types
 
-
 def exclude(declaration):
-    #return 'only_register' in declaration or declaration.get('name') == 'ndimension'
-    used = [
-        'adaptive_avg_pool2d',
-        'as_strided',
-        'cat',
-        'clone',
-        '_convolution',
-        '_convolution_nogroup',
-        '_copy_same_type_',
-        'dropout',
-        'empty',
-        'empty_strided',
-        'max_pool2d_with_indices',
-        '_nnpack_available',
-        'numel',
-        'relu_',
-        'scalar_tensor',
-        's_copy_',
-        'size',
-        'sum_out',
-        '_th_cat',
-        '_th_clone',
-        '_th_fill_',
-        'thnn_conv2d',
-        '_thnn_conv2d_forward',
-        'thnn_conv2d_forward',
-        '_thnn_max_pool2d_with_indices_forward',
-        'threshold_',
-        '_th_set_',
-        '_th_view',
-    ]
-    for f in used:
-        if (f == declaration.get('name')):
-            return False
-    return True
-
+    return 'only_register' in declaration or declaration.get('name') == 'ndimension'
 
 def add_variants(option):
     option.setdefault('variants', ['method'])

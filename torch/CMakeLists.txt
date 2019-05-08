@@ -493,6 +493,16 @@ if (USE_DISTRIBUTED)
   endif()
 endif()
 
+if (BUILD_JIT_LITE)
+
+set(JIT_LITE_SRCS
+  ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_0.cpp
+  ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_1.cpp
+  ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_2.cpp
+  )
+
+endif()
+
 if (BUILD_PYTHON)
   if (MSVC)
     add_subdirectory(${TORCH_SRC_DIR}/lib/libshm_windows)

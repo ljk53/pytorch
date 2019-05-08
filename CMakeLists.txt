@@ -61,6 +61,7 @@ endif()
 # Note to developers: if you add an option below, make sure you also add it to
 # cmake/Summary.cmake so that the summary prints out the option values.
 include(CMakeDependentOption)
+option(BUILD_JIT_LITE "Build JIT-lite interpreter" OFF)
 option(BUILD_TORCH "Build Torch" OFF)
 option(ATEN_NO_TEST "Do not build ATen test binaries" OFF)
 option(BUILD_ATEN_ONLY "Build only a subset focused on ATen only" OFF)
@@ -189,6 +190,12 @@ if (INTERN_BUILD_MOBILE AND NOT BUILD_CAFFE2_MOBILE)
   set(BUILD_CAFFE2_OPS OFF)
   set(USE_DISTRIBUTED OFF)
   set(FEATURE_TORCH_MOBILE ON)
+endif()
+
+if (BUILD_JIT_LITE)
+  set(BUILD_PYTHON OFF)
+  set(BUILD_TORCH OFF)
+  set(BUILD_CAFFE2_OPS OFF)
 endif()
 
 if (BUILD_ATEN_ONLY)
