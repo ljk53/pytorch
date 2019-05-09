@@ -76,6 +76,11 @@
 // Here, for the C10 library, we will define the macro C10_API for both import
 // and export.
 
+#undef C10_EXPORT
+#undef C10_IMPORT
+#define C10_EXPORT
+#define C10_IMPORT
+
 // This one is being used by libc10.so
 #ifdef C10_BUILD_MAIN_LIB
 #define C10_API C10_EXPORT
