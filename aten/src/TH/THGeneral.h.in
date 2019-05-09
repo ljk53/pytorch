@@ -48,7 +48,8 @@
 #endif // defined(__GNUC__)
 #endif  // _WIN32
 
-#define TH_API TH_EXTERNC TH_CPP_API
+//#define TH_API TH_EXTERNC TH_CPP_API
+#define TH_API TH_EXTERNC
 
 #ifdef _WIN32
 # define TH_NO_RETURN __declspec(noreturn)
