@@ -19,3 +19,6 @@
 #else
 #define TORCH_API
 #endif
+
+#undef TORCH_API
+#define TORCH_API
