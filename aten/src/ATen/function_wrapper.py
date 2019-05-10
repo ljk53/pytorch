@@ -143,6 +143,10 @@ FLATTEN_TYPE_METHOD_DECLARATION_CONCRETE = CodeTemplate("""\
 ${return_type} ${api_name}(${type_method_formals}) const;
 """)
 
+FLATTEN_TYPE_METHOD_DECLARATION_VIRTUAL = CodeTemplate("""\
+virtual ${return_type} ${api_name}(${type_method_formals}) const;
+""")
+
 FLATTEN_TYPE_METHOD_DECLARATION_BROADCAST = CodeTemplate("""\
 ${return_type} ${api_name}(${type_method_formals}) const;
 """)
@@ -1234,7 +1238,12 @@ def create_generic(top_env, declarations):
             top_env['pure_virtual_type_method_declarations'].append(
                 PURE_VIRTUAL_TYPE_METHOD_DECLARATION.substitute(env))
         top_env['type_method_declarations'].append(TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
-        top_env['flatten_type_method_declarations'].append(FLATTEN_TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
+
+        if option['api_name'] in ['copy_', 'resize_', 'resize_as_', 'detach', 'detach_']:
+            top_env['flatten_type_method_declarations'].append(FLATTEN_TYPE_METHOD_DECLARATION_VIRTUAL.substitute(env))
+        else:
+            top_env['flatten_type_method_declarations'].append(FLATTEN_TYPE_METHOD_DECLARATION_CONCRETE.substitute(env))
+
         option['native_type_method_dispatch'] = type_method_dispatch
 
         # Note [Abstract ATen methods]
