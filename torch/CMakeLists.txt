@@ -743,4 +743,17 @@ if (BUILD_PYTHON)
   endif()
 
   install(TARGETS torch_python DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+
+endif()
+
+if (BUILD_MOBILE_LIB)
+
+set(MOBILE_TORCH_SRCS
+  ${TORCH_SRC_DIR}/csrc/jit/lite/mobile.cpp
+)
+add_library(mobile_torch SHARED ${MOBILE_TORCH_SRCS})
+target_link_libraries(mobile_torch PRIVATE torch)
+SET_TARGET_PROPERTIES(mobile_torch PROPERTIES LINK_FLAGS "-Wl,--whole-archive -Wl,--gc-sections -Wl,--print-gc-sections")
+install(TARGETS mobile_torch DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+
 endif()
