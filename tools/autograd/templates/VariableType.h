@@ -55,8 +55,15 @@ struct TORCH_API VariableType final : public at::TypeDefault {
       bool keep_graph,
       bool create_graph) const override;
   void set_data(Tensor & self, Tensor new_data) const override;
-
+#if 0
   ${type_derived_method_declarations}
+#endif
+
+  Tensor & copy_(Tensor & self, const Tensor & src, bool non_blocking) const override;
+  Tensor & resize_(Tensor & self, IntArrayRef size) const override;
+  Tensor & resize_as_(Tensor & self, const Tensor & the_template) const override;
+  Tensor detach(const Tensor & self) const override;
+  Tensor & detach_(Tensor & self) const override;
 
 private:
   // checks that t is actually a Variable
