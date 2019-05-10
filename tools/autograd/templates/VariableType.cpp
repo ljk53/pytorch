@@ -26,7 +26,7 @@ using namespace at;
 using namespace torch::autograd::generated;
 
 namespace torch { namespace autograd {
-
+#if 0
 ${type_derived_method_definitions}
-
+#endif
 }} // namespace torch::autograd
