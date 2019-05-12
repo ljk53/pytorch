@@ -576,6 +576,7 @@ struct GraphExecutorImpl {
 
   ExecutionPlan compileSpec(const ArgumentSpec& spec) {
     auto opt_graph = graph->copy();
+    #if 0
     arg_spec_creator_.specializeTypes(*opt_graph, spec);
 
     // Phase 1. Specialize to input definedness (this is very important for
@@ -619,6 +620,7 @@ struct GraphExecutorImpl {
     }
     // Make sure there are no leftovers from any passes.
     EliminateDeadCode(opt_graph);
+    #endif
     return ExecutionPlan(opt_graph);
   }
 
