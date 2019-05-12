@@ -151,6 +151,7 @@ auto result_ = (${first}).${name}(${args_with_tensor_options});
 
 CONSTRUCTOR = CodeTemplate("""\
 [](Stack & stack) {
+    std::cout << "C ${name}" << std::endl;
     ${lvalues}
     ${call}
     drop(stack, ${num_inputs});
@@ -406,6 +407,31 @@ def gen_jit_dispatch(declarations, out, template_path):
     for group in jit_decl_groups:
         x = sum(ord(c) for c in group[0]['name']) % num_shards
         for decl in group:
+            if decl['name'] not in [
+                "adaptive_avg_pool2d",
+                "add",
+                "addmm",
+                "cat",
+                "chunk",
+                "_convolution",
+                "div",
+                "dropout",
+                "eq",
+                "ge",
+                "gt",
+                "le",
+                "lt",
+                "max_pool2d",
+                "mul",
+                "neg",
+                "ne",
+                "reciprocal",
+                "relu_",
+                "select",
+                "size",
+                "sub",
+                "view",
+            ]: continue
             shards[x].append(OPERATOR.substitute(signature=signature(decl, decl['should_match_schema']),
                                                  op=emit_decl_variant(decl)))
 
