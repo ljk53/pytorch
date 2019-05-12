@@ -9,6 +9,7 @@
 #include <queue>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 namespace torch {
 namespace jit {
@@ -234,8 +235,10 @@ std::shared_ptr<Operator> findOperatorFor(const Node* node) {
 
 const Operator& getOperatorFor(const Node* node) {
   auto op = findOperatorFor(node);
-  if (op)
+  if (op) {
+    std::cout << "O " << op->schema() << std::endl;
     return *op;
+  }
 
   auto er = script::ErrorReport(node->getSourceLocation());
   er << "Schema not found for node. File a bug report.\n";
