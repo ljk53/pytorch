@@ -419,6 +419,7 @@ target_include_directories(torch PUBLIC
   ${TORCH_ROOT}/third_party/miniz-2.0.8)
 
 set_target_properties(torch PROPERTIES VERSION 1 SOVERSION 1)
+set_target_properties(torch PROPERTIES CXX_VISIBILITY_PRESET hidden)
 
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.1")
   set_property(TARGET torch PROPERTY CXX_STANDARD 11)
