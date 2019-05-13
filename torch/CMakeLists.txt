@@ -181,7 +181,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/register_quantized_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/scope.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/compiler.cpp
-  ${TORCH_SRC_DIR}/csrc/api/src/jit.cpp
+  # ${TORCH_SRC_DIR}/csrc/api/src/jit.cpp
   ${TORCH_SRC_DIR}/csrc/jit/testing/file_check.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/final_returns.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/schema_matching.cpp
@@ -203,7 +203,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/fuser/executor.cpp
   ${TORCH_SRC_DIR}/csrc/jit/fuser/codegen.cpp
   ${TORCH_SRC_DIR}/csrc/jit/fuser/fallback.cpp
-  ${TORCH_ROOT}/test/cpp/jit/test.cpp
+  # ${TORCH_ROOT}/test/cpp/jit/test.cpp
   )
 
 if (WIN32)
@@ -241,6 +241,7 @@ if (USE_ROCM)
   )
 endif()
 
+set(NO_API ON)
 
 if (NOT NO_API)
   list(APPEND TORCH_SRCS
