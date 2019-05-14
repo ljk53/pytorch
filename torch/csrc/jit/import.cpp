@@ -11,7 +11,7 @@
 #include <torch/csrc/jit/script/script_type_parser.h>
 
 #include "caffe2/core/common.h"
-#include "caffe2/core/types.h"
+//#include "caffe2/core/types.h"
 #include "caffe2/proto/caffe2_pb.h"
 #include "caffe2/proto/torch_pb.h"
 #include "caffe2/serialize/file_adapter.h"
@@ -31,6 +31,8 @@ namespace jit {
 using caffe2::serialize::FileAdapter;
 using caffe2::serialize::IStreamAdapter;
 using caffe2::serialize::ReadAdapterInterface;
+using caffe2::TypeMeta;
+using caffe2::TensorProto;
 
 namespace {
 
@@ -160,6 +162,28 @@ void ScriptModuleDeserializer::loadAttributeTable() {
   attribute_table_ = unpickler.parse_ivalue_list();
 }
 
+const TypeMeta& DataTypeToTypeMeta(const TensorProto::DataType& dt) {
+  static std::map<TensorProto::DataType, TypeMeta> type_meta_map{
+      {caffe2::TensorProto_DataType_FLOAT, TypeMeta::Make<float>()},
+      {caffe2::TensorProto_DataType_INT32, TypeMeta::Make<int>()},
+      {caffe2::TensorProto_DataType_BYTE, TypeMeta::Make<uint8_t>()},
+      {caffe2::TensorProto_DataType_STRING, TypeMeta::Make<std::string>()},
+      {caffe2::TensorProto_DataType_BOOL, TypeMeta::Make<bool>()},
+      {caffe2::TensorProto_DataType_UINT8, TypeMeta::Make<uint8_t>()},
+      {caffe2::TensorProto_DataType_INT8, TypeMeta::Make<int8_t>()},
+      {caffe2::TensorProto_DataType_UINT16, TypeMeta::Make<uint16_t>()},
+      {caffe2::TensorProto_DataType_INT16, TypeMeta::Make<int16_t>()},
+      {caffe2::TensorProto_DataType_INT64, TypeMeta::Make<int64_t>()},
+      {caffe2::TensorProto_DataType_FLOAT16, TypeMeta::Make<at::Half>()},
+      {caffe2::TensorProto_DataType_DOUBLE, TypeMeta::Make<double>()},
+  };
+  const auto it = type_meta_map.find(dt);
+  if (it == type_meta_map.end()) {
+    throw std::runtime_error("Unknown data type.");
+  }
+  return it->second;
+}
+
 at::Tensor ScriptModuleDeserializer::loadTensor(
     const torch::TensorDef& tensor_proto,
     std::unordered_map<std::string, at::Storage>& storageMap) {
@@ -168,7 +192,7 @@ at::Tensor ScriptModuleDeserializer::loadTensor(
   std::vector<int64_t> strides(
       tensor_proto.strides().begin(), tensor_proto.strides().end());
   auto type = at::typeMetaToScalarType(
-      caffe2::DataTypeToTypeMeta(tensor_proto.data_type()));
+      DataTypeToTypeMeta(tensor_proto.data_type()));
   const std::string& record_key = tensor_proto.data().key();
   AT_ASSERT(tensor_proto.has_device() && !tensor_proto.device().empty());
   at::Device device(tensor_proto.device());

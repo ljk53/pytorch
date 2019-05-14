@@ -64,15 +64,15 @@ endif()
 # addressed yet.
 
 if (NOT BUILD_ATEN_ONLY)
-  add_subdirectory(core)
   add_subdirectory(proto)
   add_subdirectory(serialize)
-  add_subdirectory(utils)
   add_subdirectory(perfkernels)
 endif()
 
 # Skip modules that are not used by libtorch mobile yet.
 if (NOT BUILD_ATEN_ONLY AND (NOT INTERN_BUILD_MOBILE OR BUILD_CAFFE2_MOBILE))
+  add_subdirectory(core)
+  add_subdirectory(utils)
   add_subdirectory(contrib)
   add_subdirectory(predictor)
   add_subdirectory(predictor/emulator)

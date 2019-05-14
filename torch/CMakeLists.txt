@@ -140,7 +140,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/node_hashing.cpp
   ${TORCH_SRC_DIR}/csrc/jit/ir.cpp
   ${TORCH_SRC_DIR}/csrc/jit/irparser.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/netdef_converter.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/netdef_converter.cpp
   ${TORCH_SRC_DIR}/csrc/jit/operator.cpp
   ${TORCH_SRC_DIR}/csrc/jit/register_c10_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/subgraph_matcher.cpp
@@ -178,7 +178,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/fuser/interface.cpp
   ${TORCH_SRC_DIR}/csrc/jit/register_prim_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/register_special_ops.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/register_quantized_ops.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/register_quantized_ops.cpp
   ${TORCH_SRC_DIR}/csrc/jit/scope.cpp
   ${TORCH_SRC_DIR}/csrc/jit/script/compiler.cpp
   ${TORCH_SRC_DIR}/csrc/api/src/jit.cpp
