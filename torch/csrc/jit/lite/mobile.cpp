@@ -25,7 +25,7 @@ bool is_model_loaded() {
 
 void load_model(std::istream& input) {
   torch::autograd::AutoGradMode guard(false);
-  module = torch::jit::load(input);
+  //module = torch::jit::load(input);
 }
 
 void run_model() {

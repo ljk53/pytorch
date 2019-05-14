@@ -64,13 +64,13 @@ endif()
 # addressed yet.
 
 if (NOT BUILD_ATEN_ONLY)
-  add_subdirectory(proto)
-  add_subdirectory(serialize)
-  add_subdirectory(perfkernels)
 endif()
 
 # Skip modules that are not used by libtorch mobile yet.
 if (NOT BUILD_ATEN_ONLY AND (NOT INTERN_BUILD_MOBILE OR BUILD_CAFFE2_MOBILE))
+  add_subdirectory(perfkernels)
+  add_subdirectory(proto)
+  add_subdirectory(serialize)
   add_subdirectory(core)
   add_subdirectory(utils)
   add_subdirectory(contrib)
@@ -178,7 +178,7 @@ if (FALSE)
 endif()
 
 # ---[ List of libraries to link with
-if(NOT BUILD_ATEN_ONLY)
+if(FALSE)#(NOT BUILD_ATEN_ONLY)
   add_library(caffe2_protos STATIC $<TARGET_OBJECTS:Caffe2_PROTO>)
   add_dependencies(caffe2_protos Caffe2_PROTO)
   # If we are going to link protobuf locally inside caffe2 libraries, what we will do is
@@ -221,7 +221,7 @@ if (NOT WIN32)
   target_compile_options(caffe2 PRIVATE "-fvisibility=hidden")
 endif()
 
-if(NOT BUILD_ATEN_ONLY)
+if(FALSE)#(NOT BUILD_ATEN_ONLY)
   caffe2_interface_library(caffe2_protos caffe2_protos_whole)
   target_link_libraries(caffe2 PRIVATE caffe2_protos_whole)
   if (${CAFFE2_LINK_LOCAL_PROTOBUF})

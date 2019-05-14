@@ -1,5 +1,5 @@
-#include <google/protobuf/util/json_util.h>
-#include <google/protobuf/util/type_resolver_util.h>
+//#include <google/protobuf/util/json_util.h>
+//#include <google/protobuf/util/type_resolver_util.h>
 
 #include <ATen/core/functional.h>
 #include <c10/util/Exception.h>
@@ -10,13 +10,13 @@
 #include <torch/csrc/jit/pickler.h>
 #include <torch/csrc/jit/script/script_type_parser.h>
 
-#include "caffe2/core/common.h"
+//#include "caffe2/core/common.h"
 //#include "caffe2/core/types.h"
-#include "caffe2/proto/caffe2_pb.h"
-#include "caffe2/proto/torch_pb.h"
-#include "caffe2/serialize/file_adapter.h"
-#include "caffe2/serialize/inline_container.h"
-#include "caffe2/serialize/istream_adapter.h"
+//#include "caffe2/proto/caffe2_pb.h"
+//#include "caffe2/proto/torch_pb.h"
+//#include "caffe2/serialize/file_adapter.h"
+//#include "caffe2/serialize/inline_container.h"
+//#include "caffe2/serialize/istream_adapter.h"
 
 #include <ATen/ATen.h>
 
@@ -27,7 +27,7 @@
 
 namespace torch {
 namespace jit {
-
+#if 0
 using caffe2::serialize::FileAdapter;
 using caffe2::serialize::IStreamAdapter;
 using caffe2::serialize::ReadAdapterInterface;
@@ -91,6 +91,7 @@ void ScriptModuleDeserializer::deserialize(
     script::ModuleLookup module_lookup,
     c10::optional<at::Device> device,
     script::ExtraFilesMap& extra_files) {
+  #if 0
   torch::ModelDef model_def;
   at::DataPtr data_ptr;
   size_t data_size;
@@ -144,13 +145,16 @@ void ScriptModuleDeserializer::deserialize(
   // TODO: this can be simplified when C++/Python interop lands,
   // and the submodules would be created as the same in either C++ or Python
   convertModule(module_def);
+  #endif
 }
 
 void ScriptModuleDeserializer::loadTensorTable(torch::ModelDef* model_def) {
+  #if 0
   std::unordered_map<std::string, at::Storage> storageMap;
   for (const torch::TensorDef& tensor : model_def->tensors()) {
     tensor_table_.emplace_back(loadTensor(tensor, storageMap));
   }
+  #endif
 }
 
 void ScriptModuleDeserializer::loadAttributeTable() {
@@ -161,7 +165,7 @@ void ScriptModuleDeserializer::loadAttributeTable() {
   Unpickler unpickler(attributes_ptr.get(), attributes_size, &tensor_table_);
   attribute_table_ = unpickler.parse_ivalue_list();
 }
-
+#if 0
 const TypeMeta& DataTypeToTypeMeta(const TensorProto::DataType& dt) {
   static std::map<TensorProto::DataType, TypeMeta> type_meta_map{
       {caffe2::TensorProto_DataType_FLOAT, TypeMeta::Make<float>()},
@@ -255,7 +259,7 @@ at::Tensor ScriptModuleDeserializer::loadTensor(
 
   return result;
 }
-
+#endif
 void ScriptModuleDeserializer::importCallback(const std::string& qualifier) {
   if (imported_libs_.count(qualifier)) {
     return;
@@ -386,6 +390,6 @@ std::shared_ptr<script::Module> load(
 
   return module;
 }
-
+#endif
 } // namespace jit
 } // namespace torch

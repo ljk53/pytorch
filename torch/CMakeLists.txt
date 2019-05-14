@@ -125,7 +125,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/autodiff.cpp
   ${TORCH_SRC_DIR}/csrc/jit/attributes.cpp
   ${TORCH_SRC_DIR}/csrc/jit/argument_spec.cpp
-  ${TORCH_SRC_DIR}/csrc/jit/export.cpp
+  # ${TORCH_SRC_DIR}/csrc/jit/export.cpp
   ${TORCH_SRC_DIR}/csrc/jit/pass_manager.cpp
   ${TORCH_SRC_DIR}/csrc/jit/pickler.cpp
   ${TORCH_SRC_DIR}/csrc/jit/generated/register_aten_ops_0.cpp
@@ -203,7 +203,7 @@ set(TORCH_SRCS
   ${TORCH_SRC_DIR}/csrc/jit/fuser/executor.cpp
   ${TORCH_SRC_DIR}/csrc/jit/fuser/codegen.cpp
   ${TORCH_SRC_DIR}/csrc/jit/fuser/fallback.cpp
-  ${TORCH_ROOT}/test/cpp/jit/test.cpp
+  #${TORCH_ROOT}/test/cpp/jit/test.cpp
   )
 
 if (WIN32)
@@ -755,7 +755,7 @@ if (BUILD_MOBILE_LIB)
 
 add_library(mobile_torch SHARED ${MOBILE_TORCH_SRCS})
 target_link_libraries(mobile_torch PRIVATE torch)
-SET_TARGET_PROPERTIES(mobile_torch PROPERTIES LINK_FLAGS "-Wl,--whole-archive -Wl,--gc-sections -Wl,-M -Wl,--print-map -Wl,--cref")
+SET_TARGET_PROPERTIES(mobile_torch PROPERTIES LINK_FLAGS "-Wl,--whole-archive -Wl,--gc-sections")# -Wl,-M -Wl,--print-map -Wl,--cref")
 install(TARGETS mobile_torch DESTINATION "${TORCH_INSTALL_LIB_DIR}")
 
 endif()
