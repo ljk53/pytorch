@@ -133,6 +133,7 @@ RegisterOperators reg(
              return 0;
            };
          }),
+/*
      Operator(
          prim::FusionGroup,
          [](const Node* node) {
@@ -143,6 +144,7 @@ RegisterOperators reg(
              return 0;
            };
          }),
+*/
      Operator(
          "prim::rangelist(int n) -> int[]",
          [](Stack& stack) {

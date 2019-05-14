@@ -651,7 +651,7 @@ struct GraphExecutorImpl {
     // Rewrite subgraphs with many MMs into expressions that batch them.
     BatchMM(graph);
 
-    FuseGraph(graph);
+    //FuseGraph(graph);
   }
 
   static bool needsGradient(const std::shared_ptr<const Graph>& graph) {
