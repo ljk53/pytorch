@@ -269,6 +269,8 @@ endif()
 
 include(cmake/Dependencies.cmake)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffunction-sections -fdata-sections")
+
 if(USE_FBGEMM)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_FBGEMM")
 endif()
@@ -553,4 +555,3 @@ endif()
 
 include(cmake/Summary.cmake)
 caffe2_print_configuration_summary()
-
