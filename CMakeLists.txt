@@ -426,6 +426,8 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
 # ---[ Main build
 add_subdirectory(c10)
 add_subdirectory(caffe2)
+add_subdirectory(${PROJECT_SOURCE_DIR}/torch/csrc/lite_interpreter)
+
 
 # --[ Documentation
 if(BUILD_DOCS)
@@ -551,3 +553,4 @@ endif()
 
 include(cmake/Summary.cmake)
 caffe2_print_configuration_summary()
+
