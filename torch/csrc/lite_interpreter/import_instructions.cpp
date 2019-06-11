@@ -1,12 +1,7 @@
-#include <google/protobuf/util/json_util.h>
-#include <google/protobuf/util/type_resolver_util.h>
-
 #include <torch/csrc/lite_interpreter/import_instructions.h>
 #include <torch/csrc/lite_interpreter/gason.h>
-#include <torch/csrc/autograd/variable.h>
 
-#include "caffe2/core/common.h"
-#include "caffe2/core/types.h"
+#include "c10/util/typeid.h"
 #include "caffe2/serialize/inline_container.h"
 #include "caffe2/serialize/istream_adapter.h"
 #include "caffe2/serialize/read_adapter_interface.h"
@@ -226,7 +221,7 @@ at::Tensor InstructionsDeserializer::loadTensor(
   }
   AT_ASSERT(result.defined());
 
-  result = autograd::make_variable(result, requires_grad);
+  //result = autograd::make_variable(result, requires_grad);
 
   return result;
 }
