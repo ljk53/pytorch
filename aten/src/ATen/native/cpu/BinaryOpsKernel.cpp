@@ -72,9 +72,12 @@ void div_kernel(TensorIterator& iter) {
 } // anonymous namespace
 
 
-REGISTER_DISPATCH(add_stub, &add_kernel);
+//REGISTER_DISPATCH(add_stub, &add_kernel);
 REGISTER_DISPATCH(sub_stub, &sub_kernel);
 REGISTER_DISPATCH(mul_stub, &mul_kernel);
-REGISTER_DISPATCH(div_stub, &div_kernel);
+//REGISTER_DISPATCH(div_stub, &div_kernel);
+
+REGISTER_ARCH_DISPATCH(add_stub, CPU_CAPABILITY, &add_kernel)
+REGISTER_ARCH_DISPATCH(div_stub, CPU_CAPABILITY, &div_kernel)
 
 }} // namespace at::native

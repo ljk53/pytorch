@@ -57,6 +57,7 @@ struct CAFFE2_API DispatchStub;
 
 template <typename rT, typename T, typename... Args>
 struct CAFFE2_API DispatchStub<rT (*)(Args...), T> {
+  //const char* NAME;
   using FnPtr = rT (*) (Args...);
 
   template <typename... ArgTypes>
@@ -131,7 +132,7 @@ struct RegisterHIPDispatch {
 // not work with MSVC. So do a `using`-declaration if you need to pass in such
 // `fn`, e.g., grid_sampler_2d_backward_cpu_kernel in GridSampleKernel.h.
 #define DECLARE_DISPATCH(fn, name)         \
-  struct name : DispatchStub<fn, name> {}; \
+  struct name : DispatchStub<fn, name> { /*name() {NAME=#name;}*/ }; \
   extern CAFFE2_API struct name name
 
 #define DEFINE_DISPATCH(name) struct name name
@@ -171,8 +172,10 @@ struct RegisterHIPDispatch {
 // is HIP in the PyTorch HIPify build.
 #define REGISTER_DISPATCH(name, fn) REGISTER_CUDA_DISPATCH(name, fn)
 // #define REGISTER_DISPATCH(name, fn) REGISTER_HIP_DISPATCH(name, fn)
-#elif defined(CPU_CAPABILITY)
+#elif defined(CPU_CAPABILITY) && false
 #define REGISTER_DISPATCH(name, fn) REGISTER_ARCH_DISPATCH(name, CPU_CAPABILITY, fn)
+#else
+#define REGISTER_DISPATCH(name, fn) REGISTER_ARCH_DISPATCH(name, CPU_CAPABILITY, static_cast<decltype(fn)>(nullptr))
 #endif
 
 

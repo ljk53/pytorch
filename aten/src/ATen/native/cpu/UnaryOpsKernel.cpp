@@ -227,9 +227,11 @@ REGISTER_DISPATCH(abs_stub, &abs_kernel);
 REGISTER_DISPATCH(frac_stub, &frac_kernel);
 REGISTER_DISPATCH(reciprocal_stub, &reciprocal_kernel);
 REGISTER_DISPATCH(neg_stub, &neg_kernel);
-REGISTER_DISPATCH(fill_stub, &fill_kernel);
+//REGISTER_DISPATCH(fill_stub, &fill_kernel);
 REGISTER_DISPATCH(sinh_stub, &sinh_kernel);
 REGISTER_DISPATCH(cosh_stub, &cosh_kernel);
+
+REGISTER_ARCH_DISPATCH(fill_stub, CPU_CAPABILITY, &fill_kernel)
 
 // IMPLEMENT_FLOAT_KERNEL(ALL, abs)
 IMPLEMENT_FLOAT_KERNEL(FLOATING, acos)

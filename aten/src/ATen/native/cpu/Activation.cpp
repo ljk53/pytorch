@@ -177,9 +177,11 @@ void GeluBackwardKernelImpl(const Tensor& dY, const Tensor& X, Tensor* dX) {
 
 } // namespace
 
-REGISTER_DISPATCH(threshold_stub, &threshold_kernel);
+//REGISTER_DISPATCH(threshold_stub, &threshold_kernel);
 REGISTER_DISPATCH(GeluKernel, &GeluKernelImpl);
 REGISTER_DISPATCH(GeluBackwardKernel, &GeluBackwardKernelImpl);
+
+REGISTER_ARCH_DISPATCH(threshold_stub, CPU_CAPABILITY, &threshold_kernel)
 
 } // namespace native
 } // namespace at

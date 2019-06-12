@@ -53,7 +53,8 @@ static void copy_kernel(TensorIterator& iter, bool non_blocking) {
 
 } // anonymous namespace
 
-REGISTER_DISPATCH(copy_stub, &copy_kernel);
+//REGISTER_DISPATCH(copy_stub, &copy_kernel);
+REGISTER_ARCH_DISPATCH(copy_stub, CPU_CAPABILITY, &copy_kernel)
 
 } // namespace native
 } // namespace at
