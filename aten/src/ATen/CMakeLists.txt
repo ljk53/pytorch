@@ -57,8 +57,8 @@ FILE(GLOB native_mkl_cpp "native/mkl/*.cpp")
 FILE(GLOB native_mkldnn_cpp "native/mkldnn/*.cpp")
 FILE(GLOB native_sparse_cpp "native/sparse/*.cpp")
 FILE(GLOB native_quantized_cpp
-            "native/quantized/*.cpp"
-            "native/quantized/cpu/*.cpp")
+            "native/quantized/*.cpp")
+#            "native/quantized/cpu/*.cpp")
 
 FILE(GLOB native_cuda_cu "native/cuda/*.cu")
 FILE(GLOB native_cuda_cpp "native/cuda/*.cpp")
