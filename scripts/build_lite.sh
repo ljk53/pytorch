@@ -31,7 +31,7 @@ cmake .. \
 -DANDROID_NATIVE_API_LEVEL=21 \
 -DANDROID_CPP_FEATURES='rtti exceptions' \
 -DANDROID_TOOLCHAIN=clang \
-
+-DANDROID_STL=c++_shared
 
 
 ninja -j48 install
