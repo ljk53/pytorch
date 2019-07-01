@@ -440,8 +440,10 @@ struct CodeImpl {
   std::vector<BailoutBlock> bailout_blocks_;
 
   CodeImpl(const std::shared_ptr<Graph>& graph)
-      : preprocess_(*graph), current_node_(preprocess_.graph->return_node()) {
+      : graph_(graph), preprocess_(*graph_), current_node_(preprocess_.graph->return_node()) {
+    CodeImpl(graph, false);
     graph_ = preprocess_.graph;
+
     n_outputs = graph_->outputs().size();
     n_inputs = graph_->inputs().size();
     // std::cout << *graph_ << "\n";
@@ -450,6 +452,30 @@ struct CodeImpl {
     // we deferred the emission of bailout blocks so they appear at the end
     // emit them now and patch up the jumps
     insertBailoutBlocks();
+
+    std::cout << std::endl << "creating processed code impl: " << static_cast<void*>(this) << std::endl;
+    std::cout << *graph_ << std::endl;
+    std::cout << "processed instructions" << std::endl;
+    dump(std::cout);
+  }
+
+CodeImpl(const std::shared_ptr<Graph>& graph, bool optimize)
+      : preprocess_(*std::make_shared<Graph>()), current_node_(preprocess_.graph->return_node()) {
+    graph_ = graph;
+
+    n_outputs = graph_->outputs().size();
+    n_inputs = graph_->inputs().size();
+    // std::cout << *graph_ << "\n";
+    emitCodeForBlock(graph_->block());
+    insertInstruction(RET);
+    // we deferred the emission of bailout blocks so they appear at the end
+    // emit them now and patch up the jumps
+    insertBailoutBlocks();
+
+    std::cout << std::endl << "creating unprocessed code impl: " << static_cast<void*>(this) << std::endl;
+    std::cout << *graph_ << std::endl;
+    std::cout << "unprocessed instructions" << std::endl;
+    dump(std::cout);
   }
 
   void insertInstruction(OpCode op, int64_t X = 0, uint64_t N = 0) {
@@ -752,10 +778,60 @@ struct CodeImpl {
     }
   }
 
-  void dump(std::ostream& out) const {
-    out << *graph_ << "\n";
+  void dump(std::ostream& out) {
+    //out << *graph_ << "\n";
     for (size_t i = 0; i < instructions_.size(); ++i) {
       dump(out, i);
+    }
+
+    out << "[CONST TABLE]" << std::endl;
+    for (size_t i = 0; i < constant_table_.size(); ++i) {
+      out << i << " " << constant_table_[i] << std::endl;
+    }
+
+    out << "[OPS TABLE]" << std::endl;
+    for (size_t i = 0; i < operator_table_.size(); ++i) {
+      out << i << " " << operator_table_[i].target_type().name() << std::endl;
+    }
+
+    out << "[FUNC TABLE]" << std::endl;
+    for (size_t i = 0; i < function_table_.size(); ++i) {
+      out << i << " " << function_table_[i] << std::endl;
+    }
+
+    out << "[TYPE TABLE]" << std::endl;
+    for (size_t i = 0; i < type_table_.size(); ++i) {
+      out << i << " " << type_table_[i] << std::endl;
+    }
+
+    out << "[VALUE TO REG/CONST]" << std::endl;
+    {
+      std::vector<std::string> res;
+      for (auto& entry : value_to_reg_) {
+        std::ostringstream o;
+        o << entry.first->debugName() << " " << entry.second << std::endl;
+        res.push_back(o.str());
+      }
+      sort(res.begin(), res.end());
+      for (const auto& r : res) out << r;
+    }
+
+    out << "[USE COUNT]" << std::endl;
+    {
+      std::vector<std::string> res;
+      for (auto& entry : use_count_) {
+        std::ostringstream o;
+        o << entry.first->debugName() << " " << entry.second << std::endl;
+        res.push_back(o.str());
+      }
+      sort(res.begin(), res.end());
+      for (const auto& r : res) out << r;
+    }
+
+    out << "[GRAD EXECUTORS]" << std::endl;
+    const auto& grads = grad_executors();
+    for (size_t i = 0; i < grads.size(); ++i) {
+      out << i <<  " " << grads[i] << std::endl;
     }
   }
 };
@@ -1116,6 +1192,11 @@ size_t Code::num_outputs() const {
   return pImpl->n_outputs;
 }
 
+void Code::print(std::ostream& out) const {
+  pImpl->dump(out);
+  out << std::endl;
+}
+
 InterpreterState::InterpreterState(const Code& code)
     : pImpl(c10::make_intrusive<InterpreterStateImpl>(code)) {}
 InterpreterState::~InterpreterState() = default;
@@ -1142,3 +1223,8 @@ void InterpreterContinuation::operator()() {
 }
 } // namespace jit
 } // namespace torch
+
+
+TORCH_API std::ostream& operator<<(std::ostream& out, const torch::jit::Code& code) {
+  code.print(out);
+}

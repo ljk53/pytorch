@@ -25,3 +25,13 @@ if (INSTALL_TEST)
     install(FILES $<TARGET_PDB_FILE:test_jit> DESTINATION bin OPTIONAL)
   endif()
 endif()
+
+add_executable(test_adhoc
+  ${JIT_TEST_ROOT}/test_adhoc.cpp)
+
+target_link_libraries(test_adhoc PRIVATE torch)
+target_include_directories(test_adhoc PRIVATE ${ATen_CPU_INCLUDE})
+
+if (INSTALL_TEST)
+  install(TARGETS test_adhoc DESTINATION bin)
+endif()

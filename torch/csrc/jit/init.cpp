@@ -368,6 +368,11 @@ void initJITBindings(PyObject* module) {
       states.emplace_back(e->getDebugState());
     }
     return states;
+  })
+  .def_property_readonly("i", [](const Code& c) {
+    std::ostringstream out;
+    c.print(out);
+    return out.str();
   });
 
   py::class_<ExecutionPlan>(m, "ExecutionPlan")

@@ -41,6 +41,8 @@ struct TORCH_API Code {
   size_t num_inputs() const;
   size_t num_outputs() const;
 
+  void print(std::ostream& out) const;
+
  private:
   std::shared_ptr<CodeImpl> pImpl;
   friend struct InterpreterStateImpl;
@@ -94,3 +96,5 @@ struct InterpreterContinuation {
 
 } // namespace jit
 } // namespace torch
+
+TORCH_API std::ostream& operator<<(std::ostream& out, const torch::jit::Code& code);
