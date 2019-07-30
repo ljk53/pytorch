@@ -22,17 +22,17 @@ cmake .. \
 -DUSE_MPI=OFF \
 -DUSE_OPENMP=OFF \
 -DUSE_NNPACK=ON \
--DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=/home/supriyar/pytorch/build_host_protoc/bin/protoc \
+-DCAFFE2_CUSTOM_PROTOC_EXECUTABLE=${HOME}/src/pytorch/build_host_protoc/bin/protoc \
 -DCAFFE2_LINK_LOCAL_PROTOBUF=OFF \
 -DBUILD_CUSTOM_PROTOBUF=OFF \
 -DTORCH_STATIC=ON \
-#-DBUILD_CAFFE2_MOBILE=OFF \
-#-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
-#-DANDROID_NDK=${ANDROID_NDK} \
-#-DANDROID_ABI='armeabi-v7a with NEON' \
-#-DANDROID_NATIVE_API_LEVEL=21 \
-#-DANDROID_CPP_FEATURES='rtti exceptions' \
-#-DANDROID_TOOLCHAIN=clang \
+-DBUILD_CAFFE2_MOBILE=OFF \
+-DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake \
+-DANDROID_NDK=${ANDROID_NDK} \
+-DANDROID_ABI='armeabi-v7a with NEON' \
+-DANDROID_NATIVE_API_LEVEL=21 \
+-DANDROID_CPP_FEATURES='rtti exceptions' \
+-DANDROID_TOOLCHAIN=clang \
 
 
 #-DANDROID_STL=c++_shared
