@@ -736,12 +736,16 @@ void THTensor_(match)(THTensor *r_, THTensor *m1, THTensor *m2, scalar_t gain)
   c10::raw::intrusive_ptr::decref(m2);
 }
 
+#include <iostream>
+
 void THTensor_(addmm)(THTensor *r_, scalar_t beta, THTensor *t, scalar_t alpha, THTensor *m1, THTensor *m2)
 {
   char transpose_r, transpose_m1, transpose_m2;
   THTensor *r__, *m1_, *m2_;
   int free_m1 = 0;
   int free_m2 = 0;
+
+  // std::cout << "JKL addmm!\n";
 
   if( (m1->dim() != 2) || (m2->dim() != 2))
     THError("matrices expected, got %dD, %dD tensors", m1->dim(), m2->dim());

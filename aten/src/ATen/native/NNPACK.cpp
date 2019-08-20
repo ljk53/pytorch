@@ -1,5 +1,9 @@
 #include <ATen/ATen.h>
 #include <ATen/Config.h>
+#include <iostream>
+#include <chrono>
+#include <ctime>
+using namespace std::chrono;
 
 #if !AT_NNPACK_ENABLED()
 
@@ -113,12 +117,14 @@ static thread_local size_t workspace_size = 0;
 const size_t nnpack_memory_alignment_boundary = 64;
 
 static inline void deallocate_workspace() {
+  std::cout << "JKL deallocate workspace\n";
   if (workspace)
     std::free(workspace);
   workspace = nullptr;
 }
 
 static inline void allocate_workspace() {
+  std::cout << "JKL allocate workspace\n";
   if (workspace)
     deallocate_workspace();
   // Won't work on Windows, but NNPACK doesn't support Windows either
@@ -161,6 +167,7 @@ Tensor _nnpack_spatial_convolution(
     const at::Tensor& weight,
     const at::Tensor& bias,
     IntArrayRef padding) {
+  auto t1 = std::chrono::high_resolution_clock::now();
   at::Tensor output = at::empty(
       conv_output_size(input.sizes(), weight.sizes(), padding),
       input.options());
@@ -218,6 +225,7 @@ Tensor _nnpack_spatial_convolution(
         "Mismatched Tensor types in NNPack convolutionOutput");
   }
 
+  // std::cout << "JKL size: " << input.size(0) << " " << input.size(1) << " " << input.size(2) << " " << input.size(3) << "\n";
   const size_t batch_size = input.size(0);
   const size_t input_channels = input.size(1);
   const size_t output_channels = weight.size(0);
@@ -239,7 +247,9 @@ Tensor _nnpack_spatial_convolution(
   // assert
   auto input_ = input.contiguous();
   auto batched = [&]() -> nnp_status {
-    return nnp_convolution_output(
+    // std::cout << "JKL batched size " << batch_size << "\n";
+    auto start = high_resolution_clock::now();
+    auto res = nnp_convolution_output(
         algorithm,
         batch_size,
         input_channels,
@@ -258,12 +268,18 @@ Tensor _nnpack_spatial_convolution(
         nnpack_threadpool(),
         nullptr // profile
     );
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    std::cout << "JKL batched " << duration.count() << "\n";
+    return res;
   };
 
   auto single = [&]() -> nnp_status {
+    // std::cout << "JKL single\n";
+    auto start = high_resolution_clock::now();
     const nnp_size output_subsample = {.width = 1, .height = 1};
     auto input_ = input.contiguous();
-    return nnp_convolution_inference(
+    auto res = nnp_convolution_inference(
         algorithm,
         nnp_convolution_transform_strategy_compute,
         input_channels,
@@ -283,6 +299,10 @@ Tensor _nnpack_spatial_convolution(
         nnpack_threadpool(),
         nullptr // profile
     );
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    std::cout << "JKL single " << duration.count() << "\n";
+    return res;
   };
 
   auto size_and_allocate_ws = [&]() {
@@ -298,6 +318,8 @@ Tensor _nnpack_spatial_convolution(
   if (workspace == nullptr) {
     size_and_allocate_ws();
   }
+
+  auto t2 = std::chrono::high_resolution_clock::now();
 
   // Try to run with the newly created, or existing workspace
   auto status = batch_size == 1 ? single() : batched();
@@ -315,6 +337,8 @@ Tensor _nnpack_spatial_convolution(
     throw std::runtime_error("NNPACK SpatialConvolution_updateOutput failed");
   }
 
+  auto t3 = std::chrono::high_resolution_clock::now();
+  // std::cout << "JKL t2 - t1: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count() << " t3 - t2: " << std::chrono::duration_cast<std::chrono::nanoseconds>(t3-t2).count() << "\n";
   return output;
 }
 

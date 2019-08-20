@@ -1,13 +1,13 @@
 #include <torch/csrc/lite_interpreter/instruction_executor.h>
 #include <aten/src/ATen/core/dispatch/Dispatcher.h>
 #include <sstream>
-
+#include <unordered_map>
 #include <chrono>
 using namespace std::chrono;
 namespace torch {
 namespace jit {
 
-std::map<std::string, float> time_map;
+std::unordered_map<std::string, float> time_map;
 namespace {
 template <typename dtype> // int64_t, bool, double
 int listConstruct(Stack& stack, int64_t num_inputs) {
@@ -149,8 +149,8 @@ IValue InstructionExecutor::run(Stack& stack) {
 //      std::cout << "pop reg[" << reg << "];\n" << registers[reg] << "\n";
     }
     auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<milliseconds>(stop - start);
-    std::cout << "Time taken for op " << duration.count() << std::endl;
+    auto duration = duration_cast<microseconds>(stop - start);
+    // std::cout << "Time taken for op " << duration.count() << std::endl;
     if (inst.name.find("prim") != 0) {
       time_map[inst.name + std::to_string(pc)] = duration.count();
     }

@@ -2,6 +2,9 @@
 #define TH_GENERIC_FILE "TH/generic/THBlas.cpp"
 #else
 
+#include <iostream>
+#include <chrono>
+using namespace std::chrono;
 
 #ifdef BLAS_F2C
 # define ffloat double
@@ -381,6 +384,7 @@ void THBlas_(gemm)(
   }
 #endif
   {
+    //auto start = high_resolution_clock::now();
     if(!transa_ && !transb_)
     {
       if (beta == 0) {
@@ -495,6 +499,9 @@ void THBlas_(gemm)(
         }
       }
     }
+    //auto end = high_resolution_clock::now();
+    //auto duration = duration_cast<microseconds>(end - start);
+    //std::cout << "JKL " << duration.count() << "\n";
   }
 }
 

@@ -7,6 +7,10 @@
 #include "nnpack.h"
 #endif
 
+#include <iostream>
+#include <chrono>
+using namespace std::chrono;
+
 static const int MIOPEN_DIM_MAX = 4;
 
 namespace at { namespace native {
@@ -159,7 +163,8 @@ auto ConvParams::use_mkldnn(const at::Tensor& input) const -> bool {
 }
 auto ConvParams::use_nnpack(const at::Tensor& input) const -> bool {
 #if AT_NNPACK_ENABLED()
-  return at::_nnpack_available() &&
+  return //groups <= 1 &&
+         at::_nnpack_available() &&
          input.type().backend() == at::Backend::CPU &&
          input.scalar_type() == kFloat && // only on CPU Float Tensors
          !is_strided() && // doesn't support strides
@@ -363,6 +368,8 @@ at::Tensor _convolution(
     bool transposed_, IntArrayRef output_padding_, int64_t groups_,
     bool benchmark, bool deterministic, bool cudnn_enabled) {
 
+  auto start = high_resolution_clock::now();
+
   const bool input_is_mkldnn = input_r.is_mkldnn();
   auto input = input_r;
   if (!input_is_mkldnn) {
@@ -480,6 +487,33 @@ at::Tensor _convolution(
     output = view3d(output);
   }
 
+  auto stop = high_resolution_clock::now();
+  auto duration = duration_cast<microseconds>(stop - start);
+
+  {
+    string nnpack;
+    if (params.groups == 1) {
+      if (params.use_nnpack(input)) nnpack = "NNPACK";
+    } else {
+      if (params.use_nnpack(subtensor(input, 1, params.groups, 0))) nnpack = "NNPACK";
+    }
+    std::ostringstream debug;
+    debug << "(";
+    int d = input_r.ndimension();
+    for (int i = 0; i < d; i++) {
+      if (i) debug << ", ";
+      debug << input_r.size(i);
+    }
+    debug << ") (";
+    int k = weight.ndimension();
+    for (int i = 0; i < k; i++) {
+      if (i) debug << ", ";
+      debug << weight.size(i);
+    }
+    debug << ")";
+    std::cout << "JKL CONV " << debug.str() << " groups: " << groups_ << " microsec: " << duration.count() << " " << nnpack << " " << params << "\n";
+  }
+
   return output;
 }
 
@@ -504,30 +538,38 @@ at::Tensor _convolution_nogroup(
   auto dim = input.ndimension();
   auto dilated = params.is_dilated();
   auto kernel_size = weight.sizes().slice(2);
-
+  // std::cout << "JKL conv...\n";
   if (params.transposed) {
     if (dim == 4) {
+      // std::cout << "JKL case 1\n";
       return at::thnn_conv_transpose2d(
           input, weight, kernel_size, bias,
           stride, padding, output_padding, dilation);
     } else if (dim == 5) {
+      // std::cout << "JKL case 2\n";
       return at::thnn_conv_transpose3d(
         input, weight, kernel_size, bias,
         stride, padding, output_padding, dilation);
       }
   } else {  /* Not transposed */
+    // std::cout << "JKL case 3\n";
     if (dim == 4) {
+      // std::cout << "JKL case 4\n";
       if (dilated) {
+        // std::cout << "JKL case 5\n";
         return at::thnn_conv_dilated2d(
             input, weight, kernel_size, bias,
             stride, padding, dilation);
       } else {  /* dim == 4, non-dilated */
+        // std::cout << "JKL case 6\n";
         if (params.use_nnpack(input)) {
 #if AT_NNPACK_ENABLED()
+          // std::cout << "JKL case 7\n";
           return at::_nnpack_spatial_convolution(
               input, weight, bias, padding);
 #endif
         } else {
+          // std::cout << "JKL case 8\n";
           /* CPU implementation has specialized MM kernels
              for non-dilated case here */
           return at::thnn_conv2d(
@@ -536,12 +578,14 @@ at::Tensor _convolution_nogroup(
         }
       }
     } else if (dim == 5 && (input.is_cuda() || dilated)) {
+      // std::cout << "JKL case 9\n";
       return at::thnn_conv_dilated3d(
           input, weight, kernel_size, bias,
           stride, padding, dilation);
     } else if (dim == 5) { /* dim == 5, CPU, non-dilated */
       /* CPU implementation has specialized MM kernels
          for non-dilated case here */
+      // std::cout << "JKL case 10\n";
       return at::thnn_conv3d(
           input, weight, kernel_size, bias,
           stride, padding);

@@ -12,7 +12,7 @@ using namespace std::chrono;
 static at::Tensor input;
 static at::Tensor output;
 static std::shared_ptr<torch::jit::GenericInstructionList> model;
-#define BATCH_SIZE 100
+#define BATCH_SIZE 1
 void allocate_input_buffer(int c, int h, int w) {
   input = at::zeros({BATCH_SIZE, c, h, w}, at::dtype(at::kFloat));
 }
