@@ -2,6 +2,9 @@
 #include <ATen/NativeFunctions.h>
 #include <ATen/native/utils/ParamUtils.h>
 
+#include <chrono>
+using namespace std::chrono;
+
 #include <ATen/Config.h>
 #if AT_NNPACK_ENABLED()
 #include "nnpack.h"
@@ -510,7 +513,7 @@ at::Tensor _convolution(
     IntArrayRef stride_, IntArrayRef padding_, IntArrayRef dilation_,
     bool transposed_, IntArrayRef output_padding_, int64_t groups_,
     bool benchmark, bool deterministic, bool cudnn_enabled) {
-
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
   const bool input_is_mkldnn = input_r.is_mkldnn();
   auto input = input_r;
   if (!input_is_mkldnn) {
@@ -642,6 +645,11 @@ at::Tensor _convolution(
   if (k == 3) {
     output = view3d(output);
   }
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+
+  std::cout << "CONV\t\t" << input.sizes() << "\tK\t" << weight.sizes() << "\tG\t" \
+            << params.groups << "\tS\t" << params.stride << "\tP\t" << params.padding << "\t\t" \
+            << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count() << "\n";
 
   return output;
 }
