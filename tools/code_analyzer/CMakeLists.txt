@@ -9,5 +9,10 @@ add_library(OpDependencyPass MODULE
   op_dependency.cpp
 )
 
-target_compile_features(OpDependencyPass PRIVATE cxx_std_11)
-set_target_properties(OpDependencyPass PROPERTIES COMPILE_FLAGS "-fno-rtti -O3")
+set_target_properties(OpDependencyPass PROPERTIES COMPILE_FLAGS "-std=c++11 -fno-rtti -O3")
+
+if(APPLE)
+  set_target_properties(OpDependencyPass PROPERTIES
+      LINK_FLAGS "-undefined dynamic_lookup"
+  )
+endif(APPLE)
