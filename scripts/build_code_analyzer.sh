@@ -59,7 +59,8 @@ TORCH_BUILD_ROOT=${BUILD_ROOT}/build_mobile
 TORCH_INSTALL_PREFIX=${TORCH_BUILD_ROOT}/install
 
 if [ ! -d "${TORCH_INSTALL_PREFIX}" ]; then
-  BUILD_ROOT=${TORCH_BUILD_ROOT} CXXFLAGS='-S -emit-llvm' ${SRC_HOME}/scripts/build_mobile.sh
+  BUILD_ROOT=${TORCH_BUILD_ROOT} ${SRC_HOME}/scripts/build_mobile.sh \
+    -DCMAKE_CXX_FLAGS="-S -emit-llvm"
 fi
 
 ##############################################################################
@@ -122,7 +123,10 @@ if [ -n "${ANALYZE_TEST}" ]; then
   TEST_BUILD_ROOT=${BUILD_ROOT}/build_test
   mkdir -p ${TEST_BUILD_ROOT}
   pushd ${TEST_BUILD_ROOT}
-  cmake ${ANALYZER_SRC_HOME}/test -DCMAKE_PREFIX_PATH=${TORCH_INSTALL_PREFIX}
+  cmake ${ANALYZER_SRC_HOME}/test \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_PREFIX_PATH=${TORCH_INSTALL_PREFIX} \
+    -DCMAKE_CXX_FLAGS="-S -emit-llvm"
   make "-j${MAX_JOBS}"
   popd
 

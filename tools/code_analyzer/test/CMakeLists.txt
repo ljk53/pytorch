@@ -12,7 +12,3 @@ add_library(SimpleOps
   simple_ops.cpp
   utils.cpp
 )
-
-set_target_properties(SimpleOps PROPERTIES
-  COMPILE_FLAGS "-S -emit-llvm -O3"
-)
