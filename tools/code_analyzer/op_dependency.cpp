@@ -175,7 +175,8 @@ static RegexOpt FunctionSchemaPatternLoc;
 static cl::opt<RegexOpt, true, cl::parser<std::string>> FunctionSchemaPattern(
     "op_schema_pattern",
     cl::desc("Op schema regex pattern. "
-             "Example: -op_schema_pattern '(^aten::[^ ]+)|(^quantized::[^ ]+)'"),
+             "Example: -op_schema_pattern "
+             "'(^aten::[^ ]+)|(^quantized::[^ ]+)'"),
     cl::location(FunctionSchemaPatternLoc),
     cl::Required,
     cl::ValueRequired);
@@ -184,7 +185,8 @@ static RegexOpt OpRegistrationPatternLoc;
 static cl::opt<RegexOpt, true, cl::parser<std::string>> OpRegistrationPattern(
     "op_register_pattern",
     cl::desc("Op registration signature regex pattern. "
-             "Example: -op_register_pattern " "'^c10::RegisterOperators::Options::schema'"),
+             "Example: -op_register_pattern "
+             "'^c10::RegisterOperators::Options::schema'"),
     cl::location(OpRegistrationPatternLoc),
     cl::Required,
     cl::ValueRequired);
@@ -393,6 +395,10 @@ private:
     for (Instruction* cur = getNextInstruction(I);
          cur;
          cur = getNextInstruction(*cur)) {
+      if (Verbose > 2) {
+        std::cerr << "[DEBUG][INST] " << schemaStr << " => "
+                  << *cur << std::endl;
+      }
       // Check pattern to call registered ops.
       if (checkInstructionCalledFunction(
               *cur, *OpInvocationPatternLoc.pattern)) {
@@ -422,10 +428,6 @@ private:
                       << demangle(func->getName()) << std::endl;
           }
         };
-        if (Verbose > 2) {
-          std::cerr << "[DEBUG][OP_REG] " << schemaStr << " [INST] "
-                    << *cur << std::endl;
-        }
         scanReferredFunctionsFromOperands(*cur, cb);
       }
     }
@@ -513,17 +515,6 @@ private:
     return nextBlock ? &nextBlock->front() : nullptr;
   }
 
-  // Referenced the logic in llvm::CallGraph.
-  static Function* getCalledFunction(Instruction& I) {
-    auto CS = CallSite(&I);
-    if (!CS) return nullptr;
-    Function* callee = CS.getCalledFunction();
-    if (!callee || callee->isIntrinsic()) {
-      return nullptr;
-    }
-    return callee;
-  }
-
   // CallGraph only searches for CallSites (call/invoke instructions). However
   // functions can be referenced in other instructions as well (being passed
   // as function pointer).
@@ -560,9 +551,19 @@ private:
     }
   }
 
+  // Directly called function might be in ConstExpr as well, e.g.:
+  // invoke void bitcast (
+  //    void (ty1*, ...)* @c10::Dispatcher::findSchema(...) to
+  //    void (ty2*, ...)*)(...)
+  //
+  // In above case, "CallSite(I).getCalledFunction()" won't return "findSchema"
+  // as it's nested in "bitcast" instruction.
   static bool checkInstructionCalledFunction(Instruction& I, Regex& pattern) {
-    Function* callee = getCalledFunction(I);
-    return callee && pattern.match(demangle(callee->getName()));
+    bool called = false;
+    scanReferredFunctionsFromOperands(I, [&](Function* func) -> void {
+      called |= pattern.match(demangle(func->getName()));
+    });
+    return called;
   }
 
   static void mergeGraph(GRAPH& src, GRAPH* dest) {
