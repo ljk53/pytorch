@@ -226,8 +226,17 @@ static cl::opt<RegexOpt, true, cl::parser<std::string>> DebugFilter(
     cl::ZeroOrMore,
     cl::ValueRequired);
 
+static cl::opt<bool> DebugPath(
+    "debug_path",
+    cl::desc("Output path between two nodes."),
+    cl::init(false));
+
 typedef std::set<std::string> SET;
 typedef std::unordered_map<std::string, std::set<std::string>> GRAPH;
+
+// SRC -> (DEST -> PREV)
+typedef std::unordered_map<std::string,
+                           std::unordered_map<std::string, std::string>> PATH;
 
 // Referenced the logic in llvm-cxxfilt.cpp.
 std::string demangle(const std::string& mangled) {
@@ -303,12 +312,13 @@ public:
     mergeGraph(functionToFunctions, &input);
 
     // Calculate transitive closure and remove non-key nodes.
-    simplifyGraph(input, keyNodes, &result);
+    std::shared_ptr<PATH> path = DebugPath ? std::make_shared<PATH>() : nullptr;
+    simplifyGraph(input, keyNodes, &result, path);
 
     if (OutputFormat == OutputFormatType::Dot) {
       printAsDot(std::cout, keyNodes, result);
     } else if (OutputFormat == OutputFormatType::YAML) {
-      printAsYAML(std::cout, keyNodes, result);
+      printAsYAML(std::cout, keyNodes, result, path);
     }
 
     return false;
@@ -448,7 +458,8 @@ private:
   }
 
   // Calculate transitive closure and remove non-key nodes.
-  static void simplifyGraph(GRAPH& input, SET& keyNodes, GRAPH* output) {
+  static void simplifyGraph(GRAPH& input, SET& keyNodes, GRAPH* output,
+      std::shared_ptr<PATH> path) {
     // Starting from every key node, use BFS to traverse all nodes that are
     // transitively reachable from the node in the sparse graph.
     for (auto& key : keyNodes) {
@@ -458,6 +469,7 @@ private:
         if (!expanded.insert(curNode).second) return;
         for (auto& next : input[curNode]) {
           queue.emplace_back(next);
+          if (path) (*path)[key].emplace(next, curNode); // don't replace
         }
       };
 
@@ -576,7 +588,8 @@ private:
     out << "}" << std::endl;
   }
 
-  static void printAsYAML(std::ostream& out, SET& keys, GRAPH& graph) {
+  static void printAsYAML(std::ostream& out, SET& keys, GRAPH& graph,
+      std::shared_ptr<PATH> path) {
     for (const auto& K : keys) {
       out << "- name: " << demangle(K) << std::endl;
       auto& values = graph[K];
@@ -584,6 +597,16 @@ private:
       out << "  depends:" << std::endl;
       for (const auto& value : values) {
         out << "  - name: " << demangle(value) << std::endl;
+        if (path) {
+          std::vector<std::string> rpath;
+          for (std::string prev = value;
+               rpath.emplace_back(prev), prev != K;
+               prev = (*path)[K][prev]);
+          out << "    path:" << std::endl;
+          for (auto it = rpath.rbegin(); it != rpath.rend(); ++it) {
+            out << "    - " << demangle(*it) << std::endl;
+          }
+        }
       }
     }
   }
