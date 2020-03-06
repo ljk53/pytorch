@@ -14,10 +14,10 @@ target_include_directories(Predictor PUBLIC ${TORCH_INCLUDE_DIRS})
 find_package(Threads REQUIRED)
 
 target_link_libraries(Predictor
-  -Wl,-s
   -Wl,--gc-sections
   -Wl,--whole-archive
   ${TORCH_LIBRARIES}
   -Wl,--no-whole-archive
   Threads::Threads
+  ${CMAKE_DL_LIBS}
 )

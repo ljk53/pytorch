@@ -56,7 +56,8 @@ run_default_build() {
   LIBTORCH_INSTALL_PREFIX="${LIBTORCH_BUILD_ROOT}/install"
 
   BUILD_ROOT="${LIBTORCH_BUILD_ROOT}" \
-    "${SRC_ROOT}/scripts/build_mobile.sh"
+    "${SRC_ROOT}/scripts/build_mobile.sh" \
+    -DCMAKE_BUILD_TYPE=Debug
 }
 
 run_custom_build_with_static_dispatch() {
@@ -67,7 +68,8 @@ run_custom_build_with_static_dispatch() {
     "${SRC_ROOT}/scripts/build_mobile.sh" \
     -DCMAKE_CXX_FLAGS="-DSTRIP_ERROR_MESSAGES" \
     -DUSE_STATIC_DISPATCH=ON \
-    -DSELECTED_OP_LIST="${ROOT_OPS}"
+    -DSELECTED_OP_LIST="${ROOT_OPS}" \
+    -DCMAKE_BUILD_TYPE=Debug
 }
 
 run_custom_build_with_dynamic_dispatch() {
@@ -79,7 +81,8 @@ run_custom_build_with_dynamic_dispatch() {
     -DCMAKE_CXX_FLAGS="-DSTRIP_ERROR_MESSAGES" \
     -DUSE_STATIC_DISPATCH=OFF \
     -DSELECTED_OP_LIST="${ROOT_OPS}" \
-    -DOP_DEPENDENCY="${OP_DEPENDENCY}"
+    -DOP_DEPENDENCY="${OP_DEPENDENCY}" \
+    -DCMAKE_BUILD_TYPE=Debug
 }
 
 build_predictor() {
@@ -90,7 +93,7 @@ build_predictor() {
 
   cmake "${TEST_SRC_ROOT}" \
     -DCMAKE_PREFIX_PATH="${LIBTORCH_INSTALL_PREFIX}" \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Debug
 
   make
 }
