@@ -43,6 +43,9 @@ int main(int argc, const char* argv[]) {
     return 1;
   }
   init();
+  for (auto& op : torch::jit::getAllOperators()) {
+    std::cout << "op: " << op->schema().name() << "." << op->schema().overload_name() << "\n";
+  }
   auto module = loadModel(argv[1]);
   auto input = torch::ones({1, 3, 224, 224});
   auto output = [&]() {

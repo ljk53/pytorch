@@ -147,6 +147,7 @@ Operator createOperatorFromC10_withTracingHandledHere(const c10::OperatorHandle&
 
 Operator createOperatorFromC10_withTracingNotHandledHere(const c10::OperatorHandle& op) {
   return Operator(op, [op](Stack& stack) {
+      std::cout << "JK call op: " << op.schema().name() << "." << op.schema().overload_name() << "\n";
       c10::Dispatcher::singleton().callBoxed(op, &stack);
       return 0;
   });
@@ -156,11 +157,17 @@ class RegistrationListener final : public c10::OpRegistrationListener {
 public:
   void onOperatorRegistered(const c10::OperatorHandle& op) override {
     if(at::is_aten_op_and_unboxing_is_already_handled_by_c10(op.schema().operator_name())) {
+      std::cout << "JK case 1 " << op.schema().name() << "." << op.schema().overload_name() << "\n";
+      if (op.schema().name() == "aten::_convolution") {
+        std::cout << "JK register convolution!\n";
+      }
       // Those ops do tracing/autograd in VariableType, no need to handle it here
       torch::jit::registerOperator(createOperatorFromC10_withTracingNotHandledHere(op));
     } else if (at::is_aten_op_and_unboxing_is_not_handled_by_c10_yet(op.schema().operator_name())) {
+      std::cout << "JK case 2 " << op.schema().name() << "." << op.schema().overload_name() << "\n";
       // register_aten_ops.cpp registers the jit unboxing wrapper for this op, no need to do anything here.
     } else {
+      std::cout << "JK case 3 " << op.schema().name() << "." << op.schema().overload_name() << "\n";
       // custom ops don't do tracing/autograd in VariableType yet, we need to handle tracing here.
       torch::jit::registerOperator(createOperatorFromC10_withTracingHandledHere(op));
     }
