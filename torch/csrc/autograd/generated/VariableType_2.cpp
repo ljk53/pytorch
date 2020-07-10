@@ -2410,6 +2410,7 @@ Tensor & eye_out_out(Tensor & out, int64_t n) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & eye_out_m_out(Tensor & out, int64_t n, int64_t m) {
@@ -2429,6 +2430,7 @@ Tensor & eye_out_m_out(Tensor & out, int64_t n, int64_t m) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor fake_quantize_per_channel_affine_backward(const Tensor & grad, const Tensor & self, const Tensor & scale, const Tensor & zero_point, int64_t axis, int64_t quant_min, int64_t quant_max) {
@@ -2825,6 +2827,7 @@ std::tuple<Tensor &,Tensor &> fractional_max_pool3d_out_output(Tensor & output, 
   if (random_samples__impl_saved) AT_ASSERT(random_samples__impl_saved == random_samples_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -3338,6 +3341,7 @@ std::tuple<Tensor &,Tensor &> kthvalue_out_values(Tensor & values, Tensor & indi
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -4168,6 +4172,7 @@ std::tuple<Tensor &,Tensor &> max_pool3d_with_indices_out_out(Tensor & out, Tens
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -6588,6 +6593,7 @@ std::tuple<Tensor &,Tensor &> solve_out_solution(Tensor & solution, Tensor & lu,
   if (A__impl_saved) AT_ASSERT(A__impl_saved == A_.getIntrusivePtr());
   #endif
   increment_version(solution);
+  increment_version(lu);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( solution ), grad_fn);
   }

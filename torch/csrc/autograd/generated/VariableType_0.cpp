@@ -63,6 +63,7 @@ Tensor & __ilshift___Scalar(Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor & __ilshift___Tensor(Tensor & self, const Tensor & other) {
@@ -90,6 +91,7 @@ Tensor & __ilshift___Tensor(Tensor & self, const Tensor & other) {
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor & __ior___Scalar(Tensor & self, Scalar other) {
@@ -2975,6 +2977,7 @@ std::tuple<Tensor &,Tensor &> cummax_out_out(Tensor & values, Tensor & indices, 
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -4348,6 +4351,7 @@ Tensor & logspace_out_out(Tensor & out, Scalar start, Scalar end, int64_t steps,
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & logsumexp_out_out(Tensor & out, const Tensor & self, IntArrayRef dim, bool keepdim) {
@@ -4437,6 +4441,7 @@ std::tuple<Tensor &,Tensor &> max_out_dim_max(Tensor & max, Tensor & max_values,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(max);
+  increment_version(max_values);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( max ), grad_fn);
   }
@@ -4959,6 +4964,7 @@ std::tuple<Tensor &,Tensor &> mode_out_values(Tensor & values, Tensor & indices,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -5118,6 +5124,7 @@ std::tuple<Tensor &,Tensor &> multilabel_margin_loss_forward_out_output(Tensor &
   if (target__impl_saved) AT_ASSERT(target__impl_saved == target_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(is_target);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -5312,6 +5319,7 @@ Tensor & ne_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & ne_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -5347,6 +5355,7 @@ Tensor & ne_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor new_full(const Tensor & self, IntArrayRef size, Scalar fill_value, const TensorOptions & options) {
@@ -6700,6 +6709,7 @@ std::tuple<Tensor &,Tensor &> sort_out_values(Tensor & values, Tensor & indices,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -7216,6 +7226,7 @@ std::tuple<Tensor &,Tensor &> topk_out_values(Tensor & values, Tensor & indices,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
