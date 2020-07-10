@@ -56,10 +56,12 @@ Tensor __and___Tensor(const Tensor & self, const Tensor & other) {
 }
 Tensor & __iand___Scalar(Tensor & self, Scalar other) {
   TypeDefault::__iand___Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & __iand___Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::__iand___Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & __ilshift___Scalar(Tensor & self, Scalar other) {
@@ -79,6 +81,7 @@ Tensor & __ilshift___Scalar(Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor & __ilshift___Tensor(Tensor & self, const Tensor & other) {
@@ -106,14 +109,17 @@ Tensor & __ilshift___Tensor(Tensor & self, const Tensor & other) {
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor & __ior___Scalar(Tensor & self, Scalar other) {
   TypeDefault::__ior___Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & __ior___Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::__ior___Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & __irshift___Scalar(Tensor & self, Scalar other) {
@@ -133,6 +139,7 @@ Tensor & __irshift___Scalar(Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor & __irshift___Tensor(Tensor & self, const Tensor & other) {
@@ -160,14 +167,17 @@ Tensor & __irshift___Tensor(Tensor & self, const Tensor & other) {
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor & __ixor___Scalar(Tensor & self, Scalar other) {
   TypeDefault::__ixor___Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & __ixor___Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::__ixor___Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor __lshift___Scalar(const Tensor & self, Scalar other) {
@@ -629,6 +639,7 @@ Tensor _amp_update_scale(Tensor & growth_tracker, const Tensor & current_scale, 
 }
 Tensor & _baddbmm_mkl_(Tensor & self, const Tensor & batch1, const Tensor & batch2, Scalar beta, Scalar alpha) {
   TypeDefault::_baddbmm_mkl_(self, batch1, batch2, beta, alpha);
+  increment_version(self);
   return self;
 }
 std::tuple<Tensor,Tensor,Tensor,Tensor,int64_t> _batch_norm_impl_index(const Tensor & input, const Tensor & weight, const Tensor & bias, const Tensor & running_mean, const Tensor & running_var, bool training, double momentum, double eps, bool cudnn_enabled) {
@@ -1031,6 +1042,7 @@ Tensor & _coalesced_(Tensor & self, bool coalesced) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(self);
   return self;
 }
 Tensor _convolution(const Tensor & input, const Tensor & weight, const Tensor & bias, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation, bool transposed, IntArrayRef output_padding, int64_t groups, bool benchmark, bool deterministic, bool cudnn_enabled) {
@@ -3301,14 +3313,17 @@ std::tuple<Tensor,Tensor> _sobol_engine_draw(const Tensor & quasi, int64_t n, co
 }
 Tensor & _sobol_engine_ff_(Tensor & self, int64_t n, const Tensor & sobolstate, int64_t dimension, int64_t num_generated) {
   TypeDefault::_sobol_engine_ff_(self, n, sobolstate, dimension, num_generated);
+  increment_version(self);
   return self;
 }
 Tensor & _sobol_engine_initialize_state_(Tensor & self, int64_t dimension) {
   TypeDefault::_sobol_engine_initialize_state_(self, dimension);
+  increment_version(self);
   return self;
 }
 Tensor & _sobol_engine_scramble_(Tensor & self, const Tensor & ltm, int64_t dimension) {
   TypeDefault::_sobol_engine_scramble_(self, ltm, dimension);
+  increment_version(self);
   return self;
 }
 Tensor _softmax(const Tensor & self, int64_t dim, bool half_to_float) {
@@ -5376,6 +5391,7 @@ std::tuple<Tensor &,Tensor &> adaptive_max_pool2d_out_out(Tensor & out, Tensor &
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -5557,6 +5573,7 @@ std::tuple<Tensor &,Tensor &> adaptive_max_pool3d_out_out(Tensor & out, Tensor &
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -6870,6 +6887,7 @@ Tensor & all_out_out(Tensor & out, const Tensor & self, int64_t dim, bool keepdi
 }
 Tensor & all_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::all_out_dimname_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 bool allclose(const Tensor & self, const Tensor & other, double rtol, double atol, bool equal_nan) {
@@ -6882,6 +6900,7 @@ Tensor alpha_dropout(const Tensor & input, double p, bool train) {
 }
 Tensor & alpha_dropout_(Tensor & self, double p, bool train) {
   TypeDefault::alpha_dropout_(self, p, train);
+  increment_version(self);
   return self;
 }
 Tensor angle(const Tensor & self) {
@@ -7052,6 +7071,7 @@ Tensor & any_out_out(Tensor & out, const Tensor & self, int64_t dim, bool keepdi
 }
 Tensor & any_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::any_out_dimname_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor arange(Scalar end, const TensorOptions & options) {
@@ -7068,6 +7088,7 @@ Tensor arange_start_step(Scalar start, Scalar end, Scalar step, const TensorOpti
 }
 Tensor & arange_out_out(Tensor & out, Scalar end) {
   TypeDefault::arange_out_out(out, end);
+  increment_version(out);
   return out;
 }
 Tensor & arange_out_start_out(Tensor & out, Scalar start, Scalar end, Scalar step) {
@@ -7087,6 +7108,7 @@ Tensor & arange_out_start_out(Tensor & out, Scalar start, Scalar end, Scalar ste
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor argmax(const Tensor & self, c10::optional<int64_t> dim, bool keepdim) {
@@ -9208,10 +9230,12 @@ Tensor bitwise_and_Tensor(const Tensor & self, const Tensor & other) {
 }
 Tensor & bitwise_and__Scalar(Tensor & self, Scalar other) {
   TypeDefault::bitwise_and__Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_and__Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::bitwise_and__Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_and_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -9304,6 +9328,7 @@ Tensor bitwise_not(const Tensor & self) {
 }
 Tensor & bitwise_not_(Tensor & self) {
   TypeDefault::bitwise_not_(self);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_not_out_out(Tensor & out, const Tensor & self) {
@@ -9354,10 +9379,12 @@ Tensor bitwise_or_Tensor(const Tensor & self, const Tensor & other) {
 }
 Tensor & bitwise_or__Scalar(Tensor & self, Scalar other) {
   TypeDefault::bitwise_or__Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_or__Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::bitwise_or__Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_or_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -9454,10 +9481,12 @@ Tensor bitwise_xor_Tensor(const Tensor & self, const Tensor & other) {
 }
 Tensor & bitwise_xor__Scalar(Tensor & self, Scalar other) {
   TypeDefault::bitwise_xor__Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_xor__Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::bitwise_xor__Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & bitwise_xor_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -9857,6 +9886,7 @@ Tensor & cat_out_out(Tensor & out, TensorList tensors, int64_t dim) {
 }
 Tensor & cat_out_names_out(Tensor & out, TensorList tensors, Dimname dim) {
   TypeDefault::cat_out_names_out(out, tensors, dim);
+  increment_version(out);
   return out;
 }
 Tensor & cauchy_(Tensor & self, double median, double sigma, c10::optional<Generator> generator) {
@@ -9993,6 +10023,7 @@ Tensor celu(const Tensor & self, Scalar alpha) {
 }
 Tensor & celu_(Tensor & self, Scalar alpha) {
   TypeDefault::celu_(self, alpha);
+  increment_version(self);
   return self;
 }
 Tensor chain_matmul(TensorList matrices) {
@@ -12279,6 +12310,7 @@ std::tuple<Tensor &,Tensor &> cummax_out_out(Tensor & values, Tensor & indices, 
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -12286,6 +12318,8 @@ std::tuple<Tensor &,Tensor &> cummax_out_out(Tensor & values, Tensor & indices, 
 }
 std::tuple<Tensor &,Tensor &> cummax_out_dimname_out(Tensor & values, Tensor & indices, const Tensor & self, Dimname dim) {
   TypeDefault::cummax_out_dimname_out(values, indices, self, dim);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 std::tuple<Tensor,Tensor> cummin(const Tensor & self, int64_t dim) {
@@ -12370,6 +12404,7 @@ std::tuple<Tensor &,Tensor &> cummin_out_out(Tensor & values, Tensor & indices, 
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -12377,6 +12412,8 @@ std::tuple<Tensor &,Tensor &> cummin_out_out(Tensor & values, Tensor & indices, 
 }
 std::tuple<Tensor &,Tensor &> cummin_out_dimname_out(Tensor & values, Tensor & indices, const Tensor & self, Dimname dim) {
   TypeDefault::cummin_out_dimname_out(values, indices, self, dim);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 Tensor cumprod(const Tensor & self, int64_t dim, c10::optional<ScalarType> dtype) {
@@ -12454,6 +12491,7 @@ Tensor & cumprod_out_out(Tensor & out, const Tensor & self, int64_t dim, c10::op
 }
 Tensor & cumprod_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, c10::optional<ScalarType> dtype) {
   TypeDefault::cumprod_out_dimname_out(out, self, dim, dtype);
+  increment_version(out);
   return out;
 }
 Tensor cumsum(const Tensor & self, int64_t dim, c10::optional<ScalarType> dtype) {
@@ -12530,6 +12568,7 @@ Tensor & cumsum_out_out(Tensor & out, const Tensor & self, int64_t dim, c10::opt
 }
 Tensor & cumsum_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, c10::optional<ScalarType> dtype) {
   TypeDefault::cumsum_out_dimname_out(out, self, dim, dtype);
+  increment_version(out);
   return out;
 }
 Tensor deg2rad(const Tensor & self) {
@@ -13280,6 +13319,7 @@ Tensor dropout(const Tensor & input, double p, bool train) {
 }
 Tensor & dropout_(Tensor & self, double p, bool train) {
   TypeDefault::dropout_(self, p, train);
+  increment_version(self);
   return self;
 }
 std::tuple<Tensor,Tensor> eig(const Tensor & self, bool eigenvectors) {
@@ -13717,6 +13757,7 @@ Tensor empty_meta(IntArrayRef size, const TensorOptions & options, c10::optional
 }
 Tensor & empty_out_out(Tensor & out, IntArrayRef size, c10::optional<MemoryFormat> memory_format) {
   TypeDefault::empty_out_out(out, size, memory_format);
+  increment_version(out);
   return out;
 }
 Tensor empty_quantized(IntArrayRef size, const Tensor & qtensor) {
@@ -13898,6 +13939,7 @@ Tensor & eq_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & eq_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -13933,6 +13975,7 @@ Tensor & eq_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 bool equal(const Tensor & self, const Tensor & other) {
@@ -14550,6 +14593,7 @@ Tensor & eye_out_out(Tensor & out, int64_t n) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & eye_out_m_out(Tensor & out, int64_t n, int64_t m) {
@@ -14569,6 +14613,7 @@ Tensor & eye_out_m_out(Tensor & out, int64_t n, int64_t m) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor fake_quantize_per_channel_affine(const Tensor & self, const Tensor & scale, const Tensor & zero_point, int64_t axis, int64_t quant_min, int64_t quant_max) {
@@ -14706,6 +14751,7 @@ Tensor feature_alpha_dropout(const Tensor & input, double p, bool train) {
 }
 Tensor & feature_alpha_dropout_(Tensor & self, double p, bool train) {
   TypeDefault::feature_alpha_dropout_(self, p, train);
+  increment_version(self);
   return self;
 }
 Tensor feature_dropout(const Tensor & input, double p, bool train) {
@@ -14714,6 +14760,7 @@ Tensor feature_dropout(const Tensor & input, double p, bool train) {
 }
 Tensor & feature_dropout_(Tensor & self, double p, bool train) {
   TypeDefault::feature_dropout_(self, p, train);
+  increment_version(self);
   return self;
 }
 Tensor fft(const Tensor & self, int64_t signal_ndim, bool normalized) {
@@ -14788,6 +14835,7 @@ Tensor & fill__Tensor(Tensor & self, const Tensor & value) {
 }
 Tensor & fill_diagonal_(Tensor & self, Scalar fill_value, bool wrap) {
   TypeDefault::fill_diagonal_(self, fill_value, wrap);
+  increment_version(self);
   return self;
 }
 Tensor flatten_using_ints(const Tensor & self, int64_t start_dim, int64_t end_dim) {
@@ -14979,6 +15027,7 @@ Tensor & floor_divide__Tensor(Tensor & self, const Tensor & other) {
 }
 Tensor & floor_divide__Scalar(Tensor & self, Scalar other) {
   TypeDefault::floor_divide__Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & floor_divide_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -15575,6 +15624,7 @@ std::tuple<Tensor &,Tensor &> fractional_max_pool2d_out_output(Tensor & output, 
   if (random_samples__impl_saved) AT_ASSERT(random_samples__impl_saved == random_samples_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -15775,6 +15825,7 @@ std::tuple<Tensor &,Tensor &> fractional_max_pool3d_out_output(Tensor & output, 
   if (random_samples__impl_saved) AT_ASSERT(random_samples__impl_saved == random_samples_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -15790,6 +15841,7 @@ Tensor frobenius_norm_dim(const Tensor & self, IntArrayRef dim, bool keepdim) {
 }
 Tensor & frobenius_norm_out_out(Tensor & out, const Tensor & self, IntArrayRef dim, bool keepdim) {
   TypeDefault::frobenius_norm_out_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor from_file(std::string filename, c10::optional<bool> shared, c10::optional<int64_t> size, const TensorOptions & options) {
@@ -15815,6 +15867,7 @@ Tensor full_like(const Tensor & self, Scalar fill_value, const TensorOptions & o
 }
 Tensor & full_out_out(Tensor & out, IntArrayRef size, Scalar fill_value) {
   TypeDefault::full_out_out(out, size, fill_value);
+  increment_version(out);
   return out;
 }
 Tensor gather(const Tensor & self, int64_t dim, const Tensor & index, bool sparse_grad) {
@@ -15910,6 +15963,7 @@ Tensor & gather_out_out(Tensor & out, const Tensor & self, int64_t dim, const Te
 }
 Tensor & gather_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, const Tensor & index, bool sparse_grad) {
   TypeDefault::gather_out_dimname_out(out, self, dim, index, sparse_grad);
+  increment_version(out);
   return out;
 }
 Tensor ge_Scalar(const Tensor & self, Scalar other) {
@@ -16054,6 +16108,7 @@ Tensor & ge_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & ge_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -16089,6 +16144,7 @@ Tensor & ge_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor gelu(const Tensor & self) {
@@ -16843,6 +16899,7 @@ Tensor & gt_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & gt_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -16878,6 +16935,7 @@ Tensor & gt_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor hamming_window(int64_t window_length, const TensorOptions & options) {
@@ -17895,6 +17953,7 @@ Tensor & index_copy_(Tensor & self, int64_t dim, const Tensor & index, const Ten
 }
 Tensor & index_copy__dimname(Tensor & self, Dimname dim, const Tensor & index, const Tensor & source) {
   TypeDefault::index_copy__dimname(self, dim, index, source);
+  increment_version(self);
   return self;
 }
 Tensor index_fill_int_Scalar(const Tensor & self, int64_t dim, const Tensor & index, Scalar value) {
@@ -18001,10 +18060,12 @@ Tensor & index_fill__int_Tensor(Tensor & self, int64_t dim, const Tensor & index
 }
 Tensor & index_fill__Dimname_Scalar(Tensor & self, Dimname dim, const Tensor & index, Scalar value) {
   TypeDefault::index_fill__Dimname_Scalar(self, dim, index, value);
+  increment_version(self);
   return self;
 }
 Tensor & index_fill__Dimname_Tensor(Tensor & self, Dimname dim, const Tensor & index, const Tensor & value) {
   TypeDefault::index_fill__Dimname_Tensor(self, dim, index, value);
+  increment_version(self);
   return self;
 }
 Tensor index_put(const Tensor & self, TensorList indices, const Tensor & values, bool accumulate) {
@@ -18159,6 +18220,7 @@ Tensor & index_select_out_out(Tensor & out, const Tensor & self, int64_t dim, co
 }
 Tensor & index_select_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, const Tensor & index) {
   TypeDefault::index_select_out_dimname_out(out, self, dim, index);
+  increment_version(out);
   return out;
 }
 Tensor indices(const Tensor & self) {
@@ -18577,6 +18639,7 @@ std::tuple<Tensor &,Tensor &> kthvalue_out_values(Tensor & values, Tensor & indi
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -18584,6 +18647,8 @@ std::tuple<Tensor &,Tensor &> kthvalue_out_values(Tensor & values, Tensor & indi
 }
 std::tuple<Tensor &,Tensor &> kthvalue_out_dimname_out(Tensor & values, Tensor & indices, const Tensor & self, int64_t k, Dimname dim, bool keepdim) {
   TypeDefault::kthvalue_out_dimname_out(values, indices, self, k, dim, keepdim);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 Tensor l1_loss(const Tensor & self, const Tensor & target, int64_t reduction) {
@@ -18920,6 +18985,7 @@ Tensor & le_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & le_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -18955,6 +19021,7 @@ Tensor & le_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor leaky_relu(const Tensor & self, Scalar negative_slope) {
@@ -19496,6 +19563,7 @@ Tensor & linspace_out_out(Tensor & out, Scalar start, Scalar end, int64_t steps)
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor log(const Tensor & self) {
@@ -20096,6 +20164,7 @@ std::tuple<Tensor &,Tensor &> log_sigmoid_forward_out_output(Tensor & output, Te
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(buffer);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -20103,6 +20172,7 @@ std::tuple<Tensor &,Tensor &> log_sigmoid_forward_out_output(Tensor & output, Te
 }
 Tensor & log_sigmoid_out_out(Tensor & out, const Tensor & self) {
   TypeDefault::log_sigmoid_out_out(out, self);
+  increment_version(out);
   return out;
 }
 Tensor log_softmax_int(const Tensor & self, int64_t dim, c10::optional<ScalarType> dtype) {
@@ -20358,6 +20428,7 @@ Tensor & logcumsumexp_out_out(Tensor & out, const Tensor & self, int64_t dim) {
 }
 Tensor & logcumsumexp_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim) {
   TypeDefault::logcumsumexp_out_dimname_out(out, self, dim);
+  increment_version(out);
   return out;
 }
 Tensor logdet(const Tensor & self) {
@@ -20398,6 +20469,7 @@ Tensor logical_and(const Tensor & self, const Tensor & other) {
 }
 Tensor & logical_and_(Tensor & self, const Tensor & other) {
   TypeDefault::logical_and_(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & logical_and_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -20452,6 +20524,7 @@ Tensor logical_not(const Tensor & self) {
 }
 Tensor & logical_not_(Tensor & self) {
   TypeDefault::logical_not_(self);
+  increment_version(self);
   return self;
 }
 Tensor & logical_not_out_out(Tensor & out, const Tensor & self) {
@@ -20498,6 +20571,7 @@ Tensor logical_or(const Tensor & self, const Tensor & other) {
 }
 Tensor & logical_or_(Tensor & self, const Tensor & other) {
   TypeDefault::logical_or_(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & logical_or_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -20552,6 +20626,7 @@ Tensor logical_xor(const Tensor & self, const Tensor & other) {
 }
 Tensor & logical_xor_(Tensor & self, const Tensor & other) {
   TypeDefault::logical_xor_(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & logical_xor_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -20621,6 +20696,7 @@ Tensor & logspace_out_out(Tensor & out, Scalar start, Scalar end, int64_t steps,
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor logsumexp(const Tensor & self, IntArrayRef dim, bool keepdim) {
@@ -20701,6 +20777,7 @@ Tensor & logsumexp_out_out(Tensor & out, const Tensor & self, IntArrayRef dim, b
 }
 Tensor & logsumexp_out_names_out(Tensor & out, const Tensor & self, DimnameList dim, bool keepdim) {
   TypeDefault::logsumexp_out_names_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 std::tuple<Tensor,Tensor,Tensor> lstm_input(const Tensor & input, TensorList hx, TensorList params, bool has_biases, int64_t num_layers, double dropout, bool train, bool bidirectional, bool batch_first) {
@@ -20958,6 +21035,7 @@ Tensor & lt_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & lt_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -20993,6 +21071,7 @@ Tensor & lt_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor lu_solve(const Tensor & self, const Tensor & LU_data, const Tensor & LU_pivots) {
@@ -21334,6 +21413,7 @@ Tensor matmul(const Tensor & self, const Tensor & other) {
 }
 Tensor & matmul_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
   TypeDefault::matmul_out_out(out, self, other);
+  increment_version(out);
   return out;
 }
 Tensor matrix_power(const Tensor & self, int64_t n) {
@@ -21501,6 +21581,7 @@ std::tuple<Tensor &,Tensor &> max_out_dim_max(Tensor & max, Tensor & max_values,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(max);
+  increment_version(max_values);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( max ), grad_fn);
   }
@@ -21508,6 +21589,8 @@ std::tuple<Tensor &,Tensor &> max_out_dim_max(Tensor & max, Tensor & max_values,
 }
 std::tuple<Tensor &,Tensor &> max_out_names_dim_max(Tensor & max, Tensor & max_values, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::max_out_names_dim_max(max, max_values, self, dim, keepdim);
+  increment_version(max);
+  increment_version(max_values);
   return std::forward_as_tuple(max, max_values);
 }
 Tensor & max_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -21750,6 +21833,7 @@ std::tuple<Tensor &,Tensor &> max_pool2d_with_indices_out_out(Tensor & out, Tens
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -21939,6 +22023,7 @@ std::tuple<Tensor &,Tensor &> max_pool3d_with_indices_out_out(Tensor & out, Tens
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -22430,6 +22515,7 @@ Tensor & mean_out_out(Tensor & out, const Tensor & self, IntArrayRef dim, bool k
 }
 Tensor & mean_out_names_out(Tensor & out, const Tensor & self, DimnameList dim, bool keepdim, c10::optional<ScalarType> dtype) {
   TypeDefault::mean_out_names_out(out, self, dim, keepdim, dtype);
+  increment_version(out);
   return out;
 }
 std::tuple<Tensor,Tensor> median_dim(const Tensor & self, int64_t dim, bool keepdim) {
@@ -22547,6 +22633,7 @@ std::tuple<Tensor &,Tensor &> median_out_dim_values(Tensor & values, Tensor & in
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -22554,6 +22641,8 @@ std::tuple<Tensor &,Tensor &> median_out_dim_values(Tensor & values, Tensor & in
 }
 std::tuple<Tensor &,Tensor &> median_out_names_dim_values(Tensor & values, Tensor & indices, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::median_out_names_dim_values(values, indices, self, dim, keepdim);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 std::vector<Tensor> meshgrid(TensorList tensors) {
@@ -22713,6 +22802,7 @@ std::tuple<Tensor &,Tensor &> min_out_dim_min(Tensor & min, Tensor & min_indices
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(min);
+  increment_version(min_indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( min ), grad_fn);
   }
@@ -22720,6 +22810,8 @@ std::tuple<Tensor &,Tensor &> min_out_dim_min(Tensor & min, Tensor & min_indices
 }
 std::tuple<Tensor &,Tensor &> min_out_names_dim_min(Tensor & min, Tensor & min_indices, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::min_out_names_dim_min(min, min_indices, self, dim, keepdim);
+  increment_version(min);
+  increment_version(min_indices);
   return std::forward_as_tuple(min, min_indices);
 }
 Tensor & min_out_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -24133,6 +24225,7 @@ std::tuple<Tensor &,Tensor &> mode_out_values(Tensor & values, Tensor & indices,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -24140,6 +24233,8 @@ std::tuple<Tensor &,Tensor &> mode_out_values(Tensor & values, Tensor & indices,
 }
 std::tuple<Tensor &,Tensor &> mode_out_dimname_out(Tensor & values, Tensor & indices, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::mode_out_dimname_out(values, indices, self, dim, keepdim);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 Tensor mse_loss(const Tensor & self, const Tensor & target, int64_t reduction) {
@@ -24951,6 +25046,7 @@ std::tuple<Tensor &,Tensor &> multilabel_margin_loss_forward_out_output(Tensor &
   if (target__impl_saved) AT_ASSERT(target__impl_saved == target_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(is_target);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -24958,6 +25054,7 @@ std::tuple<Tensor &,Tensor &> multilabel_margin_loss_forward_out_output(Tensor &
 }
 Tensor & multilabel_margin_loss_out_out(Tensor & out, const Tensor & self, const Tensor & target, int64_t reduction) {
   TypeDefault::multilabel_margin_loss_out_out(out, self, target, reduction);
+  increment_version(out);
   return out;
 }
 Tensor multinomial(const Tensor & self, int64_t num_samples, bool replacement, c10::optional<Generator> generator) {
@@ -25005,6 +25102,7 @@ Tensor & multinomial_out_out(Tensor & out, const Tensor & self, int64_t num_samp
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor mv(const Tensor & self, const Tensor & vec) {
@@ -25438,6 +25536,8 @@ std::tuple<Tensor &,Tensor &,Tensor &> native_batch_norm_out_out(Tensor & out, T
   if (running_var__impl_saved) AT_ASSERT(running_var__impl_saved == running_var_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(save_mean);
+  increment_version(save_invstd);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -25853,6 +25953,7 @@ Tensor & ne_out_Scalar_out(Tensor & out, const Tensor & self, Scalar other) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & ne_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & other) {
@@ -25888,6 +25989,7 @@ Tensor & ne_out_Tensor_out(Tensor & out, const Tensor & self, const Tensor & oth
     AT_ASSERT(other__storage_saved.value().is_alias_of(other_.storage()));
   if (other__impl_saved) AT_ASSERT(other__impl_saved == other_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor neg(const Tensor & self) {
@@ -26253,6 +26355,7 @@ std::tuple<Tensor &,Tensor &> nll_loss2d_forward_out_output(Tensor & output, Ten
   if (weight__impl_saved) AT_ASSERT(weight__impl_saved == weight_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(total_weight);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -26260,6 +26363,7 @@ std::tuple<Tensor &,Tensor &> nll_loss2d_forward_out_output(Tensor & output, Ten
 }
 Tensor & nll_loss2d_out_out(Tensor & out, const Tensor & self, const Tensor & target, const Tensor & weight, int64_t reduction, int64_t ignore_index) {
   TypeDefault::nll_loss2d_out_out(out, self, target, weight, reduction, ignore_index);
+  increment_version(out);
   return out;
 }
 Tensor nll_loss_backward(const Tensor & grad_output, const Tensor & self, const Tensor & target, const Tensor & weight, int64_t reduction, int64_t ignore_index, const Tensor & total_weight) {
@@ -26510,6 +26614,7 @@ std::tuple<Tensor &,Tensor &> nll_loss_forward_out_output(Tensor & output, Tenso
   if (weight__impl_saved) AT_ASSERT(weight__impl_saved == weight_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(total_weight);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -26517,6 +26622,7 @@ std::tuple<Tensor &,Tensor &> nll_loss_forward_out_output(Tensor & output, Tenso
 }
 Tensor & nll_loss_out_out(Tensor & out, const Tensor & self, const Tensor & target, const Tensor & weight, int64_t reduction, int64_t ignore_index) {
   TypeDefault::nll_loss_out_out(out, self, target, weight, reduction, ignore_index);
+  increment_version(out);
   return out;
 }
 Tensor nonzero(const Tensor & self) {
@@ -26568,6 +26674,7 @@ Tensor & nonzero_out_out(Tensor & out, const Tensor & self) {
     AT_ASSERT(self__storage_saved.value().is_alias_of(self_.storage()));
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor norm_ScalarOpt_dtype(const Tensor & self, c10::optional<Scalar> p, ScalarType dtype) {
@@ -26796,10 +26903,12 @@ Tensor & norm_out_out(Tensor & out, const Tensor & self, c10::optional<Scalar> p
 }
 Tensor & norm_out_names_dtype_out(Tensor & out, const Tensor & self, c10::optional<Scalar> p, DimnameList dim, bool keepdim, ScalarType dtype) {
   TypeDefault::norm_out_names_dtype_out(out, self, p, dim, keepdim, dtype);
+  increment_version(out);
   return out;
 }
 Tensor & norm_out_names_out(Tensor & out, const Tensor & self, c10::optional<Scalar> p, DimnameList dim, bool keepdim) {
   TypeDefault::norm_out_names_out(out, self, p, dim, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor normal_Tensor_float(const Tensor & mean, double std, c10::optional<Generator> generator) {
@@ -27055,6 +27164,7 @@ Tensor & normal_out_Tensor_Tensor_out(Tensor & out, const Tensor & mean, const T
 }
 Tensor & normal_out_float_float_out(Tensor & out, double mean, double std, IntArrayRef size, c10::optional<Generator> generator) {
   TypeDefault::normal_out_float_float_out(out, mean, std, size, generator);
+  increment_version(out);
   return out;
 }
 Tensor nuclear_norm(const Tensor & self, bool keepdim) {
@@ -27067,10 +27177,12 @@ Tensor nuclear_norm_dim(const Tensor & self, IntArrayRef dim, bool keepdim) {
 }
 Tensor & nuclear_norm_out_out(Tensor & out, const Tensor & self, bool keepdim) {
   TypeDefault::nuclear_norm_out_out(out, self, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor & nuclear_norm_out_dim_out(Tensor & out, const Tensor & self, IntArrayRef dim, bool keepdim) {
   TypeDefault::nuclear_norm_out_dim_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor numpy_T(const Tensor & self) {
@@ -27095,6 +27207,7 @@ Tensor ones_like(const Tensor & self, const TensorOptions & options, c10::option
 }
 Tensor & ones_out_out(Tensor & out, IntArrayRef size) {
   TypeDefault::ones_out_out(out, size);
+  increment_version(out);
   return out;
 }
 Tensor orgqr(const Tensor & self, const Tensor & input2) {
@@ -27398,6 +27511,7 @@ Tensor polygamma(int64_t n, const Tensor & self) {
 }
 Tensor & polygamma_(Tensor & self, int64_t n) {
   TypeDefault::polygamma_(self, n);
+  increment_version(self);
   return self;
 }
 Tensor & polygamma_out_out(Tensor & out, int64_t n, const Tensor & self) {
@@ -27934,6 +28048,7 @@ Tensor & prod_out_int_out(Tensor & out, const Tensor & self, int64_t dim, bool k
 }
 Tensor & prod_out_Dimname_out(Tensor & out, const Tensor & self, Dimname dim, bool keepdim, c10::optional<ScalarType> dtype) {
   TypeDefault::prod_out_Dimname_out(out, self, dim, keepdim, dtype);
+  increment_version(out);
   return out;
 }
 ScalarType promote_types(ScalarType type1, ScalarType type2) {
@@ -28532,10 +28647,12 @@ Tensor rand_like(const Tensor & self, const TensorOptions & options, c10::option
 }
 Tensor & rand_out_out(Tensor & out, IntArrayRef size) {
   TypeDefault::rand_out_out(out, size);
+  increment_version(out);
   return out;
 }
 Tensor & rand_out_generator_out(Tensor & out, IntArrayRef size, c10::optional<Generator> generator) {
   TypeDefault::rand_out_generator_out(out, size, generator);
+  increment_version(out);
   return out;
 }
 Tensor randint(int64_t high, IntArrayRef size, const TensorOptions & options) {
@@ -28564,18 +28681,22 @@ Tensor randint_like_low_dtype(const Tensor & self, int64_t low, int64_t high, co
 }
 Tensor & randint_out_out(Tensor & out, int64_t high, IntArrayRef size) {
   TypeDefault::randint_out_out(out, high, size);
+  increment_version(out);
   return out;
 }
 Tensor & randint_out_generator_out(Tensor & out, int64_t high, IntArrayRef size, c10::optional<Generator> generator) {
   TypeDefault::randint_out_generator_out(out, high, size, generator);
+  increment_version(out);
   return out;
 }
 Tensor & randint_out_low_out(Tensor & out, int64_t low, int64_t high, IntArrayRef size) {
   TypeDefault::randint_out_low_out(out, low, high, size);
+  increment_version(out);
   return out;
 }
 Tensor & randint_out_low_generator_out(Tensor & out, int64_t low, int64_t high, IntArrayRef size, c10::optional<Generator> generator) {
   TypeDefault::randint_out_low_generator_out(out, low, high, size, generator);
+  increment_version(out);
   return out;
 }
 Tensor randn(IntArrayRef size, const TensorOptions & options) {
@@ -28600,10 +28721,12 @@ Tensor randn_like(const Tensor & self, const TensorOptions & options, c10::optio
 }
 Tensor & randn_out_out(Tensor & out, IntArrayRef size) {
   TypeDefault::randn_out_out(out, size);
+  increment_version(out);
   return out;
 }
 Tensor & randn_out_generator_out(Tensor & out, IntArrayRef size, c10::optional<Generator> generator) {
   TypeDefault::randn_out_generator_out(out, size, generator);
+  increment_version(out);
   return out;
 }
 Tensor & random__from(Tensor & self, int64_t from, c10::optional<int64_t> to, c10::optional<Generator> generator) {
@@ -28703,6 +28826,7 @@ Tensor randperm_generator(int64_t n, c10::optional<Generator> generator, const T
 }
 Tensor & randperm_out_out(Tensor & out, int64_t n) {
   TypeDefault::randperm_out_out(out, n);
+  increment_version(out);
   return out;
 }
 Tensor & randperm_out_generator_out(Tensor & out, int64_t n, c10::optional<Generator> generator) {
@@ -28722,6 +28846,7 @@ Tensor & randperm_out_generator_out(Tensor & out, int64_t n, c10::optional<Gener
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor range_step(Scalar start, Scalar end, Scalar step, const TensorOptions & options) {
@@ -28749,6 +28874,7 @@ Tensor & range_out_out(Tensor & out, Scalar start, Scalar end, Scalar step) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor real(const Tensor & self) {
@@ -29447,6 +29573,7 @@ Tensor rename(const Tensor & self, c10::optional<DimnameList> names) {
 }
 Tensor & rename_(Tensor & self, c10::optional<DimnameList> names) {
   TypeDefault::rename_(self, names);
+  increment_version(self);
   return self;
 }
 Tensor renorm(const Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
@@ -30295,6 +30422,7 @@ Tensor rrelu(const Tensor & self, Scalar lower, Scalar upper, bool training, c10
 }
 Tensor & rrelu_(Tensor & self, Scalar lower, Scalar upper, bool training, c10::optional<Generator> generator) {
   TypeDefault::rrelu_(self, lower, upper, training, generator);
+  increment_version(self);
   return self;
 }
 Tensor rrelu_with_noise(const Tensor & self, const Tensor & noise, Scalar lower, Scalar upper, bool training, c10::optional<Generator> generator) {
@@ -31049,6 +31177,7 @@ Tensor selu(const Tensor & self) {
 }
 Tensor & selu_(Tensor & self) {
   TypeDefault::selu_(self);
+  increment_version(self);
   return self;
 }
 Tensor & set__source_Storage(Tensor & self, Storage source) {
@@ -31996,6 +32125,8 @@ std::tuple<Tensor &,Tensor &,Tensor &> slow_conv3d_forward_out_output(Tensor & o
   if (bias__impl_saved) AT_ASSERT(bias__impl_saved == bias_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(finput);
+  increment_version(fgrad_input);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -32003,6 +32134,7 @@ std::tuple<Tensor &,Tensor &,Tensor &> slow_conv3d_forward_out_output(Tensor & o
 }
 Tensor & slow_conv3d_out_out(Tensor & out, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding) {
   TypeDefault::slow_conv3d_out_out(out, self, weight, kernel_size, bias, stride, padding);
+  increment_version(out);
   return out;
 }
 Tensor slow_conv_dilated2d(const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation) {
@@ -33550,6 +33682,7 @@ std::tuple<Tensor &,Tensor &> solve_out_solution(Tensor & solution, Tensor & lu,
   if (A__impl_saved) AT_ASSERT(A__impl_saved == A_.getIntrusivePtr());
   #endif
   increment_version(solution);
+  increment_version(lu);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( solution ), grad_fn);
   }
@@ -33637,6 +33770,7 @@ std::tuple<Tensor &,Tensor &> sort_out_values(Tensor & values, Tensor & indices,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -33644,6 +33778,8 @@ std::tuple<Tensor &,Tensor &> sort_out_values(Tensor & values, Tensor & indices,
 }
 std::tuple<Tensor &,Tensor &> sort_out_dimname_values(Tensor & values, Tensor & indices, const Tensor & self, Dimname dim, bool descending) {
   TypeDefault::sort_out_dimname_values(values, indices, self, dim, descending);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 Tensor sparse_coo_tensor_size(IntArrayRef size, const TensorOptions & options) {
@@ -33944,6 +34080,7 @@ Tensor square(const Tensor & self) {
 }
 Tensor & square_(Tensor & self) {
   TypeDefault::square_(self);
+  increment_version(self);
   return self;
 }
 Tensor squeeze(const Tensor & self) {
@@ -34084,6 +34221,7 @@ Tensor & squeeze__dim(Tensor & self, int64_t dim) {
 }
 Tensor & squeeze__dimname(Tensor & self, Dimname dim) {
   TypeDefault::squeeze__dimname(self, dim);
+  increment_version(self);
   return self;
 }
 Tensor sspaddmm(const Tensor & self, const Tensor & mat1, const Tensor & mat2, Scalar beta, Scalar alpha) {
@@ -34421,6 +34559,7 @@ Tensor & std_out_out(Tensor & out, const Tensor & self, IntArrayRef dim, bool un
 }
 Tensor & std_out_names_out(Tensor & out, const Tensor & self, DimnameList dim, bool unbiased, bool keepdim) {
   TypeDefault::std_out_names_out(out, self, dim, unbiased, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor stft(const Tensor & self, int64_t n_fft, c10::optional<int64_t> hop_length, c10::optional<int64_t> win_length, const Tensor & window, bool normalized, bool onesided) {
@@ -34717,6 +34856,7 @@ Tensor & sum_out_IntList_out(Tensor & out, const Tensor & self, IntArrayRef dim,
 }
 Tensor & sum_out_DimnameList_out(Tensor & out, const Tensor & self, DimnameList dim, bool keepdim, c10::optional<ScalarType> dtype) {
   TypeDefault::sum_out_DimnameList_out(out, self, dim, keepdim, dtype);
+  increment_version(out);
   return out;
 }
 Tensor sum_to_size(const Tensor & self, IntArrayRef size) {
@@ -35622,6 +35762,8 @@ std::tuple<Tensor &,Tensor &,Tensor &> thnn_conv2d_forward_out_output(Tensor & o
   if (bias__impl_saved) AT_ASSERT(bias__impl_saved == bias_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(finput);
+  increment_version(fgrad_input);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -35629,6 +35771,7 @@ std::tuple<Tensor &,Tensor &,Tensor &> thnn_conv2d_forward_out_output(Tensor & o
 }
 Tensor & thnn_conv2d_out_out(Tensor & out, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding) {
   TypeDefault::thnn_conv2d_out_out(out, self, weight, kernel_size, bias, stride, padding);
+  increment_version(out);
   return out;
 }
 Tensor thnn_conv_depthwise2d(const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation) {
@@ -35857,6 +36000,7 @@ Tensor & thnn_conv_depthwise2d_forward_out_out(Tensor & out, const Tensor & self
 }
 Tensor & thnn_conv_depthwise2d_out_out(Tensor & out, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation) {
   TypeDefault::thnn_conv_depthwise2d_out_out(out, self, weight, kernel_size, bias, stride, padding, dilation);
+  increment_version(out);
   return out;
 }
 Tensor threshold(const Tensor & self, Scalar threshold, Scalar value) {
@@ -36212,6 +36356,7 @@ std::tuple<Tensor &,Tensor &> topk_out_values(Tensor & values, Tensor & indices,
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -38431,6 +38576,7 @@ Tensor & var_out_out(Tensor & out, const Tensor & self, IntArrayRef dim, bool un
 }
 Tensor & var_out_names_out(Tensor & out, const Tensor & self, DimnameList dim, bool unbiased, bool keepdim) {
   TypeDefault::var_out_names_out(out, self, dim, unbiased, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor view(const Tensor & self, IntArrayRef size) {
@@ -38592,6 +38738,7 @@ Tensor zeros_like(const Tensor & self, const TensorOptions & options, c10::optio
 }
 Tensor & zeros_out_out(Tensor & out, IntArrayRef size) {
   TypeDefault::zeros_out_out(out, size);
+  increment_version(out);
   return out;
 }
 // }

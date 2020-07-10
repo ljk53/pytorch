@@ -56,10 +56,12 @@ Tensor __and___Tensor(const Tensor & self, const Tensor & other) {
 }
 Tensor & __iand___Scalar(Tensor & self, Scalar other) {
   TypeDefault::__iand___Scalar(self, other);
+  increment_version(self);
   return self;
 }
 Tensor & __iand___Tensor(Tensor & self, const Tensor & other) {
   TypeDefault::__iand___Tensor(self, other);
+  increment_version(self);
   return self;
 }
 Tensor _adaptive_avg_pool2d_backward(const Tensor & grad_output, const Tensor & self) {
@@ -615,10 +617,12 @@ Tensor _reshape_from_tensor(const Tensor & self, const Tensor & shape) {
 }
 Tensor & _sobol_engine_ff_(Tensor & self, int64_t n, const Tensor & sobolstate, int64_t dimension, int64_t num_generated) {
   TypeDefault::_sobol_engine_ff_(self, n, sobolstate, dimension, num_generated);
+  increment_version(self);
   return self;
 }
 Tensor & _sobol_engine_initialize_state_(Tensor & self, int64_t dimension) {
   TypeDefault::_sobol_engine_initialize_state_(self, dimension);
+  increment_version(self);
   return self;
 }
 Tensor _sparse_log_softmax_backward_data(const Tensor & grad_output, const Tensor & output, int64_t dim, const Tensor & self) {
@@ -1141,6 +1145,7 @@ Tensor & all_out_out(Tensor & out, const Tensor & self, int64_t dim, bool keepdi
 }
 Tensor & all_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::all_out_dimname_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 bool allclose(const Tensor & self, const Tensor & other, double rtol, double atol, bool equal_nan) {
@@ -1187,6 +1192,7 @@ Tensor & any_out_out(Tensor & out, const Tensor & self, int64_t dim, bool keepdi
 }
 Tensor & any_out_dimname_out(Tensor & out, const Tensor & self, Dimname dim, bool keepdim) {
   TypeDefault::any_out_dimname_out(out, self, dim, keepdim);
+  increment_version(out);
   return out;
 }
 Tensor arange(Scalar end, const TensorOptions & options) {
@@ -2410,6 +2416,7 @@ Tensor & eye_out_out(Tensor & out, int64_t n) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor & eye_out_m_out(Tensor & out, int64_t n, int64_t m) {
@@ -2429,6 +2436,7 @@ Tensor & eye_out_m_out(Tensor & out, int64_t n, int64_t m) {
     AT_ASSERT(out__storage_saved.value().is_alias_of(out_.storage()));
   if (out__impl_saved) AT_ASSERT(out__impl_saved == out_.getIntrusivePtr());
   #endif
+  increment_version(out);
   return out;
 }
 Tensor fake_quantize_per_channel_affine_backward(const Tensor & grad, const Tensor & self, const Tensor & scale, const Tensor & zero_point, int64_t axis, int64_t quant_min, int64_t quant_max) {
@@ -2453,6 +2461,7 @@ Tensor feature_alpha_dropout(const Tensor & input, double p, bool train) {
 }
 Tensor & feature_alpha_dropout_(Tensor & self, double p, bool train) {
   TypeDefault::feature_alpha_dropout_(self, p, train);
+  increment_version(self);
   return self;
 }
 Tensor flip(const Tensor & self, IntArrayRef dims) {
@@ -2825,6 +2834,7 @@ std::tuple<Tensor &,Tensor &> fractional_max_pool3d_out_output(Tensor & output, 
   if (random_samples__impl_saved) AT_ASSERT(random_samples__impl_saved == random_samples_.getIntrusivePtr());
   #endif
   increment_version(output);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( output ), grad_fn);
   }
@@ -3338,6 +3348,7 @@ std::tuple<Tensor &,Tensor &> kthvalue_out_values(Tensor & values, Tensor & indi
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(values);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( values ), grad_fn);
   }
@@ -3345,6 +3356,8 @@ std::tuple<Tensor &,Tensor &> kthvalue_out_values(Tensor & values, Tensor & indi
 }
 std::tuple<Tensor &,Tensor &> kthvalue_out_dimname_out(Tensor & values, Tensor & indices, const Tensor & self, int64_t k, Dimname dim, bool keepdim) {
   TypeDefault::kthvalue_out_dimname_out(values, indices, self, k, dim, keepdim);
+  increment_version(values);
+  increment_version(indices);
   return std::forward_as_tuple(values, indices);
 }
 Tensor l1_loss_backward(const Tensor & grad_output, const Tensor & self, const Tensor & target, int64_t reduction) {
@@ -4168,6 +4181,7 @@ std::tuple<Tensor &,Tensor &> max_pool3d_with_indices_out_out(Tensor & out, Tens
   if (self__impl_saved) AT_ASSERT(self__impl_saved == self_.getIntrusivePtr());
   #endif
   increment_version(out);
+  increment_version(indices);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( out ), grad_fn);
   }
@@ -5043,6 +5057,7 @@ Tensor polygamma(int64_t n, const Tensor & self) {
 }
 Tensor & polygamma_(Tensor & self, int64_t n) {
   TypeDefault::polygamma_(self, n);
+  increment_version(self);
   return self;
 }
 Tensor pow_Tensor_Scalar(const Tensor & self, Scalar exponent) {
@@ -5498,6 +5513,7 @@ Tensor rename(const Tensor & self, c10::optional<DimnameList> names) {
 }
 Tensor & rename_(Tensor & self, c10::optional<DimnameList> names) {
   TypeDefault::rename_(self, names);
+  increment_version(self);
   return self;
 }
 Tensor repeat_interleave_Tensor(const Tensor & repeats) {
@@ -6588,6 +6604,7 @@ std::tuple<Tensor &,Tensor &> solve_out_solution(Tensor & solution, Tensor & lu,
   if (A__impl_saved) AT_ASSERT(A__impl_saved == A_.getIntrusivePtr());
   #endif
   increment_version(solution);
+  increment_version(lu);
   if (grad_fn) {
       rebase_history(flatten_tensor_args( solution ), grad_fn);
   }
@@ -6715,6 +6732,7 @@ Tensor square(const Tensor & self) {
 }
 Tensor & square_(Tensor & self) {
   TypeDefault::square_(self);
+  increment_version(self);
   return self;
 }
 Tensor sspaddmm(const Tensor & self, const Tensor & mat1, const Tensor & mat2, Scalar beta, Scalar alpha) {
@@ -6926,6 +6944,7 @@ Tensor & tanh_backward_out_grad_input(Tensor & grad_input, const Tensor & grad_o
 }
 Tensor & thnn_conv2d_out_out(Tensor & out, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, const Tensor & bias, IntArrayRef stride, IntArrayRef padding) {
   TypeDefault::thnn_conv2d_out_out(out, self, weight, kernel_size, bias, stride, padding);
+  increment_version(out);
   return out;
 }
 std::tuple<Tensor,Tensor> thnn_conv_depthwise2d_backward_output_mask(const Tensor & grad_output, const Tensor & self, const Tensor & weight, IntArrayRef kernel_size, IntArrayRef stride, IntArrayRef padding, IntArrayRef dilation, std::array<bool,2> output_mask) {
@@ -7653,6 +7672,7 @@ Tensor & upsample_trilinear3d_backward_out_grad_input(Tensor & grad_input, const
 }
 Tensor & zeros_out_out(Tensor & out, IntArrayRef size) {
   TypeDefault::zeros_out_out(out, size);
+  increment_version(out);
   return out;
 }
 // }
