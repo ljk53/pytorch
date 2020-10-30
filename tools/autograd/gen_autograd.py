@@ -243,6 +243,9 @@ def gen_autograd(aten_path, out, autograd_dir, operator_selector: SelectiveBuild
         from .gen_variable_type import gen_variable_type
         gen_variable_type(out, aten_decls, template_path)
 
+        from .gen_trace_type import gen_trace_type
+        gen_trace_type(out, aten_decls, template_path)
+
     # Generate Functions.h/cpp
     from .gen_autograd_functions import gen_autograd_functions_lib
     gen_autograd_functions_lib(

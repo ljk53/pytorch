@@ -33,7 +33,7 @@
 from collections import defaultdict
 import itertools
 import re
-from .gen_variable_type import DONT_RECORD_TRACE
+from .gen_trace_type import DONT_RECORD_TRACE
 from .utils import write, is_tensor_method
 
 from tools.codegen.code_template import CodeTemplate
@@ -571,7 +571,7 @@ def emit_dispatch_case(
         return emit_single_dispatch(
             overload.signature, overload.base, namedtuple_typenames)
 
-# Copied from 'gen_variable_type.should_trace()'.
+# Copied from 'gen_trace_type.should_trace()'.
 # TODO: consolidate after migrating autograd codegen.
 @with_native_function
 def should_trace(f: NativeFunction) -> bool:
