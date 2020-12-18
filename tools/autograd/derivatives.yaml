@@ -97,6 +97,23 @@
 # like 'grad_output', and (2) the gradient to multiply with is always
 # called 'grad' (even though it really is a grad-grad).
 #
+# You can also add forward derivative definition by defining a formula for
+# a returned value (in general "result" if the name is not specified). This
+# formula works the same way as the backward one and advanced implementations
+# should also be placed in the FunctionsManual file.
+# This formula should compute a single Jacobian vector product using the (primal)
+# value of the argument "foo" and its forward grad "foo_fw_grad".
+# Note that the forward derivative can be automatically generated in two cases:
+#     - if your function is linear (NOT affine or multi-linear), then you can
+#       specify so by just using the string "auto_linear" for the formula.
+#     - if your function is applied element wise (and has a single input), you
+#       can specify so by just using the string "auto_element_wise" for the formula.
+#
+# Note that to avoid unpacking overhead, functions taking TensorList as inputs
+# will always have their forward grad formula called. This function is responsible
+# to check if any computation is needed and should return an undefined Tensor when
+# there is nothing to do. You can check "cat_forward" for a full example.
+#
 # NB: There are a number of gradient definitions in here which are bogus
 # (implemented using zeros_like).  These gradients are (hopefully) not
 # used by our frontend.  You MUST check the frontend code; search for
@@ -160,6 +177,7 @@
 # in Decalarations.yaml
 - name: abs(Tensor self) -> Tensor
   self: grad * self.sgn()
+  result: auto_element_wise
 
 - name: acos(Tensor self) -> Tensor
   self: grad * -((-self * self + 1).rsqrt()).conj()
@@ -167,6 +185,12 @@
 - name: add.Tensor(Tensor self, Tensor other, *, Scalar alpha=1) -> Tensor
   self: handle_r_to_c(self.scalar_type(), grad)
   other: handle_r_to_c(other.scalar_type(), maybe_multiply(grad, alpha.conj()))
+  result: "self_fw_grad.defined()? (other_fw_grad.defined()? maybe_multiply(self_fw_grad, alpha) + other_fw_grad : maybe_multiply(self_fw_grad, alpha)) : (other_fw_grad.defined()? other_fw_grad : Tensor())"
+
+- name: add_.Tensor(Tensor(a!) self, Tensor other, *, Scalar alpha=1) -> Tensor(a!)
+  self: handle_r_to_c(self.scalar_type(), grad)
+  other: handle_r_to_c(other.scalar_type(), maybe_multiply(grad, alpha.conj()))
+  result: "self_fw_grad.defined()? (other_fw_grad.defined()? self_fw_grad.mul_(alpha).add_(other_fw_grad) : self_fw_grad.mul_(alpha)) : (other_fw_grad.defined()? other_fw_grad : Tensor())"
 
 - name: add.Scalar(Tensor self, Scalar other, Scalar alpha=1) -> Tensor
   self: handle_r_to_c(self.scalar_type(), grad)
@@ -303,18 +327,6 @@
 - name: cholesky_inverse(Tensor self, bool upper=False) -> Tensor
   self: cholesky_inverse_backward(grad, self, upper, result)
 
-- name: fbgemm_linear_int8_weight_fp32_activation(Tensor input, Tensor weight, Tensor packed, Tensor col_offsets, Scalar weight_scale, Scalar weight_zero_point, Tensor bias) -> Tensor
-  self: not_implemented("fbgemm_linear_int8_weight_fp32_activation only supported for inference")
-
-- name: fbgemm_linear_int8_weight(Tensor input, Tensor weight, Tensor packed, Tensor col_offsets, Scalar weight_scale, Scalar weight_zero_point, Tensor bias) -> Tensor
-  self: not_implemented("fbgemm_linear_int8_weight only supported for inference")
-
-- name: fbgemm_linear_fp16_weight_fp32_activation(Tensor input, Tensor packed_weight, Tensor bias) -> Tensor
-  self: not_implemented("fbgemm_linear_fp16_weight_fp32_activation only supported for inference")
-
-- name: fbgemm_linear_fp16_weight(Tensor input, Tensor packed_weight, Tensor bias) -> Tensor
-  self: not_implemented("fbgemm_linear_fp16_weight only supported for inference")
-
 # For clamp, gradient is not defined at the boundaries. But empirically it's helpful
 # to be able to get gradient on min and max, so we return the subgradient 1 for these cases.
 - name: clamp(Tensor self, Scalar? min=None, Scalar? max=None) -> Tensor
@@ -328,6 +340,7 @@
 
 - name: clone(Tensor self, *, MemoryFormat? memory_format=None) -> Tensor
   self: grad
+  result: auto_linear
 
 - name: coalesce(Tensor self) -> Tensor
   self: grad
@@ -762,6 +775,12 @@
 - name: mul.Tensor(Tensor self, Tensor other) -> Tensor
   self: mul_tensor_backward(grad, other, self.scalar_type())
   other: mul_tensor_backward(grad, self, other.scalar_type())
+  result: "self_fw_grad.defined()? (other_fw_grad.defined()? other_fw_grad * self.conj() + self_fw_grad * other.conj() : self_fw_grad * other.conj()) : (other_fw_grad.defined()? other_fw_grad * self.conj() : Tensor())"
+
+- name: mul_.Tensor(Tensor(a!) self, Tensor other) -> Tensor(a!)
+  self: mul_tensor_backward(grad, other, self.scalar_type())
+  other: mul_tensor_backward(grad, self, other.scalar_type())
+  result: "self_fw_grad.defined()? (other_fw_grad.defined()? self_fw_grad.mul_(other.conj()).add_(other_fw_grad * (self / other).conj()) : self_fw_grad.mul_(other.conj())) : (other_fw_grad.defined()? other_fw_grad * (self / other).conj() : Tensor())"
 
 - name: mul.Scalar(Tensor self, Scalar other) -> Tensor
   self: mul_tensor_backward(grad, at::scalar_to_tensor(other), self.scalar_type())
@@ -945,6 +964,7 @@
 
 - name: select.int(Tensor(a) self, int dim, int index) -> Tensor(a)
   self: select_backward(grad, self.sizes(), dim, index)
+  result: auto_linear
 
 - name: sigmoid(Tensor self) -> Tensor
   self: sigmoid_backward(grad, result)
@@ -966,6 +986,7 @@
 
 - name: slice.Tensor(Tensor(a) self, int dim=0, int start=0, int end=9223372036854775807, int step=1) -> Tensor(a)
   self: slice_backward(grad, self.sizes(), dim, start, end, step)
+  result: auto_linear
 
 - name: slogdet(Tensor self) -> (Tensor sign, Tensor logabsdet)
   self: slogdet_backward(grad, self, sign, logabsdet)
