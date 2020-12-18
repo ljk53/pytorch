@@ -17,6 +17,9 @@ from torch.testing._internal.jit_metaprogramming_utils import create_script_fn, 
 from torch.testing._internal.jit_utils import disable_autodiff_subgraph_inlining
 
 
+# TODO(alband) Remove this when this flag is not needed anymore
+torch._C._set_forward_AD_enabled(True)
+
 # Tests that apply to all operators
 
 class TestOpInfo(TestCase):
@@ -77,14 +80,17 @@ class TestGradients(TestCase):
             partial_fn = partial(variant, **sample.kwargs)
             if check == 'gradcheck':
                 self.assertTrue(gradcheck(partial_fn, (*sample.input,) + sample.args,
-                                          check_grad_dtypes=True))
+                                          check_grad_dtypes=True,
+                                          check_forward=True))
             elif check == 'gradgradcheck':
                 self.assertTrue(gradgradcheck(partial_fn, (*sample.input,) + sample.args,
                                               gen_non_contig_grad_outputs=False,
-                                              check_grad_dtypes=True))
+                                              check_grad_dtypes=True,
+                                              check_forward=True))
                 self.assertTrue(gradgradcheck(partial_fn, (*sample.input,) + sample.args,
                                               gen_non_contig_grad_outputs=True,
-                                              check_grad_dtypes=True))
+                                              check_grad_dtypes=True,
+                                              check_forward=True))
             else:
                 self.assertTrue(False, msg="Unknown check requested!")
 

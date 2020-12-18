@@ -18,6 +18,9 @@ import torch.nn.functional as F
 
 torch.set_default_dtype(torch.double)
 
+# TODO(alband) Remove this when this flag is not needed anymore
+torch._C._set_forward_AD_enabled(True)
+
 NO_NCCL = not hasattr(torch.distributed, "ProcessGroupNCCL")
 
 class TestDataParallel(TestCase):
@@ -42,7 +45,7 @@ class TestDataParallel(TestCase):
         def fn(t):
             return dpm(inp)
 
-        torch.autograd.gradcheck(fn, (m.t_rg,))
+        torch.autograd.gradcheck(fn, (m.t_rg,), check_forward=True)
 
     @unittest.skipIf(not TEST_MULTIGPU, "multi-GPU not supported")
     def test_data_parallel_rnn(self):

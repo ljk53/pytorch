@@ -24,6 +24,9 @@ if TEST_LIBROSA:
     import librosa
 
 
+# TODO(alband) Remove this when this flag is not needed anymore
+torch._C._set_forward_AD_enabled(True)
+
 def _complex_stft(x, *args, **kwargs):
     # Transform real and imaginary components separably
     stft_real = torch.stft(x.real, *args, **kwargs, return_complex=True, onesided=False)
@@ -297,9 +300,9 @@ class TestFFT(TestCase):
         def test_fn(x):
             return torch_fn(x, *args)
 
-        self.assertTrue(torch.autograd.gradcheck(test_fn, inputs))
+        self.assertTrue(torch.autograd.gradcheck(test_fn, inputs, check_forward=True))
         if TEST_WITH_SLOW:
-            self.assertTrue(gradgradcheck(test_fn, inputs))
+            self.assertTrue(gradgradcheck(test_fn, inputs, check_forward=True))
 
 
     @slowAwareTest

@@ -783,6 +783,10 @@ class TestGradCheckOverride(TestCase):
         a.requires_grad = True
         b.requires_grad = True
 
+        # Run both here to make sure as much of the code path is used as possible
+        gradcheck(torch.add, (a, b), raise_exception=False, check_forward=True)
+        gradgradcheck(torch.add, (a, b), raise_exception=False, check_forward=True)
+
         gradcheck(torch.add, (a, b), raise_exception=False)
         gradgradcheck(torch.add, (a, b), raise_exception=False)
 
