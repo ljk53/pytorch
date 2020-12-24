@@ -238,9 +238,6 @@ class RegisterDispatchKey:
     # Whether or not we are actually code-genning for ROCm
     rocm: bool
 
-    def __post_init__(self) -> None:
-        assert self.target is not Target.DECLARATION
-
     @method_with_native_function
     def __call__(self, f: Union[StructuredNativeFunctions, NativeFunction]) -> List[str]:
         if isinstance(f, StructuredNativeFunctions):
@@ -386,7 +383,6 @@ struct {class_name} final : public {parent_class} {{
         # you edit this, you may need to also edit gen_unstructured.
         @with_native_function
         def gen_one(f: NativeFunction) -> Optional[str]:
-            assert self.target is not Target.DECLARATION
             assert not f.manual_kernel_registration
 
             # TODO: put this into StructuredNativeFunctions itself
@@ -435,7 +431,11 @@ struct {class_name} final : public {parent_class} {{
                 # For an overview of what this template code looks like, see
                 # https://github.com/pytorch/rfcs/pull/9
                 return f"""\
+#ifndef USE_STATIC_DISPATCH
 namespace {{
+#else
+namespace _{self.dispatch_key} {{
+#endif
 
 {self.gen_structured_class(
     f, k,
@@ -456,9 +456,10 @@ namespace {{
 
             elif self.target is Target.REGISTRATION:
                 dispatcher_sig = DispatcherSignature.from_schema(f.func)
-
                 assert local.use_c10_dispatcher() is UseC10Dispatcher.full
                 return f'm.impl("{f.func.name}", TORCH_FN({sig.name()}));'
+            elif self.target is Target.DECLARATION:
+                return f'{sig.defn()};'
             else:
                 assert_never(self.target)
                 # Silence mypy's "Missing return statement" error
@@ -468,9 +469,6 @@ namespace {{
 
     @method_with_native_function
     def gen_unstructured(self, f: NativeFunction) -> Optional[str]:
-        # for mypy type refinement; would be fixed by TODO on target
-        assert self.target is not Target.DECLARATION
-
         if self.dispatch_key not in f.dispatch:
             return None
         if f.manual_kernel_registration:
@@ -537,7 +535,11 @@ namespace {{
 """
 
             return f"""\
+#ifndef USE_STATIC_DISPATCH
 namespace {{
+#else
+namespace _{self.dispatch_key} {{
+#endif
 
 {returns_type} {name}({args_str}) {{
 {cuda_guard}{return_kw}{impl_name}({args_exprs_str});
@@ -565,8 +567,24 @@ c10::impl::hacky_wrapper_for_legacy_signatures<
 """
 
                 return f'm.impl("{f.func.name}",\n{payload});\n'
+        elif self.target is Target.DECLARATION:
+            return f'{returns_type} {name}({args_str});'
         else:
             assert_never(self.target)
+
+def generate_static_dispatch(f: NativeFunction, dispatcher_sig: DispatcherSignature, cpp_sig: CppSignature, *, method: bool) -> str:
+    static_dispatch = 'TORCH_CHECK(false);'
+    static_dispatch_name = native.name(f.func)
+    static_dispatch_exprs = translate(cpp_sig.arguments(), NativeSignature.from_schema(f.func).arguments(), method=method)
+    static_dispatch_exprs_str = ', '.join(a.expr for a in static_dispatch_exprs)
+
+    if not f.manual_kernel_registration:
+        for dispatch_key in ('CPU', 'Math', 'DefaultBackend'):
+            # HACK: structured_delegate seems special...
+            if dispatch_key in f.dispatch or f.structured_delegate is not None:
+                static_dispatch = f'return at::_{dispatch_key}::{static_dispatch_name}({static_dispatch_exprs_str});'
+                break
+    return static_dispatch
 
 # Generates Function.cpp and Function.h.  These files provide the
 # functional public C++ API, and the scaffolding to call into
@@ -606,10 +624,14 @@ class ComputeFunction:
             return f"""
 // aten::{f.func}
 {sig.defn()} {{
+#ifndef USE_STATIC_DISPATCH
     static auto op = c10::Dispatcher::singleton()
         .findSchemaOrThrow("aten::{f.func.name.name}", "{f.func.name.overload_name}")
         .typed<{dispatcher_sig.type()}>();
     return op.call({dispatcher_exprs_str});
+#else
+    {generate_static_dispatch(f, dispatcher_sig, sig, method=False)}
+#endif
 }}
 """
 
@@ -661,10 +683,14 @@ class ComputeTensorMethod:
             return f"""
 // aten::{f.func}
 {sig.defn(prefix="Tensor::")} const {{
+#ifndef USE_STATIC_DISPATCH
     static auto op = c10::Dispatcher::singleton()
         .findSchemaOrThrow("aten::{f.func.name.name}", "{f.func.name.overload_name}")
         .typed<{dispatcher_sig.type()}>();
     return op.call({dispatcher_exprs_str});
+#else
+    {generate_static_dispatch(f, dispatcher_sig, sig, method=True)}
+#endif
 }}
 """
 
@@ -1288,11 +1314,16 @@ def main() -> None:
         dispatch_keys = [k for k in dispatch_keys if is_generic_dispatch_key(k) or k in options.backend_whitelist]
 
     for dispatch_key in dispatch_keys:
-        cpp_template = 'RegisterDispatchKey.cpp'
-
         fm = cuda_fm if is_cuda_dispatch_key(dispatch_key) else cpu_fm
 
-        fm.write_with_template(f'Register{dispatch_key}.cpp', cpp_template, lambda: {
+        fm.write_with_template(f'Register{dispatch_key}.h', 'RegisterDispatchKey.h', lambda: {
+            'DispatchKey': dispatch_key,
+            'dispatch_declarations': list(concatMap(
+                RegisterDispatchKey(dispatch_key, Target.DECLARATION, selector, rocm=options.rocm),
+                grouped_native_functions
+            )),
+        })
+        fm.write_with_template(f'Register{dispatch_key}.cpp', 'RegisterDispatchKey.cpp', lambda: {
             'extra_cuda_headers': extra_cuda_headers if is_cuda_dispatch_key(dispatch_key) else '',
             'legacy_th_headers':
                 '#include <ATen/LegacyTHFunctionsCPU.h>' if dispatch_key == "CPU" else

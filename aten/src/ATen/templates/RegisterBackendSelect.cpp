@@ -4,6 +4,8 @@
 
 // ${generated_comment}
 
+#ifndef USE_STATIC_DISPATCH
+
 #include <ATen/ATen.h>
 #include <ATen/Dispatch.h>
 #include <torch/library.h>
@@ -21,3 +23,5 @@ TORCH_LIBRARY_IMPL(aten, BackendSelect, m) {
 
 } // namespace
 } // at
+
+#endif

@@ -39,15 +39,21 @@ namespace at {
 
 ${dispatch_definitions}
 
+#ifdef USE_STATIC_DISPATCH
+namespace _${DispatchKey} {
+#else
 // NB: TORCH_LIBRARY_IMPL must be in an anonymous namespace to avoid
 // ambiguity with conflicting identifiers that may have been defined in
 // at namespace already.
 namespace {
+#endif
 
+#ifndef USE_STATIC_DISPATCH
 TORCH_LIBRARY_IMPL(aten, ${DispatchKey}, m) {
   ${dispatch_registrations}
 }
+#endif
 
-} // anonymous namespace
+} // namespace
 
 } // namespace at

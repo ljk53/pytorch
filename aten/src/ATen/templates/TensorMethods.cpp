@@ -13,6 +13,12 @@
 #include <ATen/quantized/Quantizer.h>
 #include <torch/csrc/WindowsTorchApiMacro.h>
 
+#ifdef USE_STATIC_DISPATCH
+#include <ATen/RegisterCPU.h>
+#include <ATen/RegisterMath.h>
+#include <ATen/RegisterDefaultBackend.h>
+#endif
+
 namespace at {
 
 using Stream = c10::Stream;
