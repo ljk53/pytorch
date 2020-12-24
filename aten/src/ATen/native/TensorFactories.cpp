@@ -234,10 +234,13 @@ Tensor empty_like(
     const TensorOptions& options_,
     c10::optional<c10::MemoryFormat> optional_memory_format) {
 
+// translate.py emits `check_tensor_options_and_extract_memory_format` to set both
+#ifndef USE_STATIC_DISPATCH
   TORCH_CHECK(
     !(options_.has_memory_format() && optional_memory_format.has_value()),
     "Cannot set memory_format both in TensorOptions and explicit argument; please delete "
     "the redundant setter.");
+#endif
 
   TensorOptions options =
       self.options()

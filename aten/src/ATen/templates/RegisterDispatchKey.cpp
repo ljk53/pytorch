@@ -37,14 +37,20 @@ $legacy_th_headers
 
 namespace at {
 
+#ifdef USE_STATIC_DISPATCH
+namespace _${DispatchKey} {
+#else
 namespace {
+#endif
 
 ${dispatch_definitions}
 
+#ifndef USE_STATIC_DISPATCH
 TORCH_LIBRARY_IMPL(aten, ${DispatchKey}, m) {
   ${dispatch_registrations}
 }
+#endif
 
-} // anonymous namespace
+} // namespace
 
 } // namespace at

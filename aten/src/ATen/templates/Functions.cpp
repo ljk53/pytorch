@@ -5,6 +5,12 @@
 #include <ATen/core/dispatch/Dispatcher.h>
 #include <ATen/core/op_registration/hacky_wrapper_for_legacy_signatures.h>
 
+#ifdef USE_STATIC_DISPATCH
+#include <ATen/RegisterCPU.h>
+#include <ATen/RegisterMath.h>
+#include <ATen/RegisterDefaultBackend.h>
+#endif
+
 namespace at {
 
 Tensor var(const Tensor& self, int dim) {

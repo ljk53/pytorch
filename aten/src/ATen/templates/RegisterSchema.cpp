@@ -2,6 +2,8 @@
 
 // ${generated_comment}
 
+#ifndef USE_STATIC_DISPATCH
+
 #include <ATen/DeviceGuard.h>
 #include <ATen/ExpandUtils.h>
 #include <ATen/Functions.h>
@@ -58,3 +60,5 @@ TORCH_LIBRARY(aten, m) {
   m.def("get_gradients(int context_id) -> Dict(Tensor, Tensor)");
 }
 }  // namespace at
+
+#endif
