@@ -490,7 +490,8 @@ endif()
 
 if(BUILD_LITE)
   set(INTERN_BUILD_MOBILE ON)
-  string(APPEND CMAKE_CXX_FLAGS " -DNO_EXPORT")
+  set(STATIC_DISPATCH_BACKEND CPU)
+  string(APPEND CMAKE_CXX_FLAGS " -DNO_EXPORT -DUSE_STATIC_DISPATCH -ffunction-sections -fdata-sections")
 endif()
 
 # INTERN_BUILD_ATEN_OPS is used to control whether to build ATen/TH operators.

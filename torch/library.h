@@ -681,6 +681,15 @@ private:
 
 namespace detail {
 
+#ifdef USE_STATIC_DISPATCH
+class TorchLibraryInit final {
+private:
+  using InitFn = void(Library&);
+public:
+  TorchLibraryInit(Library::Kind kind, InitFn* fn, const char* ns, c10::optional<c10::DispatchKey> k, const char* file, uint32_t line) {
+  }
+};
+#else
 class TorchLibraryInit final {
 private:
   using InitFn = void(Library&);
@@ -691,6 +700,7 @@ public:
     fn(lib_);
   }
 };
+#endif
 
 } // namespace detail
 

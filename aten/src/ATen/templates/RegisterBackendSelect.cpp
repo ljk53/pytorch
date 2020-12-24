@@ -3,6 +3,8 @@
 // We then 'manually' compute a lower-priority to re-dispatch to (e.g. CPU) to get to the eventually correct backend.
 // ${generated_comment}
 
+#ifndef USE_STATIC_DISPATCH
+
 #include <ATen/ATen.h>
 #include <ATen/Dispatch.h>
 #include <ATen/core/dispatch/Dispatcher.h>
@@ -21,3 +23,5 @@ TORCH_LIBRARY_IMPL(aten, BackendSelect, m) {
 
 } // namespace
 } // at
+
+#endif
