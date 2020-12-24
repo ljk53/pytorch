@@ -199,6 +199,8 @@ elseif(INTERN_USE_EIGEN_BLAS)
   set(USE_BLAS 1)
   include(${CMAKE_CURRENT_LIST_DIR}/External/EigenBLAS.cmake)
   list(APPEND Caffe2_DEPENDENCY_LIBS eigen_blas)
+else()
+  set(USE_BLAS 0)
 endif()
 
 # ---[ FFTW
