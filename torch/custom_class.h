@@ -74,6 +74,7 @@ class class_ {
   /// you pass `foo` as the namespace name and `Bar` as the className, the
   /// class will appear as `torch.classes.foo.Bar` in Python and TorchScript
   explicit class_(const std::string& namespaceName, const std::string& className, std::string doc_string = "") {
+#ifndef BUILD_LITE
     detail::checkValidIdent(namespaceName, "Namespace name");
     detail::checkValidIdent(className, "Class name");
     qualClassName = std::string("__torch__.torch.classes.") + namespaceName + "." + className;
@@ -91,6 +92,7 @@ class class_ {
         {std::type_index(typeid(c10::tagged_capsule<CurClass>)), classTypePtr});
 
     registerCustomClass(classTypePtr);
+#endif
   }
 
   /// def() can be used in conjunction with `torch::init()` to register
@@ -100,6 +102,7 @@ class class_ {
   template <typename... Types>
   class_& def(detail::types<void, Types...>, std::string doc_string = "") { // Used in combination with
                                                // torch::init<...>()
+#ifndef BUILD_LITE
     auto func = [](c10::tagged_capsule<CurClass> self, Types... args) {
       auto classObj = c10::make_intrusive<CurClass>(args...);
       auto object = self.ivalue.toObject();
@@ -107,6 +110,7 @@ class class_ {
     };
 
     defineMethod("__init__", std::move(func), std::move(doc_string));
+#endif
     return *this;
   }
 
@@ -115,6 +119,7 @@ class class_ {
   class_& def(
       InitLambda<Func, c10::guts::typelist::typelist<ParameterTypes...>> init,
       std::string doc_string = "") {
+#ifndef BUILD_LITE
     auto init_lambda_wrapper = [func = std::move(init.f)](
                                    c10::tagged_capsule<CurClass> self,
                                    ParameterTypes... arg) {
@@ -124,7 +129,7 @@ class class_ {
       object->setSlot(0, c10::IValue::make_capsule(classObj));
     };
     defineMethod("__init__", std::move(init_lambda_wrapper), std::move(doc_string));
-
+#endif
     return *this;
   }
 
@@ -148,19 +153,23 @@ class class_ {
   ///     })
   template <typename Func>
   class_& def(std::string name, Func f, std::string doc_string = "") {
+#ifndef BUILD_LITE
     auto wrapped_f = detail::wrap_func<CurClass, Func>(std::move(f));
     defineMethod(std::move(name), std::move(wrapped_f), std::move(doc_string));
+#endif
     return *this;
   }
 
   /// This is an unsafe method registration API added for adding custom JIT backend support via custom
   /// C++ classes. It is not for general purpose use.
   class_& _def_unboxed(std::string name, std::function<void(jit::Stack&)> func, c10::FunctionSchema schema, std::string doc_string = "") {
+#ifndef BUILD_LITE
     auto qualMethodName = qualClassName + "." + name;
     auto method = std::make_unique<jit::BuiltinOpFunction>(
         qualMethodName, std::move(schema), std::move(func), std::move(doc_string));
     classTypePtr->addMethod(method.get());
     registerCustomClassMethod(std::move(method));
+#endif
     return *this;
   }
 
@@ -198,6 +207,7 @@ class class_ {
   ///         })
   template <typename GetStateFn, typename SetStateFn>
   class_& def_pickle(GetStateFn&& get_state, SetStateFn&& set_state) {
+#ifndef BUILD_LITE
     static_assert(
         c10::guts::is_stateless_lambda<std::decay_t<GetStateFn>>::value &&
             c10::guts::is_stateless_lambda<std::decay_t<SetStateFn>>::value,
@@ -257,10 +267,11 @@ class class_ {
         ser_type->repr_str(),
         " but expected ",
         arg_type->repr_str());
-
+#endif
     return *this;
   }
 
+#ifndef BUILD_LITE
  private:
   template <typename Func>
   void defineMethod(std::string name, Func func, std::string doc_string = "") {
@@ -288,6 +299,7 @@ class class_ {
 
   std::string qualClassName;
   at::ClassTypePtr classTypePtr;
+#endif
 };
 
 /// make_custom_class() is a convenient way to create an instance of a registered
