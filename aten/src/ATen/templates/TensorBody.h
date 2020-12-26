@@ -247,7 +247,12 @@ class TORCH_API Tensor {
   }
 
   bool is_contiguous(at::MemoryFormat memory_format=at::MemoryFormat::Contiguous) const {
+#ifndef BUILD_LITE
     return impl_->is_contiguous(memory_format);
+#else
+    // TORCH_CHECK(impl_->is_contiguous(memory_format));
+    return true;
+#endif
   }
 
   bool is_non_overlapping_and_dense() const {
@@ -346,6 +351,7 @@ class TORCH_API Tensor {
   /// Returns a `Tensor`'s device index.
   int64_t get_device() const;
 
+#ifndef BUILD_LITE
   /// Returns if a `Tensor` has CUDA backend.
   bool is_cuda() const;
 
@@ -376,6 +382,48 @@ class TORCH_API Tensor {
   /// Returns if a `Tensor` is a meta tensor.  Meta tensors can
   /// also have other designations.
   bool is_meta() const;
+#else
+  bool is_cuda() const {
+    // TORCH_CHECK(!impl_->is_cuda());
+    return false;
+  }
+  bool is_xpu() const {
+    // TORCH_CHECK(!impl_->is_xpu());
+    return false;
+  }
+  bool is_xla() const {
+    // TORCH_CHECK(!impl_->is_xla());
+    return false;
+  }
+  bool is_hip() const {
+    // TORCH_CHECK(!impl_->is_hip());
+    return false;
+  }
+  bool is_sparse() const {
+    // TORCH_CHECK(!impl_->is_sparse());
+    return false;
+  }
+  bool is_mkldnn() const {
+    // TORCH_CHECK(!impl_->is_mkldnn());
+    return false;
+  }
+  bool is_vulkan() const {
+    // TORCH_CHECK(!impl_->is_vulkan());
+    return false;
+  }
+  bool is_metal() const {
+    // TORCH_CHECK(!impl_->is_metal());
+    return false;
+  }
+  bool is_quantized() const {
+    // TORCH_CHECK(!impl_->is_quantized());
+    return false;
+  }
+  bool is_meta() const {
+    // TORCH_CHECK(!impl_->is_meta());
+    return false;
+  }
+#endif
 
   /// If a tensor is a quantized tensor, returns its quantizer
   /// TODO: it's not in native_functions.yaml yet as it's not exposed to python
