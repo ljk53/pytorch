@@ -13,6 +13,12 @@ inline void check_should_include_kernel_dtype(
   const char *kernel_tag_str,
   at::ScalarType scalar_type
 ) {
+#ifdef BUILD_LITE
+  TORCH_CHECK(
+      scalar_type == at::ScalarType::Long ||
+      scalar_type == at::ScalarType::Double
+  );
+#endif
 }
 }
 

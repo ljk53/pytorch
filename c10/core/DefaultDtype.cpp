@@ -2,9 +2,15 @@
 #include <c10/core/DefaultDtype.h>
 
 namespace c10 {
+#ifdef BUILD_LITE
+static auto default_dtype = caffe2::TypeMeta::Make<double>();
+static auto default_dtype_as_scalartype = default_dtype.toScalarType();
+static auto default_complex_dtype = caffe2::TypeMeta::Make<c10::complex<double>>();
+#else
 static auto default_dtype = caffe2::TypeMeta::Make<float>();
 static auto default_dtype_as_scalartype = default_dtype.toScalarType();
 static auto default_complex_dtype = caffe2::TypeMeta::Make<c10::complex<float>>();
+#endif
 
 void set_default_dtype(caffe2::TypeMeta dtype) {
   default_dtype = dtype;
