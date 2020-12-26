@@ -82,10 +82,12 @@ int64_t get_device(Tensor self) {
   return self.get_device();
 }
 
+#ifndef BUILD_LITE
 bool Tensor::is_cuda() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_cuda();
 }
+#endif
 
 NamedTensorMeta* Tensor::get_named_tensor_meta() {
   return static_cast<NamedTensorMeta*>(impl_->named_tensor_meta());
@@ -108,33 +110,40 @@ bool is_cuda(Tensor self) {
   return self.is_cuda();
 }
 
+#ifndef BUILD_LITE
 bool Tensor::is_hip() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_hip();
 }
+#endif
 
 bool is_hip(Tensor self) {
   return self.is_hip();
 }
 
+#ifndef BUILD_LITE
 bool Tensor::is_sparse() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_sparse();
 }
+#endif
 
 bool is_sparse(Tensor self) {
   return self.is_sparse();
 }
 
+#ifndef BUILD_LITE
 bool Tensor::is_mkldnn() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_mkldnn();
 }
+#endif
 
 bool is_mkldnn(Tensor self) {
   return self.is_mkldnn();
 }
 
+#ifndef BUILD_LITE
 bool Tensor::is_vulkan() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_vulkan();
@@ -144,7 +153,7 @@ bool Tensor::is_metal() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_metal();
 }
-
+#endif
 
 bool is_vulkan(Tensor self) {
   return self.is_vulkan();
@@ -154,6 +163,7 @@ bool is_metal(Tensor self) {
   return self.is_metal();
 }
 
+#ifndef BUILD_LITE
 bool Tensor::is_quantized() const {
   // NB: this is not a native function to avoid dispatching overhead.
   return impl_->is_quantized();
@@ -162,6 +172,7 @@ bool Tensor::is_quantized() const {
 bool Tensor::is_meta() const {
   return impl_->is_meta();
 }
+#endif
 
 bool is_quantized(Tensor self) {
   return self.is_quantized();
