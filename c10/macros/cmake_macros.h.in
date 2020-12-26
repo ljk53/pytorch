@@ -10,4 +10,9 @@
 #cmakedefine C10_USE_NUMA
 #cmakedefine C10_USE_MSVC_STATIC_RUNTIME
 
+#cmakedefine BUILD_LITE
+#cmakedefine NO_EXPORT
+#cmakedefine USE_STATIC_DISPATCH
+#cmakedefine STRIP_ERROR_MESSAGES
+
 #endif // C10_MACROS_CMAKE_MACROS_H_
