@@ -15,4 +15,9 @@
 // to converging libtorch and caffe2 mobile builds and removing it eventually.
 #cmakedefine FEATURE_TORCH_MOBILE
 
+#cmakedefine BUILD_LITE
+#cmakedefine NO_EXPORT
+#cmakedefine USE_STATIC_DISPATCH
+#cmakedefine STRIP_ERROR_MESSAGES
+
 #endif // C10_MACROS_CMAKE_MACROS_H_
