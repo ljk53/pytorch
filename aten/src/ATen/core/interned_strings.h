@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <cstdint>
 #include <string>
@@ -7,10 +8,13 @@
 
 #include <c10/macros/Macros.h>
 
+#if !defined(BUILD_LITE)
 #include <ATen/core/aten_interned_strings.h>
+#endif
 
 namespace c10 {
 
+#if !defined(BUILD_LITE)
 #define FORALL_NS_SYMBOLS(_)         \
   _(namespaces, prim)                \
   _(namespaces, aten)                \
@@ -433,6 +437,19 @@ namespace c10 {
   _(attr, cache_id)                  \
   _(attr, new_axis)                  \
   _(attr, warn_id)
+#else
+#define FORALL_NS_SYMBOLS(_) \
+  _(namespaces, prim)              \
+  _(namespaces, aten)              \
+  _(namespaces, cuda)              \
+  _(namespaces, onnx)              \
+  _(namespaces, attr)              \
+  _(namespaces, scope)             \
+  _(namespaces, user)              \
+  _(namespaces, _caffe2)           \
+  _(namespaces, dimname)           \
+  _(namespaces, namespaces)
+#endif
 
 // 'prim' symbols are synthetic operators that occur only in the IR
 // and don't have corresponding implementations in ATen.

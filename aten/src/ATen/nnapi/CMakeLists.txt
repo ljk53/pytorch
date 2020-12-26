@@ -1,3 +1,7 @@
+if(BUILD_LITE)
+  return()
+endif()
+
 # Define this to build the NNAPI binding out of tree.
 if(PYTORCH_NNAPI_STANDALONE)
   cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
