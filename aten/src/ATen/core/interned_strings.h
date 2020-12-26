@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <cstdint>
 #include <string>
@@ -7,13 +8,13 @@
 
 #include <c10/macros/Macros.h>
 
-#if !defined(C10_MOBILE) || defined(FEATURE_TORCH_MOBILE)
+#if (!defined(C10_MOBILE) || defined(FEATURE_TORCH_MOBILE)) && !defined(BUILD_LITE)
 #include <ATen/core/aten_interned_strings.h>
 #endif
 
 namespace c10 {
 
-#if !defined(C10_MOBILE) || defined(FEATURE_TORCH_MOBILE)
+#if (!defined(C10_MOBILE) || defined(FEATURE_TORCH_MOBILE)) && !defined(BUILD_LITE)
 #define FORALL_NS_SYMBOLS(_)         \
   _(namespaces, prim)                \
   _(namespaces, aten)                \
