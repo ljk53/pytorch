@@ -8,6 +8,13 @@
 #include <TH/TH.h>
 #include <TH/THTensor.hpp>
 
+namespace at {
+inline void check_should_include_kernel_dtype(
+  const char *kernel_tag_str,
+  at::ScalarType scalar_type
+) {
+}
+}
 
 namespace at {
 namespace native {
@@ -40,60 +47,80 @@ Tensor & _th_nonzero_out(Tensor & result, const Tensor & self) {
 
     switch (dispatch_scalar_type) {
         case ScalarType::Bool: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Bool);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THBoolTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Byte: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Byte);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THByteTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Char: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Char);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THCharTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Double);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THDoubleTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Float);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THFloatTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Int: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Int);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THIntTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Long: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Long);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THLongTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Short: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Short);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THShortTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Half: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::Half);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THHalfTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::BFloat16: {
+            check_should_include_kernel_dtype("_th_nonzero_out", ScalarType::BFloat16);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_nonzero_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero_out", false, DeviceType::CPU, dispatch_scalar_type);
             THBFloat16Tensor_nonzero(result_, self_);
@@ -111,51 +138,71 @@ Tensor _th_nonzero(const Tensor & self) {
     auto result = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(result_));
     switch (dispatch_scalar_type) {
         case ScalarType::Bool: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Bool);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THBoolTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Byte: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Byte);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THByteTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Char: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Char);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THCharTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THDoubleTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THFloatTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Int: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Int);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THIntTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Long: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Long);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THLongTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Short: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Short);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THShortTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::Half: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::Half);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THHalfTensor_nonzero(result_, self_);
             break;
         }
         case ScalarType::BFloat16: {
+            check_should_include_kernel_dtype("_th_nonzero", ScalarType::BFloat16);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_nonzero", false, DeviceType::CPU, dispatch_scalar_type);
             THBFloat16Tensor_nonzero(result_, self_);
             break;
@@ -171,6 +218,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
 
     switch (dispatch_scalar_type) {
         case ScalarType::Bool: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Bool);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -178,6 +227,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Byte: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Byte);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -185,6 +236,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Char: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Char);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -192,6 +245,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -199,6 +254,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -206,6 +263,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Int: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Int);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -213,6 +272,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Long: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Long);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -220,6 +281,8 @@ Tensor & _th_index_copy_(Tensor & self, int64_t dim, const Tensor & index, const
             break;
         }
         case ScalarType::Short: {
+            check_should_include_kernel_dtype("_th_index_copy_", ScalarType::Short);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 3, "_th_index_copy_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 4, "_th_index_copy_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -237,6 +300,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
 
     switch (dispatch_scalar_type) {
         case ScalarType::Bool: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Bool);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -244,6 +309,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Byte: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Byte);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -251,6 +318,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Char: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Char);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -258,6 +327,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -265,6 +336,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -272,6 +345,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Int: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Int);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -279,6 +354,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Long: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Long);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -286,6 +363,8 @@ Tensor & _th_put_(Tensor & self, const Tensor & index, const Tensor & source, bo
             break;
         }
         case ScalarType::Short: {
+            check_should_include_kernel_dtype("_th_put_", ScalarType::Short);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
             auto index_ = checked_dense_tensor_unwrap(index, "index", 2, "_th_put_", false, DeviceType::CPU, ScalarType::Long);
             auto source_ = checked_dense_tensor_unwrap(source, "source", 3, "_th_put_", false, DeviceType::CPU, dispatch_scalar_type);
@@ -303,6 +382,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
 
     switch (dispatch_scalar_type) {
         case ScalarType::Byte: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Byte);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -310,6 +391,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
             break;
         }
         case ScalarType::Char: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Char);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -317,6 +400,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
             break;
         }
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Double);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -324,6 +409,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Float);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -331,6 +418,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
             break;
         }
         case ScalarType::Int: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Int);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -338,6 +427,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
             break;
         }
         case ScalarType::Long: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Long);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -345,6 +436,8 @@ std::tuple<Tensor &,Tensor &> _th_mode_out(Tensor & values, Tensor & indices, co
             break;
         }
         case ScalarType::Short: {
+            check_should_include_kernel_dtype("_th_mode_out", ScalarType::Short);
+
             auto values_ = checked_dense_tensor_unwrap(values, "values", 0, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto indices_ = checked_dense_tensor_unwrap(indices, "indices", 0, "_th_mode_out", false, DeviceType::CPU, ScalarType::Long);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -365,36 +458,50 @@ std::tuple<Tensor,Tensor> _th_mode(const Tensor & self, int64_t dim, bool keepdi
     auto indices = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(indices_));
     switch (dispatch_scalar_type) {
         case ScalarType::Byte: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Byte);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THByteTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
         }
         case ScalarType::Char: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Char);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THCharTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
         }
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THDoubleTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THFloatTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
         }
         case ScalarType::Int: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Int);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THIntTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
         }
         case ScalarType::Long: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Long);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THLongTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
         }
         case ScalarType::Short: {
+            check_should_include_kernel_dtype("_th_mode", ScalarType::Short);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_mode", false, DeviceType::CPU, dispatch_scalar_type);
             THShortTensor_mode(values_, indices_, self_, dim, keepdim);
             break;
@@ -410,11 +517,15 @@ Tensor _th_var(const Tensor & self, bool unbiased) {
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_var", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_var", false, DeviceType::CPU, dispatch_scalar_type);
             return at::scalar_tensor(convert<double>(THDoubleTensor_var_all(self_, unbiased)), options(ScalarType::Double));
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_var", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_var", false, DeviceType::CPU, dispatch_scalar_type);
             return at::scalar_tensor(convert<float>(THFloatTensor_var_all(self_, unbiased)), options(ScalarType::Float));
             break;
@@ -429,11 +540,15 @@ Tensor _th_std(const Tensor & self, bool unbiased) {
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_std", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_std", false, DeviceType::CPU, dispatch_scalar_type);
             return at::scalar_tensor(convert<double>(THDoubleTensor_std_all(self_, unbiased)), options(ScalarType::Double));
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_std", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_std", false, DeviceType::CPU, dispatch_scalar_type);
             return at::scalar_tensor(convert<float>(THFloatTensor_std_all(self_, unbiased)), options(ScalarType::Float));
             break;
@@ -448,6 +563,8 @@ Tensor & _th_renorm_out(Tensor & result, const Tensor & self, Scalar p, int64_t 
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_renorm_out", ScalarType::Double);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_renorm_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_renorm_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto p_ = p.toDouble();
@@ -456,6 +573,8 @@ Tensor & _th_renorm_out(Tensor & result, const Tensor & self, Scalar p, int64_t 
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_renorm_out", ScalarType::Float);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_renorm_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_renorm_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto p_ = p.toFloat();
@@ -475,6 +594,8 @@ Tensor _th_renorm(const Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
     auto result = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(result_));
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_renorm", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_renorm", false, DeviceType::CPU, dispatch_scalar_type);
             auto p_ = p.toDouble();
             auto maxnorm_ = maxnorm.toDouble();
@@ -482,6 +603,8 @@ Tensor _th_renorm(const Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_renorm", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_renorm", false, DeviceType::CPU, dispatch_scalar_type);
             auto p_ = p.toFloat();
             auto maxnorm_ = maxnorm.toFloat();
@@ -499,6 +622,8 @@ Tensor & _th_renorm_(Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_renorm_", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_renorm_", false, DeviceType::CPU, dispatch_scalar_type);
             auto p_ = p.toDouble();
             auto maxnorm_ = maxnorm.toDouble();
@@ -506,6 +631,8 @@ Tensor & _th_renorm_(Tensor & self, Scalar p, int64_t dim, Scalar maxnorm) {
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_renorm_", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_renorm_", false, DeviceType::CPU, dispatch_scalar_type);
             auto p_ = p.toFloat();
             auto maxnorm_ = maxnorm.toFloat();
@@ -523,6 +650,8 @@ Tensor & _th_histc_out(Tensor & result, const Tensor & self, int64_t bins, Scala
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_histc_out", ScalarType::Double);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_histc_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_histc_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto min_ = min.toDouble();
@@ -531,6 +660,8 @@ Tensor & _th_histc_out(Tensor & result, const Tensor & self, int64_t bins, Scala
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_histc_out", ScalarType::Float);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_histc_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_histc_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto min_ = min.toFloat();
@@ -550,6 +681,8 @@ Tensor _th_histc(const Tensor & self, int64_t bins, Scalar min, Scalar max) {
     auto result = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(result_));
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_histc", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_histc", false, DeviceType::CPU, dispatch_scalar_type);
             auto min_ = min.toDouble();
             auto max_ = max.toDouble();
@@ -557,6 +690,8 @@ Tensor _th_histc(const Tensor & self, int64_t bins, Scalar min, Scalar max) {
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_histc", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_histc", false, DeviceType::CPU, dispatch_scalar_type);
             auto min_ = min.toFloat();
             auto max_ = max.toFloat();
@@ -575,6 +710,8 @@ std::tuple<Tensor &,Tensor &> _th_gels_out(Tensor & res1, Tensor & res2, const T
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_gels_out", ScalarType::Double);
+
             auto res1_ = checked_dense_tensor_unwrap(res1, "res1", 0, "_th_gels_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto res2_ = checked_dense_tensor_unwrap(res2, "res2", 0, "_th_gels_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_gels_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -583,6 +720,8 @@ std::tuple<Tensor &,Tensor &> _th_gels_out(Tensor & res1, Tensor & res2, const T
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_gels_out", ScalarType::Float);
+
             auto res1_ = checked_dense_tensor_unwrap(res1, "res1", 0, "_th_gels_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto res2_ = checked_dense_tensor_unwrap(res2, "res2", 0, "_th_gels_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_gels_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -604,12 +743,16 @@ std::tuple<Tensor,Tensor> _th_gels(const Tensor & self, const Tensor & A) {
     auto res2 = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(res2_));
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_gels", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_gels", false, DeviceType::CPU, dispatch_scalar_type);
             auto A_ = checked_dense_tensor_unwrap(A, "A", 2, "_th_gels", false, DeviceType::CPU, dispatch_scalar_type);
             THDoubleTensor_gels(res1_, res2_, self_, A_);
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_gels", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_gels", false, DeviceType::CPU, dispatch_scalar_type);
             auto A_ = checked_dense_tensor_unwrap(A, "A", 2, "_th_gels", false, DeviceType::CPU, dispatch_scalar_type);
             THFloatTensor_gels(res1_, res2_, self_, A_);
@@ -626,6 +769,8 @@ std::tuple<Tensor &,Tensor &> _th_geqrf_out(Tensor & res1, Tensor & res2, const 
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_geqrf_out", ScalarType::Double);
+
             auto res1_ = checked_dense_tensor_unwrap(res1, "res1", 0, "_th_geqrf_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto res2_ = checked_dense_tensor_unwrap(res2, "res2", 0, "_th_geqrf_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_geqrf_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -633,6 +778,8 @@ std::tuple<Tensor &,Tensor &> _th_geqrf_out(Tensor & res1, Tensor & res2, const 
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_geqrf_out", ScalarType::Float);
+
             auto res1_ = checked_dense_tensor_unwrap(res1, "res1", 0, "_th_geqrf_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto res2_ = checked_dense_tensor_unwrap(res2, "res2", 0, "_th_geqrf_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_geqrf_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -653,11 +800,15 @@ std::tuple<Tensor,Tensor> _th_geqrf(const Tensor & self) {
     auto res2 = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(res2_));
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_geqrf", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_geqrf", false, DeviceType::CPU, dispatch_scalar_type);
             THDoubleTensor_geqrf(res1_, res2_, self_);
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_geqrf", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_geqrf", false, DeviceType::CPU, dispatch_scalar_type);
             THFloatTensor_geqrf(res1_, res2_, self_);
             break;
@@ -673,6 +824,8 @@ Tensor & _th_ormqr_out(Tensor & result, const Tensor & self, const Tensor & inpu
 
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_ormqr_out", ScalarType::Double);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_ormqr_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_ormqr_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto input2_ = checked_dense_tensor_unwrap(input2, "input2", 2, "_th_ormqr_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -681,6 +834,8 @@ Tensor & _th_ormqr_out(Tensor & result, const Tensor & self, const Tensor & inpu
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_ormqr_out", ScalarType::Float);
+
             auto result_ = checked_dense_tensor_unwrap(result, "result", 0, "_th_ormqr_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_ormqr_out", false, DeviceType::CPU, dispatch_scalar_type);
             auto input2_ = checked_dense_tensor_unwrap(input2, "input2", 2, "_th_ormqr_out", false, DeviceType::CPU, dispatch_scalar_type);
@@ -700,6 +855,8 @@ Tensor _th_ormqr(const Tensor & self, const Tensor & input2, const Tensor & inpu
     auto result = Tensor(c10::intrusive_ptr<TensorImpl, UndefinedTensorImpl>::reclaim(result_));
     switch (dispatch_scalar_type) {
         case ScalarType::Double: {
+            check_should_include_kernel_dtype("_th_ormqr", ScalarType::Double);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_ormqr", false, DeviceType::CPU, dispatch_scalar_type);
             auto input2_ = checked_dense_tensor_unwrap(input2, "input2", 2, "_th_ormqr", false, DeviceType::CPU, dispatch_scalar_type);
             auto input3_ = checked_dense_tensor_unwrap(input3, "input3", 3, "_th_ormqr", false, DeviceType::CPU, dispatch_scalar_type);
@@ -707,6 +864,8 @@ Tensor _th_ormqr(const Tensor & self, const Tensor & input2, const Tensor & inpu
             break;
         }
         case ScalarType::Float: {
+            check_should_include_kernel_dtype("_th_ormqr", ScalarType::Float);
+
             auto self_ = checked_dense_tensor_unwrap(self, "self", 1, "_th_ormqr", false, DeviceType::CPU, dispatch_scalar_type);
             auto input2_ = checked_dense_tensor_unwrap(input2, "input2", 2, "_th_ormqr", false, DeviceType::CPU, dispatch_scalar_type);
             auto input3_ = checked_dense_tensor_unwrap(input3, "input3", 3, "_th_ormqr", false, DeviceType::CPU, dispatch_scalar_type);
