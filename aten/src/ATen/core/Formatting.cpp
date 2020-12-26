@@ -14,6 +14,8 @@ std::ostream& operator<<(std::ostream & out, Backend b) {
 }
 namespace at {
 
+typedef double default_print_type;
+
 //not all C++ compilers have default float so we define our own here
 inline std::ios_base& defaultfloat(std::ios_base& __base) {
   __base.unsetf(std::ios_base::floatfield);
@@ -43,7 +45,11 @@ static std::tuple<double, int64_t> __printFormat(std::ostream& stream, const Ten
     return std::make_tuple(1., 0);
   }
   bool intMode = true;
+#ifdef BUILD_LITE
+  auto self_p = self.data_ptr<default_print_type>();
+#else
   auto self_p = self.data_ptr<double>();
+#endif
   for(int64_t i = 0; i < size; i++) {
     auto z = self_p[i];
     if(std::isfinite(z)) {
@@ -165,7 +171,11 @@ static void __printMatrix(std::ostream& stream, const Tensor& self, int64_t line
     }
     for(int64_t l = 0; l < self.size(0); l++) {
       Tensor row = self.select(0,l);
+#ifdef BUILD_LITE
+      default_print_type *row_ptr = row.data_ptr<default_print_type>();
+#else
       double *row_ptr = row.data_ptr<double>();
+#endif
       for(int64_t c = firstColumn; c < lastColumn+1; c++) {
         stream << std::setw(sz) << row_ptr[c]/scale;
         if(c == lastColumn) {
@@ -239,6 +249,9 @@ std::ostream& print(std::ostream& stream, const Tensor & tensor_, int64_t linesi
     stream << "]";
   } else {
     Tensor tensor;
+#ifdef BUILD_LITE
+    tensor = tensor_.to(kCPU, kDouble).contiguous();
+#else
     if (tensor_.is_quantized()) {
       tensor = tensor_.dequantize().to(kCPU, kDouble).contiguous();
     } else if (tensor_.is_mkldnn()) {
@@ -247,8 +260,13 @@ std::ostream& print(std::ostream& stream, const Tensor & tensor_, int64_t linesi
     } else {
       tensor = tensor_.to(kCPU, kDouble).contiguous();
     }
+#endif
     if(tensor.ndimension() == 0) {
+#ifdef BUILD_LITE
+      stream << defaultfloat << tensor.data_ptr<default_print_type>()[0] << std::endl;
+#else
       stream << defaultfloat << tensor.data_ptr<double>()[0] << std::endl;
+#endif
       stream << "[ " << tensor_.toString() << "{}";
     } else if(tensor.ndimension() == 1) {
       if (tensor.numel() > 0) {
@@ -258,7 +276,11 @@ std::ostream& print(std::ostream& stream, const Tensor & tensor_, int64_t linesi
         if(scale != 1) {
           printScale(stream, scale);
         }
+#ifdef BUILD_LITE
+        default_print_type* tensor_p = tensor.data_ptr<default_print_type>();
+#else
         double* tensor_p = tensor.data_ptr<double>();
+#endif
         for (int64_t i = 0; i < tensor.size(0); i++) {
           stream << std::setw(sz) << tensor_p[i]/scale << std::endl;
         }

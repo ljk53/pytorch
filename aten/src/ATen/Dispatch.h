@@ -25,7 +25,12 @@ inline constexpr bool should_include_kernel_dtype(
   const char *kernel_tag_str,
   at::ScalarType scalar_type
 ) {
+#ifndef BUILD_LITE
   return true;
+#else
+  return scalar_type == at::ScalarType::Long ||
+         scalar_type == at::ScalarType::Double;
+#endif
 }
 }
 #endif
