@@ -470,9 +470,12 @@ static std::unordered_map<
     std::string,
     c10::intrusive_ptr<CellParamsBase> (*)(CellParamsSerializationType)>
     cell_params_deserializers = {
+#ifndef BUILD_LITE
         {"quantized", &QuantizedCellParams::__setstate__},
         {"quantized_dynamic", &QuantizedCellParamsDynamic::__setstate__},
-        {"quantized_fp16", &QuantizedCellParamsFP16::__setstate__}};
+        {"quantized_fp16", &QuantizedCellParamsFP16::__setstate__}
+#endif
+};
 
 // Stupid wrapper to convert from -> to .
 struct QRNNCellParamsWrapper {
