@@ -1,3 +1,7 @@
+#include <c10/macros/Macros.h>
+
+#ifndef BUILD_LITE
+
 #include <c10/util/Exception.h>
 #include <c10/util/Unicode.h>
 #include <ATen/DynamicLibrary.h>
@@ -104,3 +108,5 @@ DynamicLibrary::~DynamicLibrary() {
 #endif
 
 } // namespace at
+
+#endif // BUILD_LITE
