@@ -494,6 +494,8 @@ if(BUILD_LITE)
   set(NO_EXPORT ON)
   set(USE_STATIC_DISPATCH ON)
   set(STRIP_ERROR_MESSAGES ON)
+
+  string(APPEND CMAKE_CXX_FLAGS " -ffunction-sections -fdata-sections -fvisibility=hidden -fvisibility-inlines-hidden")
 endif()
 
 # INTERN_BUILD_ATEN_OPS is used to control whether to build ATen/TH operators.
