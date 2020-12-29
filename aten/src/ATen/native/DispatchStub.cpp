@@ -9,6 +9,10 @@
 namespace at { namespace native {
 
 static CPUCapability compute_cpu_capability() {
+#ifdef ESP_PLATFORM
+  return CPUCapability::DEFAULT;
+#endif
+
   auto envar = std::getenv("ATEN_CPU_CAPABILITY");
   if (envar) {
 #ifdef HAVE_VSX_CPU_DEFINITION

@@ -11,14 +11,36 @@ namespace {
 
 // Used to generate unique callback handles
 CallbackHandle next_unique_callback_handle() {
+#if defined(ESP_PLATFORM)
+  static uint64_t unique_cb_id {1};
+#else
   static std::atomic<uint64_t> unique_cb_id {1};
+#endif
   return CallbackHandle(unique_cb_id++);
 }
 
 RecordFunctionHandle next_unique_record_function_handle() {
+#if defined(ESP_PLATFORM)
+  static uint64_t unique_rf_id {1};
+#else
   static std::atomic<uint64_t> unique_rf_id {1};
+#endif
   return RecordFunctionHandle(unique_rf_id++);
 }
+
+#if defined(ESP_PLATFORM)
+
+RecordFunctionTLS rf_tls_;
+
+int64_t defaultNodeId(-1);
+
+// Enumerates thread ids logically;
+// note: std::this_thread::get_id may return potentially
+// reused thread id
+uint64_t next_thread_id_ {0};
+uint64_t current_thread_id_ = 0;
+
+#else
 
 thread_local RecordFunctionTLS rf_tls_;
 
@@ -29,6 +51,8 @@ std::atomic<int64_t> defaultNodeId(-1);
 // reused thread id
 std::atomic<uint64_t> next_thread_id_ {0};
 thread_local uint64_t current_thread_id_ = 0;
+
+#endif
 
 // Low probability constant
 static const double kLowProb = 0.001;

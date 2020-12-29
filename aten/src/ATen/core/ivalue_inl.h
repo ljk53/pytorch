@@ -132,11 +132,17 @@ inline c10::intrusive_ptr<ivalue::EnumHolder> IValue::toEnumHolder() const& {
   TORCH_INTERNAL_ASSERT(isEnum(), "Expected Enum but got ", tagKind());
   return toIntrusivePtr<ivalue::EnumHolder>();
 }
+
 inline c10::complex<double> IValue::toComplexDouble() const {
   TORCH_INTERNAL_ASSERT(isComplexDouble(), "Expected ComplexDouble but got ", tagKind());
+#if defined(ESP_PLATFORM)
+  TORCH_CHECK(false, "ComplexDouble not supported!");
+#else
   auto ptr = toIntrusivePtr<ivalue::ComplexHolder>();
   return (*ptr).val;
+#endif
 }
+
 inline at::Tensor IValue::toTensor() && {
   if (C10_UNLIKELY(!isTensor())) {
     reportToTensorTypeError();
@@ -1297,8 +1303,12 @@ inline IValue::IValue(c10::intrusive_ptr<at::Quantizer> v)
 template <typename T>
 inline IValue::IValue(c10::complex<T> c)
     : tag(Tag::ComplexDouble), is_intrusive_ptr(true) {
+#if defined(ESP_PLATFORM)
+  TORCH_CHECK(false, "ComplexDouble not supported!");
+#else
   auto v = c10::make_intrusive<ivalue::ComplexHolder>(c);
   payload.u.as_intrusive_ptr = v.release();
+#endif
 }
 
 inline const std::string& IValue::toStringRef() const {

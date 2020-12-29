@@ -58,6 +58,8 @@ void* alloc_cpu(size_t nbytes) {
   data = memalign(gAlignment, nbytes);
 #elif defined(_MSC_VER)
   data = _aligned_malloc(nbytes, gAlignment);
+#elif defined(ESP_PLATFORM)
+  data = malloc(nbytes);
 #else
   int err = posix_memalign(&data, gAlignment, nbytes);
   if (err != 0) {

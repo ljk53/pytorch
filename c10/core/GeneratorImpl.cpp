@@ -42,6 +42,9 @@ namespace detail {
 #ifndef _WIN32
 static uint64_t readURandomLong()
 {
+#ifdef ESP_PLATFORM
+  TORCH_CHECK(false);
+#endif
   int randDev = open("/dev/urandom", O_RDONLY);
   // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
   uint64_t randValue;
