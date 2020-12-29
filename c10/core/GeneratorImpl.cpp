@@ -42,6 +42,9 @@ namespace detail {
 #ifndef _WIN32
 static uint64_t readURandomLong()
 {
+#ifdef ESP_PLATFORM
+  TORCH_CHECK(false);
+#endif
   int randDev = open("/dev/urandom", O_RDONLY);
   uint64_t randValue;
   TORCH_CHECK(randDev >= 0, "Unable to open /dev/urandom");
