@@ -62,8 +62,10 @@ std::string get_parallel_info() {
 
   ss << at::get_mkldnn_version() << std::endl;
 
+#if !defined(ESP_PLATFORM)
   ss << "std::thread::hardware_concurrency() : "
      << std::thread::hardware_concurrency() << std::endl;
+#endif
 
   ss << "Environment variables:" << std::endl;
   ss << "\tOMP_NUM_THREADS : "

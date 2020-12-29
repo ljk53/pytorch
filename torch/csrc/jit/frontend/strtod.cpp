@@ -5,6 +5,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#ifndef ESP_PLATFORM
 #if defined(__APPLE__) || defined(__FreeBSD__)
 #include <xlocale.h>
 #endif
@@ -249,3 +250,5 @@ C10_EXPORT float strtof_c(const char* nptr, char** endptr) {
 
 } // namespace jit
 } // namespace torch
+
+#endif // ESP_PLATFORM
