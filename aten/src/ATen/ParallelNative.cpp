@@ -1,11 +1,12 @@
 #include <ATen/Config.h>
 #if AT_PARALLEL_NATIVE
+
 #include <ATen/Parallel.h>
 #include <ATen/PTThreadPool.h>
 
 #ifndef C10_MOBILE
 #include <c10/core/thread_pool.h>
-#else
+#elif !defined(ESP_PLATFORM)
 #include <caffe2/utils/threadpool/pthreadpool-cpp.h>
 #endif // C10_MOBILE
 
@@ -86,7 +87,7 @@ void _run_with_pool(const std::function<void(int, size_t)>& fn, size_t range) {
   }
   // Run the first task on the current thread directly.
   fn(0, 0);
-#else
+#elif !defined(ESP_PLATFORM)
   caffe2::PThreadPool* const pool = caffe2::pthreadpool();
   TORCH_INTERNAL_ASSERT(pool, "Invalid thread pool!");
 
@@ -96,6 +97,10 @@ void _run_with_pool(const std::function<void(int, size_t)>& fn, size_t range) {
     [&fn](const size_t task_id) {
       fn(0 /* unused */, task_id);
     }, range);
+#else
+  for (size_t i = 0; i < range; ++i) {
+    fn((int)i, i);
+  }
 #endif // C10_MOBILE
 }
 
@@ -182,7 +187,7 @@ void init_num_threads() {
   mkl_set_num_threads(1);
 #endif
 
-#ifdef C10_MOBILE
+#if defined(C10_MOBILE) && !defined(ESP_PLATFORM)
   caffe2::pthreadpool();
 #endif
 }
@@ -206,7 +211,7 @@ void set_num_threads(int nthreads) {
         "when using native parallel backend");
     }
   }
-#else
+#elif !defined(ESP_PLATFORM)
   caffe2::PThreadPool* const pool = caffe2::pthreadpool();
   TORCH_INTERNAL_ASSERT(pool, "Invalid thread pool!");
   pool->set_thread_count(nthreads);
@@ -226,10 +231,12 @@ int get_num_threads() {
     TORCH_INTERNAL_ASSERT(nthreads == CONSUMED);
     return _get_intraop_pool().size() + 1;
   }
-#else
+#elif !defined(ESP_PLATFORM)
   caffe2::PThreadPool* const pool = caffe2::pthreadpool();
   TORCH_INTERNAL_ASSERT(pool, "Invalid thread pool!")
   return in_parallel_region() ? 1 /* current thread */ : pool->get_thread_count();
+#else
+  return 1;
 #endif // C10_MOBILE
 }
 
@@ -291,4 +298,5 @@ std::shared_ptr<c10::ivalue::Future> intraop_launch_future(
 }
 
 } // namespace at
-#endif
+
+#endif // AT_PARALLEL_NATIVE

@@ -59,10 +59,14 @@ struct ComplexHolder : c10::intrusive_ptr_target {
   public:
     template <typename T>
     ComplexHolder(c10::complex<T> c) {
+#if !defined(ESP_PLATFORM)
       val = convert<decltype(val), c10::complex<T>>(c);
+#endif
     }
     ComplexHolder() {}
+#if !defined(ESP_PLATFORM)
     c10::complex<double> val;
+#endif
 };
 } // namespace ivalue
 

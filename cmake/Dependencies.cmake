@@ -74,12 +74,14 @@ if(MSVC)
 endif(MSVC)
 
 # ---[ Threads
+if(NOT ESP_PLATFORM)
 include(${CMAKE_CURRENT_LIST_DIR}/public/threads.cmake)
 if(TARGET Threads::Threads)
   list(APPEND Caffe2_PUBLIC_DEPENDENCY_LIBS Threads::Threads)
 else()
   message(FATAL_ERROR
       "Cannot find threading library. Caffe2 requires Threads to compile.")
+endif()
 endif()
 
 if(USE_TBB)
@@ -310,7 +312,7 @@ set(CONFU_DEPENDENCIES_BINARY_DIR ${PROJECT_BINARY_DIR}/confu-deps
 # ---[ pthreadpool
 # Only add a dependency on pthreadpool if we are on a mobile build
 # or are building any of the libraries in the {Q/X}NNPACK family.
-if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
+if((INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY) AND NOT ESP_PLATFORM)
   set(USE_PTHREADPOOL ON CACHE BOOL "" FORCE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_PTHREADPOOL")
 

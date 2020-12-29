@@ -992,6 +992,7 @@ endif()
   endif()
 
   # XXX This ABI check cannot be run with arm-linux-androideabi-g++
+  if(NOT ESP_PLATFORM)
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if(DEFINED GLIBCXX_USE_CXX11_ABI)
       message(STATUS "_GLIBCXX_USE_CXX11_ABI is already defined as a cmake variable")
@@ -1016,6 +1017,7 @@ endif()
       endif()
     endif()
     message(STATUS "Determined _GLIBCXX_USE_CXX11_ABI=${GLIBCXX_USE_CXX11_ABI}")
+  endif()
   endif()
 
   # CMake config for external projects.
