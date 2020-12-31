@@ -123,8 +123,10 @@ file(GLOB native_utils_cpp "native/utils/*.cpp")
 file(GLOB native_xnnpack "native/xnnpack/*.cpp")
 
 # Add files needed from jit folders
+if(NOT BUILD_LITE)
 append_filelist("jit_core_headers" ATen_CORE_HEADERS)
 append_filelist("jit_core_sources" ATen_CORE_SRCS)
+endif()
 
 add_subdirectory(quantized)
 add_subdirectory(nnapi)
