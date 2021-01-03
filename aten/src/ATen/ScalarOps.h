@@ -22,6 +22,10 @@ namespace c10 {
 // FIXME: this should be (and was) Scalar::toTensor, but there is currently no way
 // to implement this without going through Derived Types (which are not part of core).
 inline at::Tensor scalar_to_tensor(Scalar s, const Device device = at::kCPU) {
+#ifdef BUILD_LITE
+  // HACK: only support float dtype
+  return at::detail::scalar_tensor_static(s, at::kFloat, at::kCPU);
+#endif
   // This is the fast track we have for CPU scalar tensors.
   if (device == at::kCPU && !s.isComplex()) {
     if (s.isFloatingPoint()) {
@@ -57,6 +61,10 @@ inline at::Tensor scalar_to_tensor(Scalar s, const Device device = at::kCPU) {
 inline at::Tensor scalar_to_tensor_default_dtype(
     Scalar s,
     const Device device = at::kCPU) {
+#ifdef BUILD_LITE
+  // HACK: only support float dtype
+  return at::scalar_tensor(s, at::device(device).dtype(at::kFloat));
+#else
   if (s.isFloatingPoint()) {
     return at::scalar_tensor(
         s, at::device(device).dtype(at::get_default_dtype()));
@@ -69,6 +77,7 @@ inline at::Tensor scalar_to_tensor_default_dtype(
     AT_ASSERT(s.isIntegral(false));
     return at::scalar_tensor(s, at::device(device).dtype(at::kLong));
   }
+#endif
 }
 
 }
