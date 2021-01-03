@@ -22,6 +22,10 @@ namespace c10 {
 // FIXME: this should be (and was) Scalar::toTensor, but there is currently no way
 // to implement this without going through Derived Types (which are not part of core).
 inline at::Tensor scalar_to_tensor(const Scalar& s, const Device device = at::kCPU) {
+#ifdef BUILD_LITE
+  // HACK: only support float dtype
+  return at::detail::scalar_tensor_static(s, at::kFloat, at::kCPU);
+#endif
   // This is the fast track we have for CPU scalar tensors.
   if (device == at::kCPU) {
     if (s.isFloatingPoint()) {

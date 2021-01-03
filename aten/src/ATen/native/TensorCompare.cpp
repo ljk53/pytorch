@@ -204,6 +204,10 @@ namespace {
 at::Tensor scalar_to_tensor_default_dtype(
     const Scalar& s,
     const Device device = at::kCPU) {
+#ifdef BUILD_LITE
+  // HACK: only support float dtype
+  return at::scalar_tensor(s, at::device(device).dtype(at::kFloat));
+#else
   if (s.isFloatingPoint()) {
     return at::scalar_tensor(
         s, at::device(device).dtype(at::get_default_dtype()));
@@ -216,6 +220,7 @@ at::Tensor scalar_to_tensor_default_dtype(
     TORCH_INTERNAL_ASSERT(s.isIntegral(false));
     return at::scalar_tensor(s, at::device(device).dtype(at::kLong));
   }
+#endif
 }
 
 // TLDR: Don't call `wrapped_scalar_tensor_default_dtype` -- this function is only necessary to support the partial

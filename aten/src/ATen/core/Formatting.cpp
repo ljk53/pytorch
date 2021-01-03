@@ -14,7 +14,7 @@ std::ostream& operator<<(std::ostream & out, Backend b) {
 }
 namespace at {
 
-typedef double default_print_type;
+typedef float default_print_type;
 
 //not all C++ compilers have default float so we define our own here
 inline std::ios_base& defaultfloat(std::ios_base& __base) {
@@ -250,7 +250,7 @@ std::ostream& print(std::ostream& stream, const Tensor & tensor_, int64_t linesi
   } else {
     Tensor tensor;
 #ifdef BUILD_LITE
-    tensor = tensor_.to(kCPU, kDouble).contiguous();
+    tensor = tensor_.to(kCPU, kFloat).contiguous();
 #else
     if (tensor_.is_quantized()) {
       tensor = tensor_.dequantize().to(kCPU, kDouble).contiguous();

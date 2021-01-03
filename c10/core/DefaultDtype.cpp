@@ -4,9 +4,9 @@
 namespace c10 {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 #ifdef BUILD_LITE
-static auto default_dtype = caffe2::TypeMeta::Make<double>();
+static auto default_dtype = caffe2::TypeMeta::Make<float>();
 static auto default_dtype_as_scalartype = default_dtype.toScalarType();
-static auto default_complex_dtype = caffe2::TypeMeta::Make<c10::complex<double>>();
+static auto default_complex_dtype = caffe2::TypeMeta::Make<c10::complex<float>>();
 #else
 static auto default_dtype = caffe2::TypeMeta::Make<float>();
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)

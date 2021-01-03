@@ -7,16 +7,20 @@
 #include <ATen/ExpandUtils.h>
 #include <TH/TH.h>
 #include <TH/THTensor.hpp>
+#include <c10/util/selective_build.h>
 
 namespace at {
 inline void check_should_include_kernel_dtype(
   const char *kernel_tag_str,
   at::ScalarType scalar_type
 ) {
-#ifdef BUILD_LITE
+#ifdef SELECTED_DTYPES
+  // HACK: should be based on 'kernel_tag_str' instead of global switch
   TORCH_CHECK(
-      scalar_type == at::ScalarType::Long ||
-      scalar_type == at::ScalarType::Double
+      (macro_contains(SELECTED_DTYPES, "int") && scalar_type == at::ScalarType::Int) ||
+      (macro_contains(SELECTED_DTYPES, "long") && scalar_type == at::ScalarType::Long) ||
+      (macro_contains(SELECTED_DTYPES, "float") && scalar_type == at::ScalarType::Float) ||
+      (macro_contains(SELECTED_DTYPES, "double") && scalar_type == at::ScalarType::Double)
   );
 #endif
 }
