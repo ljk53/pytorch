@@ -9,6 +9,7 @@
 #include <c10/util/Metaprogramming.h>
 #include <c10/util/complex.h>
 #include <c10/util/string_view.h>
+#include <c10/util/selective_build.h>
 
 #ifdef XPLAT_MOBILE_BUILD
 #include <ATen/selected_mobile_ops.h>
@@ -25,11 +26,15 @@ inline constexpr bool should_include_kernel_dtype(
   const char *kernel_tag_str,
   at::ScalarType scalar_type
 ) {
-#ifndef BUILD_LITE
+#ifndef SELECTED_DTYPES
   return true;
 #else
-  return scalar_type == at::ScalarType::Long ||
-         scalar_type == at::ScalarType::Double;
+  // HACK: should be based on 'kernel_tag_str' instead of global switch
+  return
+      macro_contains(SELECTED_DTYPES, "int") && scalar_type == at::ScalarType::Int ||
+      macro_contains(SELECTED_DTYPES, "long") && scalar_type == at::ScalarType::Long ||
+      macro_contains(SELECTED_DTYPES, "float") && scalar_type == at::ScalarType::Float ||
+      macro_contains(SELECTED_DTYPES, "double") && scalar_type == at::ScalarType::Double;
 #endif
 }
 }
