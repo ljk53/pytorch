@@ -5,6 +5,19 @@
 # representing ScalarType's. They are now superseded by usage of
 # `aten::to()`. The ops remain here for backward compatibility purposes.
 
+- func: dummy.out(Tensor self, *, Tensor(a!) out) -> Tensor(a!)
+  use_c10_dispatcher: hacky_wrapper_for_legacy_signatures
+  dispatch:
+    CPU: dummy_out
+
+- func: dummy(Tensor self) -> Tensor
+  dispatch:
+    CPU: dummy
+
+- func: dummy_(Tensor(a!) self) -> Tensor(a!)
+  dispatch:
+    CPU: dummy_
+
 # DEPRECATED. DO NOT USE
 - func: _cast_Byte(Tensor self, bool non_blocking=False) -> Tensor
   variants: function
