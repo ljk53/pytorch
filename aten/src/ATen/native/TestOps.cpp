@@ -68,5 +68,18 @@ Tensor _test_ambiguous_defaults(const Tensor& dummy, int64_t a, std::string b) {
   return c10::scalar_to_tensor(2);
 }
 
+Tensor& dummy_out(Tensor& result, const Tensor& self) {
+  result = self;
+  return result;
+}
+
+Tensor dummy(const Tensor& self) {
+  return self;
+}
+
+Tensor& dummy_(Tensor& self) {
+  return self;
+}
+
 } // namespace native
 } // namespace at
