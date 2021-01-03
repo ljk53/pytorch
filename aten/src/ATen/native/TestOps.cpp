@@ -50,5 +50,18 @@ Tensor _test_string_default(const Tensor& dummy, std::string a, std::string b) {
   return dummy;
 }
 
+Tensor& dummy_out(Tensor& result, const Tensor& self) {
+  result = self;
+  return result;
+}
+
+Tensor dummy(const Tensor& self) {
+  return self;
+}
+
+Tensor& dummy_(Tensor& self) {
+  return self;
+}
+
 } // namespace native
 } // namespace at
