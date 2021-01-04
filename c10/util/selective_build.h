@@ -34,5 +34,10 @@ constexpr bool list_contains(string_view list, string_view item) {
 
 } // namespace c10
 
+
 #define STR(x) #x
-#define macro_contains(MACRO, ITEM) c10::impl::list_contains(STR(MACRO), ITEM)
+#define IS_DEFINED(x) IS_DEFINED2(x)
+// assuming defined macro always has lowercased value
+#define IS_DEFINED2(x) (#x[0] == 0 || (#x[0] >= 'a' && #x[0] <= 'z'))
+// undefined macro contains everything
+#define macro_contains(MACRO, ITEM) (!IS_DEFINED2(MACRO) || c10::impl::list_contains(STR(MACRO), ITEM))
