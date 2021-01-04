@@ -8,6 +8,7 @@
 
 #include <ATen/Config.h>
 #include <c10/macros/Macros.h>
+#include <c10/util/selective_build.h>
 
 #if AT_NNPACK_ENABLED()
 #include <nnpack.h>
@@ -768,6 +769,7 @@ at::Tensor _convolution(
         (input.device().type() == c10::DeviceType::CPU) &&
         !params.is_dilated()) {
       // fast path for grouped conv3d
+      TORCH_CHECK(macro_contains(SELECTED_FEATURES, "slow_conv3d"));
       output = at::slow_conv3d(
           input,
           weight,
@@ -836,10 +838,12 @@ at::Tensor _convolution_nogroup(
 
   if (params.transposed) {
     if (dim == 4) {
+      TORCH_CHECK(macro_contains(SELECTED_FEATURES, "slow_conv_transpose2d"));
       return at::slow_conv_transpose2d(
           input, weight, kernel_size, bias,
           stride, padding, output_padding, dilation);
     } else if (dim == 5) {
+      TORCH_CHECK(macro_contains(SELECTED_FEATURES, "slow_conv_transpose3d"));
       return at::slow_conv_transpose3d(
         input, weight, kernel_size, bias,
         stride, padding, output_padding, dilation);
@@ -847,6 +851,7 @@ at::Tensor _convolution_nogroup(
   } else {  /* Not transposed */
     if (dim == 4) {
       if (dilated) {
+        TORCH_CHECK(macro_contains(SELECTED_FEATURES, "slow_conv_dilated2d"));
         return at::slow_conv_dilated2d(
             input, weight, kernel_size, bias,
             stride, padding, dilation);
@@ -865,6 +870,7 @@ at::Tensor _convolution_nogroup(
         }
       }
     } else if (dim == 5 && (input.is_cuda() || dilated)) {
+      TORCH_CHECK(macro_contains(SELECTED_FEATURES, "slow_conv_dilated3d"));
       return at::slow_conv_dilated3d(
           input, weight, kernel_size, bias,
           stride, padding, dilation);
@@ -874,6 +880,7 @@ at::Tensor _convolution_nogroup(
 
       // This path is already overwritten with the fast impl in _convolution
       // See: https://github.com/pytorch/pytorch/pull/3635
+      TORCH_CHECK(macro_contains(SELECTED_FEATURES, "slow_conv3d"));
       return at::slow_conv3d(
           input, weight, kernel_size, bias,
           stride, padding);
