@@ -53,6 +53,12 @@ def translate(bindings: Sequence[Binding], goals: Sequence[Binding], *, method: 
     for b in bindings:
         ctx[b.ctype] = b.name
 
+        # handle `const c10::optional<Tensor> &` -> `const Tensor &`
+        t = b.ctype
+        if isinstance(t, ConstRefCType) and isinstance(t.elem, OptionalCType) and \
+            isinstance(t.elem.elem, BaseCType) and t.elem.elem.type == 'Tensor':
+            ctx[ConstRefCType(BaseCType("Tensor", b.name))] = f'({b.name}.has_value() ? *{b.name} : at::Tensor())'
+
     # Add implicit bindings if the generated code is inside a Tensor method
     if method:
         ctx[MutRefCType(BaseCType("Tensor", "self"))] = "const_cast<Tensor&>(*this)"

@@ -201,6 +201,79 @@ def is_cuda_dispatch_key(dk: DispatchKey) -> bool:
 def is_structured_dispatch_key(dk: DispatchKey) -> bool:
     return dk in STRUCTURED_DISPATCH_KEYS
 
+def static_dispatch_extra_headers() -> str:
+    return f"""\
+#include <ATen/RegisterCPU.h>
+#include <ATen/RegisterDefaultBackend.h>
+#include <ATen/RegisterMath.h>
+"""
+
+def static_dispatch(f: NativeFunction, cpp_sig: CppSignature, *, method: bool) -> str:
+    if f.manual_kernel_registration:
+        return ''
+
+    tensor_opts = [a for a in cpp_sig.arguments() if isinstance(a.argument, TensorOptionsArguments)]
+    tensor_args = [
+        a.name for a in cpp_sig.arguments()
+        if isinstance(a.argument, SelfArgument) or isinstance(a.argument, Argument) and a.argument.type.is_tensor_like()
+    ]
+    if method:
+        tensor_args.append('const_cast<Tensor&>(*this)')
+
+    stmts: List[str] = []
+    if not tensor_opts and not tensor_args:
+        return ''
+    if not tensor_args:
+        assert len(tensor_opts) == 1
+        # specialized fast pass
+        stmts.append(f'DispatchKey _dk = {tensor_opts[0].name}.computeDispatchKey();')
+    else:
+        subexprs: List[str] = []
+        args = ', '.join(tensor_args)
+        subexprs.append(f'c10::detail::multi_dispatch_key_set({args})')
+        for tensor_opt in tensor_opts:
+            subexprs.append(f'DispatchKeySet({tensor_opt.name}.computeDispatchKey())')
+        stmts.append(f"""\
+DispatchKeySet _dk_set = {' | '.join(subexprs)};
+    DispatchKey _dk = c10::impl::dispatchTypeId(_dk_set, DispatchKeySet::FULL);""")
+
+    if f.structured or f.structured_delegate:
+        # structured native functions support CppSignature directly, but it's always not faithful (for now)
+        struct_cpp_sig = CppSignatureGroup.from_native_function(f, method=False, fallback_binding=False).signature
+        name = struct_cpp_sig.name()
+        exprs = translate(cpp_sig.arguments(), struct_cpp_sig.arguments(), method=method)
+        exprs_str = ', '.join(a.expr for a in exprs)
+    else:
+        # translate CppSignature into NativeSignature
+        name = native.name(f.func)
+        exprs = translate(cpp_sig.arguments(), NativeSignature(f.func).arguments(), method=method)
+        exprs_str = ', '.join(a.expr for a in exprs)
+
+    stmts.append(f"""\
+    switch (_dk) {{\
+""")
+
+    has_any = False
+    for case_key in (DispatchKey.CPU, ):
+        for dispatch_key in (case_key, DispatchKey.DefaultBackend, DispatchKey.Math):
+            # FIXME: how do I get dispatch table for function with structured_delegate? Is it correct to
+            # always statically dispatch to the delegate?
+            if dispatch_key in f.dispatch or f.structured_delegate is not None:
+                has_any = True
+                stmts.append(f"""\
+    case DispatchKey::{case_key}:
+        return at::{dispatch_key.lower()}::{name}({exprs_str});\
+""")
+                break
+
+    stmts.append(f"""\
+    default:
+        // fallback to regular dispatch
+        break;
+    }}
+""")
+    return '\n'.join(stmts) if has_any else ''
+
 # Generates RegisterSchema.cpp.  Depending on the selector, either
 # all schemas are registered, or only some are (in the case of
 # selective build)
@@ -467,11 +540,9 @@ namespace {{
 
 }} // anonymous namespace
 
-namespace {self.dispatch_key.lower()} {{
 {cpp_sig.defn()} {{
     return {sig.name()}({', '.join(e.expr for e in translate(cpp_sig.arguments(), sig.arguments()))});
 }}
-}} // namespace {self.dispatch_key.lower()}
 """
 
             elif self.target is Target.REGISTRATION:
@@ -502,7 +573,8 @@ namespace {self.dispatch_key.lower()} {{
         args_str = ', '.join(a.defn() for a in args)
 
         if self.target is Target.DECLARATION:
-            return ''
+            return f'{returns_type} {name}({args_str});'
+
         elif self.target is Target.DEFINITION:
             impl_name = f"at::native::{f.dispatch[self.dispatch_key]}"
 
@@ -556,13 +628,9 @@ namespace {self.dispatch_key.lower()} {{
 """
 
             return f"""\
-namespace {{
-
 {returns_type} {name}({args_str}) {{
 {cuda_guard}{return_kw}{impl_name}({args_exprs_str});
 }}
-
-}} // anonymous namespace
 """
 
         elif self.target is Target.REGISTRATION:
@@ -625,6 +693,7 @@ class ComputeFunction:
             return f"""
 // aten::{f.func}
 {sig.defn()} {{
+    {static_dispatch(f, sig, method=False)}
     static auto op = c10::Dispatcher::singleton()
         .findSchemaOrThrow("aten::{f.func.name.name}", "{f.func.name.overload_name}")
         .typed<{dispatcher_sig.type()}>();
@@ -680,6 +749,7 @@ class ComputeTensorMethod:
             return f"""
 // aten::{f.func}
 {sig.defn(prefix="Tensor::")} const {{
+    {static_dispatch(f, sig, method=True)}
     static auto op = c10::Dispatcher::singleton()
         .findSchemaOrThrow("aten::{f.func.name.name}", "{f.func.name.overload_name}")
         .typed<{dispatcher_sig.type()}>();
@@ -1320,6 +1390,7 @@ def main() -> None:
                 '#include <ATen/LegacyTHFunctionsCUDA.h>' if dispatch_key == DispatchKey.CUDA else
                 '',
             'DispatchKey': dispatch_key,
+            'dispatch_namespace': dispatch_key.lower(),
             'dispatch_definitions': list(concatMap(
                 RegisterDispatchKey(dispatch_key, Target.DEFINITION, selector, rocm=options.rocm),
                 grouped_native_functions
@@ -1329,7 +1400,13 @@ def main() -> None:
                 grouped_native_functions
             )),
         })
-
+        fm.write_with_template(f'Register{dispatch_key}.h', 'RegisterDispatchKey.h', lambda: {
+            'dispatch_namespace': dispatch_key.lower(),
+            'dispatch_declarations': list(concatMap(
+                RegisterDispatchKey(dispatch_key, Target.DECLARATION, selector, rocm=options.rocm),
+                grouped_native_functions
+            )),
+        })
         if dispatch_key in functions_keys:
             fm.write_with_template(f'{dispatch_key}Functions.h', 'DispatchKeyFunctions.h', lambda: {
                 'dispatch_namespace': dispatch_key.lower(),
@@ -1364,12 +1441,14 @@ def main() -> None:
         'function_declarations': list(mapMaybe(ComputeFunction(Target.DECLARATION), native_functions)),
     })
     cpu_fm.write('Functions.cpp', lambda: {
+        'static_dispatch_extra_headers': static_dispatch_extra_headers(),
         'function_definitions': list(mapMaybe(ComputeFunction(Target.DEFINITION), native_functions)),
     })
     core_fm.write('TensorBody.h', lambda: {
         'tensor_method_declarations': list(mapMaybe(ComputeTensorMethod(Target.DECLARATION), native_functions)),
     })
     core_fm.write('TensorMethods.cpp', lambda: {
+        'static_dispatch_extra_headers': static_dispatch_extra_headers(),
         'tensor_method_definitions': list(mapMaybe(ComputeTensorMethod(Target.DEFINITION), native_functions)),
     })
     core_fm.write('ATenOpList.cpp', lambda: {
