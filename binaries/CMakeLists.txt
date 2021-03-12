@@ -1,3 +1,6 @@
+caffe2_binary_target("nnc_for_mobile.cc")
+return()
+caffe2_binary_target("optimize_for_mobile.cc")
 if(INTERN_BUILD_MOBILE)
   if(BUILD_CAFFE2_MOBILE)
     caffe2_binary_target("predictor_verifier.cc")
@@ -105,4 +108,3 @@ endif()
 caffe2_binary_target("tutorial_blob.cc")
 
 caffe2_binary_target("dump_operator_names.cc")
-caffe2_binary_target("optimize_for_mobile.cc")

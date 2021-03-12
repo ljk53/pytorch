@@ -125,7 +125,7 @@ class AOT_NNC_Compiler {
   AOT_NNC_Compiler(std::shared_ptr<Graph>& g)
       : original_graph(g), optimized_graph(g) {}
 
-  void compile_for_sizes(const std::vector<int>& sizes) {
+  void compile_for_sizes(const std::vector<int64_t>& sizes) {
     root_stmt = new tensorexpr::Block({});
     optimized_graph = original_graph->copy();
 
@@ -171,7 +171,9 @@ class AOT_NNC_Compiler {
     l.simplify();
     l.prepareForCodegen();
     l.simplify();
+    std::cerr << "JKL before preallocate constants size = " << constants.size() << std::endl;
     auto preallocated = preallocateTemps(l.root_stmt());
+    std::cerr << "JKL after preallocate constants size = " << constants.size() << std::endl;
     for (const auto& c : preallocated) {
       buf_args.push_back(BufHandle(c.second));
     }
@@ -197,11 +199,17 @@ class AOT_NNC_Compiler {
       out_sizes.push_back(dim_size);
       total_size *= dim_size;
     }
-    output_data = (void*)(new double[total_size]);
-    input_tensor = at::ones({1, 3, 224, 224});
-
+    output_data = (void*)(new double[total_size]);  // LEAK!
     original_graph->eraseInput(0);
     optimized_graph->eraseInput(0);
+  }
+
+  IValue get_compiled_blob() {
+    Dict<IValue, IValue> blob(StringType::get(), AnyType::get());
+    blob.insert("parameters", parameters_);
+    blob.insert("temp_sizes", temp_sizes_);
+    blob.insert("out_sizes", out_sizes);
+    return blob;
   }
 
   at::Tensor call_with_nnc(at::Tensor x) {
@@ -297,13 +305,15 @@ class AOT_NNC_Compiler {
 
   std::vector<ConstantDescr> constants;
   std::vector<CodeGen::CallArg> call_args;
-  at::Tensor output_tensor, input_tensor;
   void* output_data;
   std::vector<int64_t> out_sizes;
 
   std::unique_ptr<CodeGen> codegen_;
   std::vector<at::Tensor> unpacked_constants;
   std::vector<void*> preallocated_temps;
+
+  std::vector<at::Tensor> parameters_;
+  std::vector<int64_t> temp_sizes_;
 };
 
 void* AOT_NNC_Compiler::preallocateBuf(Stmt* s, const Buf* b) {
@@ -327,6 +337,7 @@ void* AOT_NNC_Compiler::preallocateBuf(Stmt* s, const Buf* b) {
   void* ptr = malloc(alloc_size);
   preallocated_temps.push_back(ptr);
   constants.push_back({b, ptr});
+  temp_sizes_.push_back(alloc_size);
 
   Stmt *alloc_stmt = nullptr, *free_stmt = nullptr;
   for (auto ss : dynamic_cast<Block*>(s)->stmts()) {
@@ -483,7 +494,7 @@ void AOT_NNC_Compiler::handleConstant(Node* n) {
       std::cerr << s;
       te_sizes.push_back(IntImm::make(s));
     }
-    std::cerr << "; rank = " << sizes.size() << "\n";
+    std::cerr << "; rank = " << sizes.size();
     size_map[v] = te_sizes;
     buf_map[v] =
         new Buf(v->debugName(), ExprHandleVectorToExprVector(te_sizes), kFloat);
@@ -493,6 +504,10 @@ void AOT_NNC_Compiler::handleConstant(Node* n) {
       const_tensor = unpacked_constants.back();
     }
     constants.push_back({buf_map.at(v), const_tensor.data_ptr()});
+    parameters_.emplace_back(const_tensor);
+    std::cerr << "; constants[" << (constants.size() - 1) << "] = "
+              << const_tensor.view(-1).index({at::indexing::Slice(at::indexing::None, 5)})
+              << "\n";
   } else {
     std::cerr << "%" << v->debugName() << ": ";
     std::cerr << "ivalue " << *toIValue(v) << "\n";
@@ -1091,7 +1106,7 @@ void AOT_NNC_Compiler::process_block(torch::jit::Block* bb) {
   }
 }
 
-void fancy_compile(std::shared_ptr<Graph>& g, const std::vector<int>& sizes) {
+IValue fancy_compile(std::shared_ptr<Graph>& g, const std::vector<int64_t>& sizes) {
   KernelScope kernel_scope;
   std::cerr << "Hi from fancy_compile!\nSizes: ";
   for (auto s : sizes) {
@@ -1101,10 +1116,12 @@ void fancy_compile(std::shared_ptr<Graph>& g, const std::vector<int>& sizes) {
 
   AOT_NNC_Compiler aot(g);
   aot.compile_for_sizes(sizes);
-  //   at::Tensor input_tensor = at::ones({1, 3, 224, 224});
-  at::Tensor input_tensor = at::randn({1, 3, 224, 224}) * 1000.0;
-  auto a = aot.call_with_nnc(input_tensor);
-  auto b = aot.call_with_jit_optimized_graph(input_tensor);
+  // at::Tensor input_tensor = at::ones(sizes);
+  //at::Tensor input_tensor = at::ones({1, 3, 224, 224});
+  //at::Tensor input_tensor = at::randn({1, 3, 224, 224}) * 1000.0;
+  // auto a = aot.call_with_nnc(input_tensor);
+  // auto b = aot.call_with_jit_optimized_graph(input_tensor);
+  return aot.get_compiled_blob();
 }
 
 } // namespace tensorexpr

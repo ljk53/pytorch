@@ -184,7 +184,7 @@ void Method::run(Stack& stack) const {
 c10::IValue Method::operator()(std::vector<c10::IValue> stack) const {
   run(stack);
   TORCH_INTERNAL_ASSERT(!stack.empty());
-  return stack.front();
+  return stack.back();  // FIXME!
 }
 
 } // namespace mobile

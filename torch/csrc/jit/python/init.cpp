@@ -439,7 +439,7 @@ void initJITBindings(PyObject* module) {
               "Interpret a JIT graph with given inputs without running any optimization passes on it"))
       .def(
           "_fancy_compile",
-          [](std::shared_ptr<Graph>& graph, std::vector<int> sizes) {
+          [](std::shared_ptr<Graph>& graph, std::vector<int64_t> sizes) {
             tensorexpr::fancy_compile(graph, sizes);
           })
       .def("_jit_pass_remove_expands", RemoveExpands)

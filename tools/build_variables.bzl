@@ -353,8 +353,14 @@ torch_mobile_core = [
     "torch/csrc/jit/runtime/register_special_ops.cpp",
 ]
 
+torch_mobile_nnc_lib = [
+    "torch/csrc/jit/tensorexpr/external_functions.cpp",
+    "torch/csrc/jit/mobile/nnc_backend.cpp",
+    "torch/csrc/jit/backends/backend_interface.cpp",
+]
+
 # TODO: core_trainer_sources is not necessary for libtorch lite
-libtorch_lite_cmake_sources = sorted(core_trainer_sources + core_sources_common + torch_mobile_core)
+libtorch_lite_cmake_sources = sorted(core_trainer_sources + core_sources_common + torch_mobile_core + torch_mobile_nnc_lib)
 
 libtorch_cmake_sources = libtorch_core_sources + libtorch_core_jit_sources
 

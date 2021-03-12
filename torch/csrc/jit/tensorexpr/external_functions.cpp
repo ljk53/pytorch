@@ -88,6 +88,7 @@ void nnc_aten_conv2d(
   }
 
   // TODO: can i haz an out version of the conv2d?
+  // std::cerr << "JKL conv2d, element_size = " << r.element_size() << " numel = " << r.numel() << " total = " << r.element_size() * r.numel() << " write = " << (void*)buf_data[0] << std::endl;
   memcpy(buf_data[0], r.data_ptr(), r.element_size() * r.numel());
 }
 
@@ -213,6 +214,7 @@ void nnc_aten_addmm(
   }
 }
 
+#ifndef C10_MOBILE
 const static RegisterNNCExternalFunction nnc_conv2d(
     "nnc_aten_conv2d",
     nnc_aten_conv2d);
@@ -230,6 +232,7 @@ const static RegisterNNCExternalFunction nnc_mean(
 static const RegisterNNCExternalFunction nnc_addmm(
     "nnc_aten_addmm",
     nnc_aten_addmm);
+#endif
 
 } // namespace tensorexpr
 } // namespace jit

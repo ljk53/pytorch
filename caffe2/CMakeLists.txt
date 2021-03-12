@@ -548,6 +548,7 @@ if(NOT INTERN_BUILD_MOBILE OR NOT BUILD_CAFFE2_MOBILE)
        ${TORCH_SRC_DIR}/csrc/jit/mobile/import.cpp
        ${TORCH_SRC_DIR}/csrc/jit/mobile/import_data.cpp
        ${TORCH_SRC_DIR}/csrc/jit/mobile/module.cpp
+       ${TORCH_SRC_DIR}/csrc/jit/mobile/nnc_backend.cpp
        ${TORCH_SRC_DIR}/csrc/jit/mobile/observer.cpp
        ${TORCH_SRC_DIR}/csrc/jit/mobile/interpreter.cpp
        ${TORCH_SRC_DIR}/csrc/jit/mobile/export_data.cpp
@@ -977,14 +978,15 @@ endif()
     "${TORCH_SRC_DIR}/custom_class_detail.h"
     DESTINATION ${TORCH_INSTALL_INCLUDE_DIR}/torch)
 
+  if(BUILD_LITE_INTERPRETER)
+    add_subdirectory(
+      ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime
+      ${CMAKE_BINARY_DIR}/test_lite_interpreter_runtime
+    )
+  endif()
 
   if(BUILD_TEST)
-    if(BUILD_LITE_INTERPRETER)
-      add_subdirectory(
-        ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime
-        ${CMAKE_BINARY_DIR}/test_lite_interpreter_runtime
-      )
-    else()
+    if(NOT BUILD_LITE_INTERPRETER)
       add_subdirectory(${TORCH_ROOT}/test/cpp/jit ${CMAKE_BINARY_DIR}/test_jit)
         add_subdirectory(
           ${TORCH_ROOT}/test/cpp/tensorexpr

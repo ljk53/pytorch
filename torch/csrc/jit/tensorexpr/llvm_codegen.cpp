@@ -544,11 +544,11 @@ void LLVMCodeGenImpl::emitKernel(
   // print graph debug info before optimization
   llvm::SmallVector<char, 0> asmBuffer;
   llvm::raw_svector_ostream asmStream(asmBuffer);
-  if (GRAPH_DEBUG_ENABLED) {
+  if (true /*GRAPH_DEBUG_ENABLED*/) {
     module_->print(asmStream, nullptr);
   }
-  GRAPH_DEBUG(
-      "\nLLVM module before optimizations\n\n", asmStream.str().str(), "\n");
+  std::cout <<
+      "\nLLVM module before optimizations\n\n" << asmStream.str().str() << "\n";
 
   optimize(*module_);
 
@@ -572,6 +572,8 @@ void LLVMCodeGenImpl::emitKernel(
 
   GRAPH_DEBUG(
       "\nLLVM module after optimizations\n\n", llvmCode, "\n", asmCode, "\n");
+  std::cout <<
+      "\nLLVM module after optimizations\n\n" << llvmCode << "\n" << asmCode << "\n";
 }
 
 // TODO: The binary ops are copypasta.

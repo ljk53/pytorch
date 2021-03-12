@@ -1,3 +1,22 @@
+enable_language(ASM)
+
+add_executable(
+  test_mobile_nnc
+  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/test_mobile_nnc.cpp
+  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/linear_x86-64.s
+  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/mobilenetv3_x86-64.s)
+
+target_include_directories(
+  test_mobile_nnc PRIVATE
+  ${ATen_CPU_INCLUDE}
+  ${TORCH_SRC_DIR}/csrc/api
+  ${TORCH_SRC_DIR}/csrc/api/include)
+target_link_libraries(test_mobile_nnc PRIVATE torch)
+
+if(NOT BUILD_TEST)
+  return()
+endif()
+
 set(
   LITE_INTERPRETER_RUNTIME_TEST_DIR
   "${TORCH_ROOT}/test/cpp/lite_interpreter_runtime")

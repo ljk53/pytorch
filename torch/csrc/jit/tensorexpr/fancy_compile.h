@@ -7,9 +7,9 @@ namespace torch {
 namespace jit {
 
 namespace tensorexpr {
-TORCH_API void fancy_compile(
+TORCH_API c10::IValue fancy_compile(
     std::shared_ptr<Graph>& subgraph,
-    const std::vector<int>& sizes);
+    const std::vector<int64_t>& sizes);
 
 } // namespace tensorexpr
 } // namespace jit
