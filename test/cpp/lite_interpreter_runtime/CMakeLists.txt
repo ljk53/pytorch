@@ -1,10 +1,15 @@
 enable_language(ASM)
 
+set(NNC_ASM_SOURCES
+  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/linear_armv7.s
+  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/mobilenetv3_armv7.s)
+set_source_files_properties(
+  ${NNC_ASM_SOURCES} PROPERTIES COMPILE_FLAGS "-march=armv7-a -mfpu=neon")
+
 add_executable(
   test_mobile_nnc
-  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/test_mobile_nnc.cpp
-  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/linear_x86-64.s
-  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/mobilenetv3_x86-64.s)
+  ${NNC_ASM_SOURCES}
+  ${TORCH_ROOT}/test/cpp/lite_interpreter_runtime/test_mobile_nnc.cpp)
 
 target_include_directories(
   test_mobile_nnc PRIVATE

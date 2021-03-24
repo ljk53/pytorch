@@ -47,6 +47,8 @@ if(DEFINED GLIBCXX_USE_CXX11_ABI)
   endif()
 endif()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv7-a -mfpu=neon")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # One variable that determines whether the current cmake process is being run

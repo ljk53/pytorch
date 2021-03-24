@@ -1,40 +1,53 @@
-	.section	__TEXT,__text,regular,pure_instructions
-	.macosx_version_min 10, 15
+	.text
 	.syntax unified
-	.globl	_linear_wrapper         @ -- Begin function linear_wrapper
+	.eabi_attribute	67, "2.09"	@ Tag_conformance
+	.eabi_attribute	6, 1	@ Tag_CPU_arch
+	.eabi_attribute	8, 1	@ Tag_ARM_ISA_use
+	.eabi_attribute	9, 2	@ Tag_THUMB_ISA_use
+	.fpu	neon
+	.eabi_attribute	34, 1	@ Tag_CPU_unaligned_access
+	.eabi_attribute	17, 1	@ Tag_ABI_PCS_GOT_use
+	.eabi_attribute	20, 1	@ Tag_ABI_FP_denormal
+	.eabi_attribute	21, 1	@ Tag_ABI_FP_exceptions
+	.eabi_attribute	23, 3	@ Tag_ABI_FP_number_model
+	.eabi_attribute	24, 1	@ Tag_ABI_align_needed
+	.eabi_attribute	25, 1	@ Tag_ABI_align_preserved
+	.eabi_attribute	28, 1	@ Tag_ABI_VFP_args
+	.eabi_attribute	38, 1	@ Tag_ABI_FP_16bit_format
+	.eabi_attribute	14, 0	@ Tag_ABI_PCS_R9_use
+	.file	"pytorch"
+	.globl	linear_wrapper          @ -- Begin function linear_wrapper
 	.p2align	2
+	.type	linear_wrapper,%function
 	.code	32                      @ @linear_wrapper
-_linear_wrapper:
+linear_wrapper:
+	.fnstart
 @ %bb.0:                                @ %wrapBB
-	push	{r4, lr}
 	ldm	r0, {r1, r2}
-	add	r4, r2, #16
 	ldr	r0, [r0, #8]
-	add	lr, r1, #32
-	add	r3, r0, #16
-	add	r12, r0, #32
-	vld1.32	{d16, d17}, [r3]
-	add	r3, r1, #16
-	vld1.32	{d18, d19}, [r3]
-	mov	r3, #48
-	vadd.f32	q8, q9, q8
-	vld1.32	{d18, d19}, [r0], r3
-	vld1.32	{d20, d21}, [r1], r3
-	vadd.f32	q9, q10, q9
-	vst1.32	{d16, d17}, [r4]
-	add	r4, r2, #32
-	vst1.32	{d18, d19}, [r2], r3
-	vld1.32	{d16, d17}, [r0]
+	vldr	s2, [r1]
+	vldr	s0, [r0]
+	vadd.f32	s0, s2, s0
+	vstr	s0, [r2]
+	vldr	s0, [r0, #20]
+	vldr	s2, [r1, #20]
+	vadd.f32	s0, s2, s0
+	vstr	s0, [r2, #20]
+	vldr	s0, [r0, #40]
+	vldr	s2, [r1, #40]
+	vadd.f32	s0, s2, s0
+	vstr	s0, [r2, #40]
+	vldr	s0, [r0, #60]
 	mov	r0, #0
-	vld1.32	{d18, d19}, [r1]
-	vadd.f32	q8, q9, q8
-	vld1.32	{d20, d21}, [r12]
-	vld1.32	{d18, d19}, [lr]
-	vadd.f32	q9, q9, q10
-	vst1.32	{d16, d17}, [r2]
-	vst1.32	{d18, d19}, [r4]
-	pop	{r4, lr}
+	vldr	s2, [r1, #60]
+	vadd.f32	s0, s2, s0
+	vstr	s0, [r2, #60]
 	mov	pc, lr
+.Lfunc_end0:
+	.size	linear_wrapper, .Lfunc_end0-linear_wrapper
+	.cantunwind
+	.fnend
                                         @ -- End function
 
-.subsections_via_symbols
+	.section	".note.GNU-stack","",%progbits
+	.eabi_attribute	30, 1	@ Tag_ABI_optimization_goals
