@@ -282,7 +282,9 @@ test_libtorch() {
     assert_git_not_dirty
   fi
 }
+test_mobile_nnc() {
 
+}
 test_vulkan() {
   if [[ "$BUILD_ENVIRONMENT" == *vulkan-linux* ]]; then
     ln -sf "$TORCH_LIB_DIR"/libtorch* "$TORCH_TEST_DIR"
@@ -531,6 +533,8 @@ elif [[ "${BUILD_ENVIRONMENT}" == *distributed* ]]; then
   test_rpc
 elif [[ "${TEST_CONFIG}" = docs_test ]]; then
   test_docs_test
+elif [[ "${BUILD_ENVIRONMENT}" == *mobile-nnc* ]]; then
+  test_mobile_nnc
 else
   install_torchvision
   install_monkeytype
