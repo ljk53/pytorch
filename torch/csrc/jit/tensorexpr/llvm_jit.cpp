@@ -88,6 +88,7 @@ static llvm::orc::JITTargetMachineBuilder makeTargetMachineBuilder(
     c10::optional<std::string> triple,
     c10::optional<std::string> cpu,
     c10::optional<std::string> attrs) {
+  // Here it uses the triple that user specifies.
   auto JTMB = triple ? makeJTMBFromTriple(*triple, cpu, attrs)
                      : makeJTMBFromHost(cpu, attrs);
   JTMB.setCodeGenOptLevel(llvm::CodeGenOpt::Default);

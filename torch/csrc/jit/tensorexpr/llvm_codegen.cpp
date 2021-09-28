@@ -397,6 +397,7 @@ LLVMCodeGenImpl::LLVMCodeGenImpl(
     llvm::InitializeAllTargets();
     llvm::InitializeAllTargetMCs();
     llvm::InitializeAllAsmPrinters();
+    // TODO: should pass in mobile target architecture info.
     jit_ = std::make_unique<llvm::orc::PytorchLLVMJIT>(triple, cpu, attrs);
   }
 
@@ -2033,6 +2034,7 @@ void LLVMCodeGenImpl::optimize(llvm::Module& M) {
   FPM.doFinalization();
 }
 
+// Here is registers the LLVMCodeGen without triple/cpu/attrs.
 RegisterCodeGen<LLVMCodeGen> llvm_codegen_reg("llvm_codegen");
 
 #endif // TORCH_ENABLE_LLVM

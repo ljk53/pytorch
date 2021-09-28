@@ -213,6 +213,7 @@ class RegisterCodeGen {
            at::Device device,
            const std::string& kernel_func_name) {
           // NOLINTNEXTLINE(cppcoreguidelines-init-variables)
+          // How can we pass (dtype, triple, cpu, attrs) into LLVMCodeGen's initializer?
           std::unique_ptr<CodeGen> method(
               new CodeGenType(stmt, params, device, kernel_func_name));
           return method;

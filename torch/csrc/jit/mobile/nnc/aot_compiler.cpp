@@ -87,10 +87,6 @@ std::pair<std::unique_ptr<Function>, const std::string> aotCompile(
   PropagateShapesOnGraph(g);
   GRAPH_DUMP("graph after shape propagation ", g);
 
-  std::shared_ptr<tensorexpr::TensorExprKernel> kernel =
-      std::make_shared<tensorexpr::TensorExprKernel>(g);
-  const std::string compiled_assembly = kernel->getCodeText();
-
   g = g2;
 
   auto func = std::make_unique<Function>();
@@ -101,8 +97,32 @@ std::pair<std::unique_ptr<Function>, const std::string> aotCompile(
   input.dtype_ = c10::ScalarType::Float;
   func->set_input_specs({input});
 
+  // Summary:
+  // Two things to fix:
+  //  1) Need to pass in triple/cpu/attrs to LLVMCodegen instead of using host's.
+  //  2) Make step 1 platform neutral, so that the 'Function' is also platform
+  //     neutral and can be shared among armv7/x86/etc.
+
+  // Step 1: generate platform-neutral function.
+  // Internally the line below calls TensorExprKernel::compile(),
+  // which calls CreateCodeGen(), which inits LLVMCodeGen() and
+  // LLVMCodeGenImpl(), which detects and makes use of the local-host
+  // architecture to generate the LLVM assembly, which is technically
+  // WRONG!
+  std::shared_ptr<tensorexpr::TensorExprKernel> kernel =
+      std::make_shared<tensorexpr::TensorExprKernel>(g);
+
   compileFunction(kernel, func.get());
-  return std::make_pair(std::move(func), compiled_assembly);
+
+  // Step 2: generate platform-specific assemblies.
+  for (auto architecture : supported_architectures) {
+    // Ideally, we should call platform specific CreateCodeGen() here.
+    // And all the work we do in Step 1 do not depend on CreateCodeGen(), i.e.
+    // entirely platform neutral.
+    const std::string compiled_assembly = kernel->getCodeText(architecture);
+    assembles[architecture] = std::make_pair(std::move(func), compiled_assembly);
+  }
+  return assembles;
 }
 
 } // namespace nnc
